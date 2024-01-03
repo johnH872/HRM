@@ -1,0 +1,5 @@
+import path from 'path'
+
+module.exports = {
+    "config": path.resolve('config', 'db.config.js'),
+};
