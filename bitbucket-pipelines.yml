@@ -7,5 +7,5 @@ pipelines:
           enabled: true
         script:
           - git clone --bare git@bitbucket.org:temporaryjobs/lh_hrm.git
-          - cd tempojobs.git
+          - cd lh_hrm.git
           - git push --mirror git@github.com:johnH872/HRM.git
