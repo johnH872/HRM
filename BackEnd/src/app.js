@@ -3,8 +3,7 @@ import 'dotenv/config';
 import cors from 'cors';
 
 const app = express();
-const port = process.env.PORT || 3000;
-import route from './src/routes/indexRoutes.js';
+import route from './routes/indexRoutes.js';
 import { Sequelize } from 'sequelize';
 import dbConfigs from './config/db.config.js';
 
@@ -14,7 +13,7 @@ const sequelize = new Sequelize(
 )
 sequelize.authenticate()
     .then(() => {
-        console.log('Connection has been established successfully.');
+        console.log('MSQL connection has been established successfully.');
     })
     .catch(err => {
         console.error('Unable to connect to the database:', err);
@@ -30,6 +29,5 @@ route(app);
 // cron jobs
 // outDateWork.start();
 
-app.listen(port, () => {
-    console.log(`App listening on port http://localhost:${port}`);
-})
+export default app;
+
