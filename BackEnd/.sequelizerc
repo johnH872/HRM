@@ -1,5 +1,7 @@
-import path from 'path'
+const path = require('path');
 
 module.exports = {
-    "config": path.resolve('config', 'db.config.js'),
+    'config': path.resolve('src/config', 'db.config.js'),
+    'models-path': path.resolve('src', 'models'),
+    'migrations-path': path.resolve('src', 'migrations')
 };
