@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rimraf dist && babel src --out-dir dist  --copy-files",
     "start": "node server.js",
-    "start:dev": "nodemon --exec babel-node server.js"
+    "start:dev": "nodemon --exec babel-node src/config/runtime.config.js && nodemon --exec babel-node server.js"
   },
   "keywords": [
     "hrm"
