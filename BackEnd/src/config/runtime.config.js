@@ -1,5 +1,4 @@
-// Run migration automatically. Go to package.json and comment "nodemon --exec babel-node src/config/runtime.config.js &&"
-// to block auto add migration
+// Run migration automatically. Go to package.json and comment "nodemon --exec babel-node src/config/runtime.config.js &&" to block auto add migration
 import { exec } from 'child_process';
 
 (async () => {

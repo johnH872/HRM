@@ -1,5 +1,6 @@
 'use strict';
 import { Model } from 'sequelize';
+import bcrypt from 'bcrypt';
 export default (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -8,24 +9,79 @@ export default (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      User.belongsTo(models.Role, { foreignKey: 'roleId'});
     }
   }
   User.init({
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    middleName: DataTypes.STRING,
-    email: DataTypes.STRING,
-    birth: DataTypes.DATEONLY,
-    gender: DataTypes.STRING,
-    password: DataTypes.STRING,
-    nationality: DataTypes.STRING,
-    createdAt: DataTypes.DATE,
-    updatedAt: DataTypes.DATE
+    userId: {
+      allowNull: false,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
+      type: DataTypes.UUID
+    },
+    firstName: {
+      allowNull: false,
+      type: DataTypes.STRING
+    },
+    middleName: {
+      type: DataTypes.STRING
+    },
+    lastName: {
+      allowNull: false,
+      type: DataTypes.STRING
+    },
+    email: {
+      type: DataTypes.STRING
+    },
+    birth: {
+      type: DataTypes.DATEONLY
+    },
+    gender: {
+      type: DataTypes.STRING
+    },
+    password: {
+      type: DataTypes.STRING
+    },
+    nationality: {
+      type: DataTypes.STRING
+    },
+    avatarUrl: {
+      type: DataTypes.STRING
+    },
+    roleId: {
+      type: DataTypes.UUID
+    },
+    createdAt: {
+      allowNull: false,
+      type: DataTypes.DATE
+    },
+    updatedAt: {
+      allowNull: false,
+      type: DataTypes.DATE
+    },
+    deletedAt: {
+      type: DataTypes.DATE
+    }
   }, {
     sequelize,
     modelName: 'User',
-    tableName: 'Users'
+    paranoid: true,
+    timestamps: true
   });
+
+  User.beforeSave(async(user, options) => {
+    if(user.password) {
+      user.password = bcrypt.hashSync(user.password, bcrypt.genSalt(10), null);
+    }
+  });
+
+  User.prototype.comparePassword = function(passw, cb) {
+    bcrypt.compare(passw, this.password, function(error, isMatch) {
+      if(error) {
+        return cb(error);
+      }
+      cb(null, isMatch);
+    })
+  }
   return User;
 };

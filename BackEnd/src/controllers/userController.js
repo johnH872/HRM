@@ -1,21 +1,22 @@
-// import { constants } from "../../constants.js";
-// import { ReturnResult } from "../DTO/returnResult.js";
-// import User from "../models/userModel.js";
-// import UserDetail from "../models/userDetailModel.js"
-// import { hash } from 'bcrypt';
-// import GoogleMapLocation from "../models/googleMapLocationModel.js";
-
-// class userController {
-//     // [GET] /get
-//     async get(req, res, next) {
-//         const data = await User.find({});
-//         if (data) {
-//             res.status(200).json({ data });
-//         } else {
-//             res.status(401).json("Null");
-//             return;
-//         }
-//     }
+import { ReturnResult } from "../models/DTO/returnResult.js";
+import db from '../models/index.js'
+const {User} = db;
+// import User from "../models/user.js"
+class userController {
+    async get(req, res, next) {
+        var returnResult = new ReturnResult();
+        try {
+            db.then(async value => {
+                const user = await value.User.findOne({where: {firstName: 'Ta'}, include: {model: value.Role}});
+                returnResult.result = user;
+                res.status(200).json(returnResult);
+            })
+        } catch(error) {
+            res.status(400).json(error);
+            console.log(error)
+        }
+    }
+}
 
 //     async getAllUserDetail(req, res, next) {
 //         const email = req.query.email;
@@ -316,4 +317,4 @@
 //     }
 // }
 
-// export default new userController;
+export default new userController;

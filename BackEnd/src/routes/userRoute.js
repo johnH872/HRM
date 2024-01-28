@@ -3,7 +3,7 @@ const router = Router();
 
 // import authController from "../controllers/authController.js";
 // import {validateToken, checkUserRole} from "../middlewares/validateTokenHandler.js";
-// import userController from "../controllers/userController.js";
+import userController from "../controllers/userController.js";
 
 // router.route('/get').get( userController.get);
 // router.route('/getAllUserDetail').get( userController.getAllUserDetail);
@@ -19,5 +19,7 @@ const router = Router();
 // router.route('/blockUser').post(userController.blockUser);
 // router.route('/unBlockUser').post(userController.unBlockUser);
 // router.route('/getBlockedUserByUserId').get(userController.getBlockedUserByUserId);
+
+router.route('/testRoute').get(userController.get);
 
 export default router;
