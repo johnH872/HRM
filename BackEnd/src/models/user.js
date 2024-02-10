@@ -48,9 +48,6 @@ export default (sequelize, DataTypes) => {
     avatarUrl: {
       type: DataTypes.STRING
     },
-    roleId: {
-      type: DataTypes.UUID
-    },
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE

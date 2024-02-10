@@ -38,9 +38,6 @@ module.exports = {
       avatarUrl: {
         type: Sequelize.STRING
       },
-      roleId: {
-        type: Sequelize.UUID
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

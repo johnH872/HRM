@@ -14,7 +14,6 @@ module.exports = {
       password: '123456',
       nationality: 'VietNam',
       avatarUrl: '',
-      roleId: '7f2998a1-e145-415a-98a5-41e3a28dc943',
       createdAt: new Date(),
       updatedAt: new Date,
       deletedAt: null
@@ -30,10 +29,19 @@ module.exports = {
       updatedAt: new Date,
       deletedAt: null
     }], {});
+
+    await queryInterface.bulkInsert('User_roles', [{
+      roleId: '7f2998a1-e145-415a-98a5-41e3a28dc943',
+      userId: 'fa2e3df8-ab46-462d-8e13-25e07454142f',
+      createdAt: new Date(),
+      updatedAt: new Date,
+      deletedAt: null
+    }], {});
   },
 
   async down (queryInterface, Sequelize) {
     await queryInterface.bulkDelete('Users', null, {});
     await queryInterface.bulkDelete('Roles', null, {});
+    await queryInterface.bulkDelete('User_roles', null, {});
   }
 };

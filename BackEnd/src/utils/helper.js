@@ -1,4 +1,4 @@
-import RolePermission from "../models/rolepermission";
+import Role_Permission from "../models/rolepermission";
 import Permission from "../models/permission";
 
 class Helper {
@@ -12,7 +12,7 @@ class Helper {
                         permission: permissionName
                     }
                 }).then((permission) => {
-                    RolePermission.findOne({
+                    Role_Permission.findOne({
                         where: {
                             roleId: roleId,
                             permissionId: permission.permissionId

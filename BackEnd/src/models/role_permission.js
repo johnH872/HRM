@@ -1,33 +1,27 @@
 'use strict';
 import { Model } from 'sequelize';
 export default (sequelize, DataTypes) => {
-  class Permission extends Model {
+  class Role_Permission extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Permission.belongsToMany(models.Role, {through: 'Role_Permission'})
+      // define association here
     }
   }
-  Permission.init({
-    permissionId: {
+  Role_Permission.init({
+    RolePermissionId: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    displayName: {
+    roleId: {
       type: DataTypes.STRING
     },
-    permission: {
-      type: DataTypes.STRING
-    },
-    screen: {
-      type: DataTypes.STRING
-    },
-    description: {
+    permissionId: {
       type: DataTypes.STRING
     },
     createdAt: {
@@ -43,9 +37,9 @@ export default (sequelize, DataTypes) => {
     }
   }, {
     sequelize,
-    modelName: 'Permission',
-    timestamps: true,
-    paranoid: true
+    modelName: 'Role_Permission',
+    paranoid: true,
+    timestamps: true
   });
-  return Permission;
+  return Role_Permission;
 };
