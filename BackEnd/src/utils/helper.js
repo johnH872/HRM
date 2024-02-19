@@ -1,4 +1,4 @@
-import Role_Permission from "../models/rolepermission";
+import Role_Permission from "../models/role_permission";
 import Permission from "../models/permission";
 
 class Helper {

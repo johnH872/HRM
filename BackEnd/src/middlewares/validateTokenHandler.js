@@ -23,7 +23,7 @@ const validateToken = async(req, res, next) => {
 };
 
 const checkAdminRole = async(req, res, next) => {
-    // validateToken(req, res, next);
+    validateToken(req, res, next);
     const {role} = req.user;
     if(role !== Admin) {
         res.status(403).json("Forbidden!!!");
@@ -33,7 +33,7 @@ const checkAdminRole = async(req, res, next) => {
 }
 
 const checkUserRole = async(req, res, next) => {
-    // validateToken(req, res, next);
+    validateToken(req, res, next);
     const {role} = req.user;
     if(role !== User) {
         res.status(403).json("Forbidden!!!");

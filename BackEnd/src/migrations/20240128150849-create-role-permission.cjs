@@ -3,7 +3,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Role_Permissions', {
-      id: {
+      RolePermissionId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,

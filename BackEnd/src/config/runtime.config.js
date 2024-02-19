@@ -1,4 +1,9 @@
-// Run migration automatically. Go to package.json and comment "nodemon --exec babel-node src/config/runtime.config.js &&" to block auto add migration
+// Run migration automatically. command: npm run add-migration
+// ################# NOTE #################
+// - .cjs migration file
+// - change model 
+// - must have paranoid & timestamp in models
+// ########################################
 import { exec } from 'child_process';
 
 (async () => {
