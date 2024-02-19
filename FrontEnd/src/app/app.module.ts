@@ -11,19 +11,42 @@ import { EventService } from './demo/service/event.service';
 import { IconService } from './demo/service/icon.service';
 import { NodeService } from './demo/service/node.service';
 import { PhotoService } from './demo/service/photo.service';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { TokenInterceptor } from './token-intercreptor';
+import { MatDialogModule } from '@angular/material/dialog';
+import { NbAuthModule, NbDummyAuthStrategy } from '@nebular/auth';
 
 @NgModule({
     declarations: [
         AppComponent, NotfoundComponent
     ],
     imports: [
+        HttpClientModule,
         AppRoutingModule,
-        AppLayoutModule
+        AppLayoutModule,
+        MatDialogModule
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         CountryService, CustomerService, EventService, IconService, NodeService,
-        PhotoService, ProductService
+        // Set up http intercepter
+        PhotoService, ProductService,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: TokenInterceptor,
+            multi: true
+        },
+        // Setup nebular auth
+        ...NbAuthModule.forRoot({
+            strategies: [
+                NbDummyAuthStrategy.setup({
+                    name: 'email',
+                    delay: 3000,
+                }),
+            ],
+            forms: {
+            },
+        }).providers,
     ],
     bootstrap: [AppComponent]
 })

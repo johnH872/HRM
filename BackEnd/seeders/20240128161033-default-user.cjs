@@ -11,7 +11,7 @@ module.exports = {
       email: 'taduyhoang10@gmail.com',
       birth: new Date(),
       gender: 'Male',
-      password: '123456',
+      password: '$2b$10$lpHbaPiZU7ofNwnlSXsRTOPauhAObEPL8XS12KTQF6v3w4kxGE4L2',
       nationality: 'VietNam',
       avatarUrl: '',
       createdAt: new Date(),
