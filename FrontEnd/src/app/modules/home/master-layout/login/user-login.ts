@@ -1,8 +1,9 @@
 
-import { prop, required, minLength } from '@rxweb/reactive-form-validators';
+import { prop, required, minLength, email } from '@rxweb/reactive-form-validators';
 export class UserLogin {
     @required()
-    userNameOrEmail!: string;
+    @email()
+    email!: string;
     @required()
     @minLength({ value: 6 })
     password!: string;

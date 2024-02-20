@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken';
 
-const createToken = (user) => 
+const createToken = (user, timeInSeconds) => 
     jwt.sign(
         {
-            exp: Math.floor(Date.now() / 1000) + (60*60*10),
+            exp: Math.floor(Date.now() / 1000) + timeInSeconds,
             user, 
         },
         process.env.ACCESS_TOKEN_SECRET, 

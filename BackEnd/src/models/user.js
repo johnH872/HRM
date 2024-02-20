@@ -66,11 +66,11 @@ export default (sequelize, DataTypes) => {
     timestamps: true
   });
 
-  User.beforeSave(async(user, options) => {
-    if(user.password) {
-      user.password = bcrypt.hashSync(user.password, bcrypt.genSalt(10), null);
-    }
-  });
+  // User.beforeSave(async(user, options) => {
+  //   if(user.password) {
+  //     user.password = bcrypt.hash(user.password, 10);
+  //   }
+  // });
 
   User.prototype.comparePassword = function(passw, cb) {
     bcrypt.compare(passw, this.password, function(error, isMatch) {

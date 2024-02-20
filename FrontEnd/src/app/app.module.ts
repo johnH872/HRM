@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { HashLocationStrategy, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppLayoutModule } from './layout/app.layout.module';
@@ -22,12 +22,12 @@ import { NbAuthModule, NbDummyAuthStrategy } from '@nebular/auth';
     ],
     imports: [
         HttpClientModule,
-        AppRoutingModule,
         AppLayoutModule,
-        MatDialogModule
+        MatDialogModule,
+        AppRoutingModule,
     ],
     providers: [
-        { provide: LocationStrategy, useClass: HashLocationStrategy },
+        { provide: LocationStrategy, useClass: PathLocationStrategy },
         CountryService, CustomerService, EventService, IconService, NodeService,
         // Set up http intercepter
         PhotoService, ProductService,

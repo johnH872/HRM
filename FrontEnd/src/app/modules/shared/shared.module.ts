@@ -28,9 +28,22 @@ import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule, MatDialogRef } from '@angu
 import { MatListModule } from '@angular/material/list';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import {MatDividerModule} from '@angular/material/divider';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatSliderModule } from '@angular/material/slider';
 import { HtmlSafetyPipe } from './pipes/safety-html.pipe';
+import { FormLayoutDemoRoutingModule } from 'src/app/demo/components/uikit/formlayout/formlayoutdemo-routing.module';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { CalendarModule } from 'primeng/calendar';
+import { ChipsModule } from 'primeng/chips';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputMaskModule } from 'primeng/inputmask';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { CascadeSelectModule } from 'primeng/cascadeselect';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { InputTextModule } from 'primeng/inputtext';
+import { PasswordModule } from 'primeng/password';
+import { CheckboxModule } from 'primeng/checkbox';
 
 const materialModules = [
   MatFormFieldModule,
@@ -74,6 +87,22 @@ const nebularModules = [
   NbFormFieldModule
 ];
 
+const primengModules = [
+  FormsModule,
+  AutoCompleteModule,
+  CalendarModule,
+  ChipsModule,
+  DropdownModule,
+  InputMaskModule,
+  InputNumberModule,
+  CascadeSelectModule,
+  MultiSelectModule,
+  InputTextareaModule,
+  InputTextModule,
+  PasswordModule,
+  CheckboxModule 
+]
+
 const angularModules = [
   ReactiveFormsModule,
   MatFormFieldModule,
@@ -100,12 +129,14 @@ const angularModules = [
     FormsModule,
     [...materialModules],
     [...nebularModules],
-    [...angularModules]
+    [...angularModules],
+    [...primengModules]
   ],
   exports: [
     [...materialModules],
     [...nebularModules],
     [...angularModules],
+    [...primengModules],
     CommonModule,
     NbAuthModule,
     NbLayoutModule,
@@ -123,7 +154,7 @@ const angularModules = [
       {
         name: 'default',
       },
-      [ DEFAULT_THEME, COSMIC_THEME, CORPORATE_THEME, DARK_THEME ],
+      [DEFAULT_THEME, COSMIC_THEME, CORPORATE_THEME, DARK_THEME],
     ).providers,
   ],
 })

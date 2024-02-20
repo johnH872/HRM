@@ -31,8 +31,7 @@
                             "src/assets"
                         ],
                         "styles": [
-                            "src/styles.scss",
-                            "node_modules/@nebular/theme/styles/prebuilt/default.css"
+                            "src/styles.scss"
                         ],
                         "scripts": [
                             "node_modules/prismjs/prism.js",

@@ -23,35 +23,35 @@ export class AppMenuComponent implements OnInit {
             {
                 label: 'UI Components',
                 items: [
-                    { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', routerLink: ['/uikit/formlayout'] },
-                    { label: 'Input', icon: 'pi pi-fw pi-check-square', routerLink: ['/uikit/input'] },
-                    { label: 'Float Label', icon: 'pi pi-fw pi-bookmark', routerLink: ['/uikit/floatlabel'] },
-                    { label: 'Invalid State', icon: 'pi pi-fw pi-exclamation-circle', routerLink: ['/uikit/invalidstate'] },
-                    { label: 'Button', icon: 'pi pi-fw pi-box', routerLink: ['/uikit/button'] },
-                    { label: 'Table', icon: 'pi pi-fw pi-table', routerLink: ['/uikit/table'] },
-                    { label: 'List', icon: 'pi pi-fw pi-list', routerLink: ['/uikit/list'] },
-                    { label: 'Tree', icon: 'pi pi-fw pi-share-alt', routerLink: ['/uikit/tree'] },
-                    { label: 'Panel', icon: 'pi pi-fw pi-tablet', routerLink: ['/uikit/panel'] },
-                    { label: 'Overlay', icon: 'pi pi-fw pi-clone', routerLink: ['/uikit/overlay'] },
-                    { label: 'Media', icon: 'pi pi-fw pi-image', routerLink: ['/uikit/media'] },
-                    { label: 'Menu', icon: 'pi pi-fw pi-bars', routerLink: ['/uikit/menu'], routerLinkActiveOptions: { paths: 'subset', queryParams: 'ignored', matrixParams: 'ignored', fragment: 'ignored' } },
-                    { label: 'Message', icon: 'pi pi-fw pi-comment', routerLink: ['/uikit/message'] },
-                    { label: 'File', icon: 'pi pi-fw pi-file', routerLink: ['/uikit/file'] },
-                    { label: 'Chart', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/uikit/charts'] },
-                    { label: 'Misc', icon: 'pi pi-fw pi-circle', routerLink: ['/uikit/misc'] }
+                    { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', routerLink: ['/admin/uikit/formlayout'] },
+                    { label: 'Input', icon: 'pi pi-fw pi-check-square', routerLink: ['/admin/uikit/input'] },
+                    { label: 'Float Label', icon: 'pi pi-fw pi-bookmark', routerLink: ['/admin/uikit/floatlabel'] },
+                    { label: 'Invalid State', icon: 'pi pi-fw pi-exclamation-circle', routerLink: ['/admin/uikit/invalidstate'] },
+                    { label: 'Button', icon: 'pi pi-fw pi-box', routerLink: ['/admin/uikit/button'] },
+                    { label: 'Table', icon: 'pi pi-fw pi-table', routerLink: ['/admin/uikit/table'] },
+                    { label: 'List', icon: 'pi pi-fw pi-list', routerLink: ['/admin/uikit/list'] },
+                    { label: 'Tree', icon: 'pi pi-fw pi-share-alt', routerLink: ['/admin/uikit/tree'] },
+                    { label: 'Panel', icon: 'pi pi-fw pi-tablet', routerLink: ['/admin/uikit/panel'] },
+                    { label: 'Overlay', icon: 'pi pi-fw pi-clone', routerLink: ['/admin/uikit/overlay'] },
+                    { label: 'Media', icon: 'pi pi-fw pi-image', routerLink: ['/admin/uikit/media'] },
+                    { label: 'Menu', icon: 'pi pi-fw pi-bars', routerLink: ['/admin/uikit/menu'], routerLinkActiveOptions: { paths: 'subset', queryParams: 'ignored', matrixParams: 'ignored', fragment: 'ignored' } },
+                    { label: 'Message', icon: 'pi pi-fw pi-comment', routerLink: ['/admin/uikit/message'] },
+                    { label: 'File', icon: 'pi pi-fw pi-file', routerLink: ['/admin/uikit/file'] },
+                    { label: 'Chart', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/admin/uikit/charts'] },
+                    { label: 'Misc', icon: 'pi pi-fw pi-circle', routerLink: ['/admin/uikit/misc'] }
                 ]
             },
             {
                 label: 'Prime Blocks',
                 items: [
-                    { label: 'Free Blocks', icon: 'pi pi-fw pi-eye', routerLink: ['/blocks'], badge: 'NEW' },
-                    { label: 'All Blocks', icon: 'pi pi-fw pi-globe', url: ['https://www.primefaces.org/primeblocks-ng'], target: '_blank' },
+                    { label: 'Free Blocks', icon: 'pi pi-fw pi-eye', routerLink: ['/admin/blocks'], badge: 'NEW' },
+                    { label: 'All Blocks', icon: 'pi pi-fw pi-globe', url: ['/adminhttps://www.primefaces.org/primeblocks-ng'], target: '_blank' },
                 ]
             },
             {
                 label: 'Utilities',
                 items: [
-                    { label: 'PrimeIcons', icon: 'pi pi-fw pi-prime', routerLink: ['/utilities/icons'] },
+                    { label: 'PrimeIcons', icon: 'pi pi-fw pi-prime', routerLink: ['/admin/utilities/icons'] },
                     { label: 'PrimeFlex', icon: 'pi pi-fw pi-desktop', url: ['https://www.primefaces.org/primeflex/'], target: '_blank' },
                 ]
             },
@@ -62,7 +62,7 @@ export class AppMenuComponent implements OnInit {
                     {
                         label: 'Landing',
                         icon: 'pi pi-fw pi-globe',
-                        routerLink: ['/landing']
+                        routerLink: ['/admin/landing']
                     },
                     {
                         label: 'Auth',
@@ -71,39 +71,39 @@ export class AppMenuComponent implements OnInit {
                             {
                                 label: 'Login',
                                 icon: 'pi pi-fw pi-sign-in',
-                                routerLink: ['/auth/login']
+                                routerLink: ['/admin/auth/login']
                             },
                             {
                                 label: 'Error',
                                 icon: 'pi pi-fw pi-times-circle',
-                                routerLink: ['/auth/error']
+                                routerLink: ['/admin/auth/error']
                             },
                             {
                                 label: 'Access Denied',
                                 icon: 'pi pi-fw pi-lock',
-                                routerLink: ['/auth/access']
+                                routerLink: ['/admin/auth/access']
                             }
                         ]
                     },
                     {
                         label: 'Crud',
                         icon: 'pi pi-fw pi-pencil',
-                        routerLink: ['/pages/crud']
+                        routerLink: ['/admin/pages/crud']
                     },
                     {
                         label: 'Timeline',
                         icon: 'pi pi-fw pi-calendar',
-                        routerLink: ['/pages/timeline']
+                        routerLink: ['/admin/pages/timeline']
                     },
                     {
                         label: 'Not Found',
                         icon: 'pi pi-fw pi-exclamation-circle',
-                        routerLink: ['/notfound']
+                        routerLink: ['/admin/notfound']
                     },
                     {
                         label: 'Empty',
                         icon: 'pi pi-fw pi-circle-off',
-                        routerLink: ['/pages/empty']
+                        routerLink: ['/admin/pages/empty']
                     },
                 ]
             },
@@ -153,7 +153,7 @@ export class AppMenuComponent implements OnInit {
                 label: 'Get Started',
                 items: [
                     {
-                        label: 'Documentation', icon: 'pi pi-fw pi-question', routerLink: ['/documentation']
+                        label: 'Documentation', icon: 'pi pi-fw pi-question', routerLink: ['/admin/documentation']
                     },
                     {
                         label: 'View Source', icon: 'pi pi-fw pi-search', url: ['https://github.com/primefaces/sakai-ng'], target: '_blank'
