@@ -33,7 +33,7 @@ export class RegisterComponent implements OnInit {
   messages: string[] = [];
   user: any = {};
   socialLinks: NbAuthSocialLink[] = [];
-  registerFormGroup: FormGroup;
+  registerFormGroup: FormGroup
 
   constructor(protected service: NbAuthService,
               @Inject(NB_AUTH_OPTIONS) protected options = {},

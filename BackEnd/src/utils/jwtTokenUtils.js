@@ -9,6 +9,10 @@ const createToken = (user, timeInSeconds) =>
         process.env.ACCESS_TOKEN_SECRET, 
         { algorithm: 'HS512' })
 
+const createOTP = (user) => {
+    
+}
+
 export {
     createToken
 }

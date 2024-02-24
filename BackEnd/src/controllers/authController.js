@@ -90,7 +90,7 @@ class authController {
             if (email) {
                 const user = await dbContext.User.findOne({ where: {email: email} });
                 if(user) {
-                    let existedToken = await dbContext.Token.findOne({ where: {userId: user.userId}});
+                    let existedToken = await dbContext.Token.findOne({ where: {userId: user.userId, type: TokenType.ResetPassword}});
                     if (!existedToken) {
                         // 30 minutes reset password token
                         const newToken = createToken(
@@ -134,6 +134,40 @@ class authController {
             }
         }
         catch(error) {
+            console.log(error);
+        }
+        res.status(200).json(result);
+    }
+
+    async generateOTP(req, res, next) {
+        var result = new ReturnResult();
+        try {
+            var { email } = req.body;
+            var responseToken = "";
+            if (email) {
+                const user = await dbContext.User.findOne({ where: {email: email} });
+                if(user) {
+                    let existedToken = await dbContext.Token.findOne({ where: {userId: user.userId,type: TokenType.MobileOTP}});
+                    if (!existedToken) {
+                        // 30 minutes reset password token
+                        const newToken = createToken(
+                            {
+                                id: user.userId
+                            });
+                        const savedToken = await dbContext.Token.create({
+                            userId: user.userId,
+                            token: newToken,
+                            type: TokenType.ResetPassword,
+                        });
+
+                        responseToken = savedToken.token;
+                    } else responseToken = existedToken.token;
+                    const link = `${process.env.FRONT_END_BASE_URL}/auth/reset-password/${responseToken}`;
+                    await sendEmail(user.email, "Reset password", link);
+                }
+                result.result = "The password change request has been sent to your email.";
+            }   
+        } catch(error) {
             console.log(error);
         }
         res.status(200).json(result);

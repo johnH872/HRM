@@ -10,7 +10,7 @@ import { NbAuthComponent, NbAuthService } from '@nebular/auth';
 export class AuthComponent extends NbAuthComponent implements OnInit{
   constructor(
     protected service: NbAuthService,
-    protected override location: Location,
+    protected location: Location,
   ) {
     super(service, location);
     // this.settingService.getConfigCompany().subscribe(res => {

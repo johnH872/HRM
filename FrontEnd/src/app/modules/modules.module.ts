@@ -1,16 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { ModulesRoutingModule } from './modules-routing.module';
-import { NbAuthJWTToken, NbAuthModule, NbPasswordAuthStrategy } from '@nebular/auth';
-import { environment } from 'src/environments/environment';
-
+import { NbPasswordAuthStrategy, NbAuthModule, NbAuthJWTToken } from '@nebular/auth';
+import { environment } from 'src/enviroments/enviroment';
 
 @NgModule({
   declarations: [],
   imports: [
-    CommonModule,
     ModulesRoutingModule,
+    CommonModule,
+
     NbAuthModule.forRoot({
       strategies: [
         NbPasswordAuthStrategy.setup({
