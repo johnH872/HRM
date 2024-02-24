@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import { TOTP } from 'totp-generator';
 
 const createToken = (user, timeInSeconds) => 
     jwt.sign(
@@ -9,10 +10,12 @@ const createToken = (user, timeInSeconds) =>
         process.env.ACCESS_TOKEN_SECRET, 
         { algorithm: 'HS512' })
 
-const createOTP = (user) => {
-    
+const createOTP = () => {
+    const { otp } = TOTP.generate(process.env.OTP_KEY, { digits: 8 });
+    return otp;
 }
 
 export {
-    createToken
+    createToken,
+    createOTP
 }

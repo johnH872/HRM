@@ -1,5 +1,5 @@
 export const TokenType = {
-    ResetPassword: "reset-password",
-    AccessToken: "access-token",
-    MobileOTP: "mobile-otp"
+    RESET_PASSWORD: "reset-password",
+    ACCESS_TOKEN: "access-token",
+    MOBILE_OTP: "mobile-otp"
 }
