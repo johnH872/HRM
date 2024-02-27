@@ -6,6 +6,7 @@ import { DatastateManagementComponent } from './datastate-management/datastate-m
 import { ReportManagementComponent } from './report-management/report-management.component';
 import { UserManagementComponent } from './user-management/user-management.component';
 import { WorkManagementComponent } from './work-management/work-management.component';
+import { EmployeeManagementComponent } from './employee-management/employee-management.component';
 
 const routes: Routes = [{
   path: '',
@@ -30,6 +31,10 @@ const routes: Routes = [{
     {
       path: 'work',
       component: WorkManagementComponent,
+    },
+    {
+      path: 'employee',
+      component: EmployeeManagementComponent,
     },
     {
       path: '',

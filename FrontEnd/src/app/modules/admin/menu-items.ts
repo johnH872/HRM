@@ -12,9 +12,9 @@ export const MENU_ITEMS: NbMenuItem[] = [
     group: true,
   },
   {
-    title: 'Users',
+    title: 'Employees',
     icon: 'person-outline',
-    link: '/admin/user',
+    link: '/admin/employee',
     home: true,
   },
   {

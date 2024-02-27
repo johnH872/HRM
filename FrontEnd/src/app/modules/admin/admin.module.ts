@@ -21,6 +21,8 @@ import { WorkApplyDialogComponent } from './work-management/work-apply-dialog/wo
 import { ApproveTaskerDialogComponent } from './work-management/approve-tasker-dialog/approve-tasker-dialog.component';
 import { AppyWorkComponent } from './work-management/work-apply-dialog/appy-work/appy-work.component';
 import { FindItemPipe } from './work-management/work-apply-dialog/appy-work/find-item.pipe';
+import { EmployeeManagementComponent } from './employee-management/employee-management.component';
+import { AddEditEmployeeComponent } from './employee-management/add-edit-employee/add-edit-employee.component';
 
 
 @NgModule({
@@ -41,7 +43,9 @@ import { FindItemPipe } from './work-management/work-apply-dialog/appy-work/find
     WorkApplyDialogComponent,
     ApproveTaskerDialogComponent,
     AppyWorkComponent,
-    FindItemPipe
+    FindItemPipe,
+    EmployeeManagementComponent,
+    AddEditEmployeeComponent
   ],
   imports: [
     ThemeModule,

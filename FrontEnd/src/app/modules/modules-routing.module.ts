@@ -6,7 +6,7 @@ import { AuthAuthGuardService } from "./auth-auth-guard.service";
 const routes: Routes = [
     {
         path: 'admin',
-        canActivate: [AdminAuthGuardService],
+        // canActivate: [AdminAuthGuardService],
         loadChildren: () => import('./admin/admin.module')
             .then(m => m.AdminModule)
     },

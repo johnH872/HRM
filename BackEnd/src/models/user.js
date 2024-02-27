@@ -48,6 +48,18 @@ export default (sequelize, DataTypes) => {
     avatarUrl: {
       type: DataTypes.STRING
     },
+    phoneNumber: {
+      type: DataTypes.STRING
+    },
+    jobTitle: {
+      type: DataTypes.STRING
+    },
+    dateStartContract: {
+      type: DataTypes.DATE
+    },
+    ownerId: {
+      type: DataTypes.UUID
+    },
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE

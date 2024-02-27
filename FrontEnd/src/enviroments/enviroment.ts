@@ -1,4 +1,4 @@
-export const host = 'http://localhost:5001';
+export const host = 'http://localhost:5000';
 export const apiUrl = `${host}/api`;
 
 export const environment = {
@@ -12,4 +12,6 @@ export const environment = {
     apiDataStateManagement: apiUrl + '/dataState',
     apiPayment: apiUrl + '/payment',
     apiReport: apiUrl + '/report',
+
+    apiEmployeeManagement: apiUrl + '/EmployeeManagement',
 }

@@ -52,6 +52,21 @@ import { RatingStarComponent } from './components/rating-star/rating-star.compon
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { TableModule } from 'primeng/table';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { CalendarModule } from 'primeng/calendar';
+import { ChipsModule } from 'primeng/chips';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputMaskModule } from 'primeng/inputmask';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { CascadeSelectModule } from 'primeng/cascadeselect';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { InputTextModule } from 'primeng/inputtext';
+import { PasswordModule } from 'primeng/password';
+import { CheckboxModule } from 'primeng/checkbox';
+import { ButtonModule } from 'primeng/button';
+import { ToolbarModule } from 'primeng/toolbar';
+import { DialogModule } from 'primeng/dialog';
 
 const materialModules = [
   MatFormFieldModule,
@@ -106,7 +121,23 @@ const angularModules = [
 ];
 
 const primengModules = [
-  TableModule
+  FormsModule,
+  AutoCompleteModule,
+  CalendarModule,
+  ChipsModule,
+  DropdownModule,
+  InputMaskModule,
+  InputNumberModule,
+  CascadeSelectModule,
+  MultiSelectModule,
+  InputTextareaModule,
+  InputTextModule,
+  PasswordModule,
+  CheckboxModule,
+  TableModule,
+  ButtonModule,
+  ToolbarModule,
+  DialogModule,
 ]
 
 @NgModule({
