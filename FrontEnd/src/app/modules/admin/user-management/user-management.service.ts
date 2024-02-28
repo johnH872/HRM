@@ -5,6 +5,7 @@ import { GoogleMapLocation, ProfileDetail, User } from "../../shared/models/user
 import { environment } from "src/enviroments/enviroment";
 import { PagedData } from "../../shared/models/paged-data";
 import { ReturnResult } from "../../shared/models/return-result";
+import { UserRoleModel } from "../../shared/models/user-role-model";
 
 @Injectable({
     providedIn: 'root'
@@ -78,5 +79,9 @@ export class UserManagementService {
 
     evaluationUser(userId: string, evaluate: number): Observable<ReturnResult<boolean>> {
         return this.httpclient.get<ReturnResult<boolean>>(`${this.baseUrl}/evaluationUser?userId=${userId}&evaluate=${evaluate}`);
+    }
+
+    getRoles(): Observable<ReturnResult<UserRoleModel[]>> {
+        return this.httpclient.get<ReturnResult<UserRoleModel[]>>(`${this.baseUrl}/GetRoles`);
     }
 }

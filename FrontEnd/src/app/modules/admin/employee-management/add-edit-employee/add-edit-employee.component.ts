@@ -6,11 +6,13 @@ import { NbAuthJWTToken, NbAuthService } from '@nebular/auth';
 import { NbToastrService } from '@nebular/theme';
 import { RxFormBuilder } from '@rxweb/reactive-form-validators';
 import { Subject, takeUntil } from 'rxjs';
-import { UserService } from 'src/app/@core/mock/users.service';
 import { QuillConfiguration } from 'src/app/modules/shared/components/rich-inline-edit/rich-inline-edit.component';
 import { TblActionType } from 'src/app/modules/shared/enum/tbl-action-type.enum';
 import { EmployeeModel } from 'src/app/modules/shared/models/employee.model';
 import { EmployeeManagementService } from '../employee-management.service';
+import { Helper } from 'src/app/modules/shared/utility/Helper';
+import { UserRoleModel } from 'src/app/modules/shared/models/user-role-model';
+import { UserManagementService } from '../../user-management/user-management.service';
 
 @Component({
   selector: 'app-add-edit-employee',
@@ -26,11 +28,12 @@ export class AddEditEmployeeComponent implements OnInit {
   isLoading = false;
   editorOptions = QuillConfiguration;
   user;
+  listRoles: UserRoleModel[] = [];
 
   constructor(
     public dialModalRef: MatDialogRef<AddEditEmployeeComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private userService: UserService,
+    private userService: UserManagementService,
     private frmBuilder: RxFormBuilder,
     private authService: NbAuthService,
     private toast: NbToastrService,
@@ -50,6 +53,11 @@ export class AddEditEmployeeComponent implements OnInit {
   ngOnInit() {
     this.frmEmployee = this.frmBuilder.formGroup(EmployeeModel, this.employeeModel);
     this.dialModalRef.updatePosition({ right: '0', });
+    this.userService.getRoles().subscribe(res => {
+      if (res.result != null && res.result.length > 0) {
+        this.listRoles = [...res.result];
+      }
+    });
   }
 
   ngAfterContentChecked() {
@@ -66,37 +74,38 @@ export class AddEditEmployeeComponent implements OnInit {
   }
 
   saveData() {
-    // if (this.frmEmployee.valid) {
-    //   this.isLoading = !this.isLoading;
-    //   const model: EmployeeModel = Object.assign({}, this.frmEmployee.value);
-    //   model.base64IMG = this.headShot.pictureHeadShot?.substring(this.headShot.pictureHeadShot?.lastIndexOf(',') + 1);
-    //   model.pictureURL = this.userModel.pictureURL;
-    //   if (this.action == 0) model.isActive = true;
-    //   let isEmptyPassword = false;
-    //   if (this.action == 0 && !model.password && !model.confirmPassword) {
-    //     isEmptyPassword = true;
-    //     model.password = Helper.makeid(6);
-    //   }
+    if (this.frmEmployee.valid) {
+      this.isLoading = !this.isLoading;
+      const model: EmployeeModel = Object.assign({}, this.frmEmployee.value);
+      // model.base64IMG = this.headShot.pictureHeadShot?.substring(this.headShot.pictureHeadShot?.lastIndexOf(',') + 1);
+      // model.pictureURL = this.userModel.pictureURL;
+      let isEmptyPassword = false;
+      if (this.action == 0 && !model.password && !model.confirmPassword) {
+        isEmptyPassword = true;
+        model.password = Helper.makeid(6);
+      }
 
-    //   this.saleAccountService.saveEmployee(model).subscribe(resp => {
-    //     if (resp.result) {
-    //       this.toast.success(`Save user ${model.userName} successfully`, 'Success');
+      this.employeeService.saveEmployee(model).subscribe(resp => {
+        if (resp.result) {
+          this.toast.success(`Save employee successfully`, 'Success');
 
-    //       if (this.action == 0 && isEmptyPassword) {
-    //         this.userService.sendEmailResetPassword(resp.result.id).subscribe(emailResp => {
-    //           if (emailResp.result) {
-    //             this.toast.success(
-    //               `Please check email ${resp.result.email} to reset password`,
-    //               "Success")
-    //           }
-    //         })
-    //       }
+          if (this.action == 0 && isEmptyPassword) {
+            // this.userService.sendEmailResetPassword(resp.result.id).subscribe(emailResp => {
+            //   if (emailResp.result) {
+            //     this.toast.success(
+            //       `Please check email ${resp.result.email} to reset password`,
+            //       "Success")
+            //   }
+            // })
+          }
 
-    //       this.dialModalRef.close(resp.result);
-    //     }
-    //   }).add(() => {
-    //     this.isLoading = !this.isLoading;
-    //   });
-    // }
+          this.dialModalRef.close(resp.result);
+        } else {
+          this.toast.danger(resp.message, 'Failure');
+        }
+      }).add(() => {
+        this.isLoading = !this.isLoading;
+      });
+    }
   }
 }

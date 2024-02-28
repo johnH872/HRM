@@ -35,6 +35,9 @@ export class EmployeeModel {
     @compare({ fieldName: 'password', message: 'Confirm Password are not matched' })
     @minLength({ value: 6 })
     confirmPassword!: string;
+    @prop()
+    @required()
+    roles: string[];
 
     displayName: string;
 }
