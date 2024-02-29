@@ -118,6 +118,18 @@ class employeeController {
             console.log(error);
         }
     }
+
+    async getEmployeeById(req, res, next) {
+        var result = new ReturnResult;
+        try {
+            var employeeId = req.params.id;
+            const employee = await dbContext.User.findByPk(employeeId);
+            if(employee) result.result = employee;
+        } catch(error) {
+            console.error(error);
+        }
+        return result;
+    }
 }
 
 export default new employeeController;

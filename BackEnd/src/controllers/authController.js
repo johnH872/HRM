@@ -9,50 +9,6 @@ import moment from 'moment/moment.js';
 import { EmailType } from '../models/enums/emailType.js';
 const dbContext = await db;
 class authController {
-    // [POST] /register
-    // async register(req, res, next) {
-    //     const { firstName, lastName, email, password, role } = req.body;
-    //     if (!firstName || !email || !password) {
-    //         res.status(400);
-    //         throw new Error("All fields are madatory");
-    //     }
-    //     const userAvailable = await await dbContext.User.findOne({
-    //         where: {
-    //             email: email
-    //         }  
-    //     });
-
-    //     if (userAvailable) {
-    //         res.status(400).json("Email đã được đăng ký, vui lòng chọn email khác!");
-    //         return;
-    //     }
-
-    //     //Hash password
-    //     const hashedPassword = await hash(password, 10);
-
-    //     const user = await dbContext.User.create({
-    //         displayName: firstName + " " + lastName,
-    //         email,
-    //         password: hashedPassword,
-    //         userDetail: userDetail,
-    //         role
-    //     });
-
-    //     if (user) {
-    //         const accessToken = createToken(
-    //             {
-    //                 displayName: user.displayName,
-    //                 email: user.email,
-    //                 id: user.id,
-    //                 role: user.role,
-    //             });
-
-    //         res.status(200).json({ accessToken });
-    //     } else {
-    //         res.status(400).json("Email hoặc mật khẩu không hợp lệ!");
-    //     }
-    // }
-
     // [POST] /login
     async login(req, res, next) {
         const { email, password } = req.body;
@@ -62,19 +18,26 @@ class authController {
         }
 
         const user = await dbContext.User.findOne({
-            where: {
-                email: email
-            }  
+            where: {email: email},
+            include: dbContext.Role
         });
+
+        var roles = user.Roles.map(x => x.displayName);
 
         //compare password with hashed password
         if (user && (await compare(password, user.password))) {
             // 10 hours access token
             const accessToken = createToken(
                 {
+                    userId: user.userId,
                     firstName: user.firstName,
+                    middleName: user.middleName,
+                    lastName: user.lastName,
                     email: user.email,
-                    id: user.userId
+                    jobTitle: user.jobTitle,    
+                    ownerId: user.ownerId,
+                    avatarUrl: user.avatarUrl,
+                    roles: roles
                 }, 10*60*60);
             res.status(200).json({ accessToken });
         } else {

@@ -8,8 +8,8 @@ export default (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Role.hasMany(models.User, {foreignKey:'userId'});
-      Role.belongsToMany(models.Permission, {through: 'Role_Permission'});
+      Role.belongsToMany(models.Permission, {through: models.Role_Permission});
+      Role.belongsToMany(models.User, { through: 'User_Role', foreignKey:"roleId"});
     }
   }
   Role.init({
@@ -29,6 +29,12 @@ export default (sequelize, DataTypes) => {
     },
     defaultScreen: {
       type: DataTypes.STRING
+    },
+    priority: {
+      type: DataTypes.INTEGER
+    },
+    isShow: {
+      type: DataTypes.BOOLEAN
     },
     createdAt: {
       allowNull: false,

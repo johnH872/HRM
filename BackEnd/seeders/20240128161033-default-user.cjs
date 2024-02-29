@@ -2,7 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
     await queryInterface.bulkInsert('Users', [{
       userId: 'fa2e3df8-ab46-462d-8e13-25e07454142f',
       firstName: 'Ta',
@@ -25,6 +25,8 @@ module.exports = {
       roleDescription: null,
       displayName: 'Admin',
       defaultScreen: '/home',
+      priority: 0,
+      isShow: true,
       createdAt: new Date(),
       updatedAt: new Date,
       deletedAt: null
@@ -39,7 +41,7 @@ module.exports = {
     }], {});
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface, Sequelize) {
     await queryInterface.bulkDelete('Users', null, {});
     await queryInterface.bulkDelete('Roles', null, {});
     await queryInterface.bulkDelete('User_roles', null, {});

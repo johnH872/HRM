@@ -38,6 +38,18 @@ module.exports = {
       avatarUrl: {
         type: Sequelize.STRING
       },
+      phoneNumber: {
+        type: Sequelize.STRING
+      },
+      jobTitle: {
+        type: Sequelize.STRING
+      },
+      dateStartContract: {
+        type: Sequelize.DATE
+      },
+      ownerId: {
+        type: Sequelize.UUID
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

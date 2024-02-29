@@ -8,9 +8,9 @@ export default (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    // static associate(models) {
-    //   User.belongsTo(models.Role, { foreignKey: 'roleId'});
-    // }
+    static associate(models) {
+      User.belongsToMany(models.Role, { through: 'User_Role',foreignKey:"userId"});
+    }
   }
   User.init({
     userId: {

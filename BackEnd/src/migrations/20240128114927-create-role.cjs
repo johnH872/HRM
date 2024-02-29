@@ -20,6 +20,12 @@ module.exports = {
       defaultScreen: {
         type: Sequelize.STRING
       },
+      priority: {
+        type: Sequelize.INTEGER
+      },
+      isShow: {
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
