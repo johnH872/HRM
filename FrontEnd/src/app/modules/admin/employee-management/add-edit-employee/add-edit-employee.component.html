@@ -131,8 +131,8 @@
         <mat-form-field appearance="fill">
           <mat-label>Role</mat-label>
           <mat-select formControlName="roles" required multiple>
-            <mat-option *ngFor="let item of listRoles" [value]="item.id | lowercase">
-              {{ item.displayName }}
+            <mat-option *ngFor="let item of listRoles" [value]="item?.roleName | lowercase">
+              {{ item?.displayName }}
             </mat-option>
           </mat-select>
           <mat-error *ngIf="

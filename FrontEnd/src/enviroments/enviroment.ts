@@ -14,4 +14,5 @@ export const environment = {
     apiReport: apiUrl + '/report',
 
     apiEmployeeManagement: apiUrl + '/EmployeeManagement',
+    apiRoleManagement: apiUrl + '/RoleManagement',
 }

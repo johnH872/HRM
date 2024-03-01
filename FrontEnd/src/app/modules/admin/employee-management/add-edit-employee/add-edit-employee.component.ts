@@ -11,8 +11,9 @@ import { TblActionType } from 'src/app/modules/shared/enum/tbl-action-type.enum'
 import { EmployeeModel } from 'src/app/modules/shared/models/employee.model';
 import { EmployeeManagementService } from '../employee-management.service';
 import { Helper } from 'src/app/modules/shared/utility/Helper';
-import { UserRoleModel } from 'src/app/modules/shared/models/user-role-model';
 import { UserManagementService } from '../../user-management/user-management.service';
+import { RoleModel } from 'src/app/modules/shared/models/role-model';
+import { RoleManagementService } from 'src/app/modules/shared/services/role-management.service';
 
 @Component({
   selector: 'app-add-edit-employee',
@@ -28,7 +29,7 @@ export class AddEditEmployeeComponent implements OnInit {
   isLoading = false;
   editorOptions = QuillConfiguration;
   user;
-  listRoles: UserRoleModel[] = [];
+  listRoles: RoleModel[] = [];
 
   constructor(
     public dialModalRef: MatDialogRef<AddEditEmployeeComponent>,
@@ -40,6 +41,7 @@ export class AddEditEmployeeComponent implements OnInit {
     private cdref: ChangeDetectorRef,
     private activatedRoute: ActivatedRoute,
     private employeeService: EmployeeManagementService,
+    private roleService: RoleManagementService,
   ) {
     this.action = data?.action;
     this.employeeModel = data?.model ?? new EmployeeModel();
@@ -53,9 +55,10 @@ export class AddEditEmployeeComponent implements OnInit {
   ngOnInit() {
     this.frmEmployee = this.frmBuilder.formGroup(EmployeeModel, this.employeeModel);
     this.dialModalRef.updatePosition({ right: '0', });
-    this.userService.getRoles().subscribe(res => {
+    this.roleService.getRoles().subscribe(res => {
       if (res.result != null && res.result.length > 0) {
         this.listRoles = [...res.result];
+        console.log(this.listRoles);
       }
     });
   }
