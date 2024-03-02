@@ -44,6 +44,12 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
     var employeePagingResults = await this.employeeService.getEmployeePaging().pipe(takeUntil(this.destroy$)).toPromise();
     if (employeePagingResults.result) {
       this.dataTable = employeePagingResults.result;
+      this.dataTable.map(data => {
+        data.roleId = [];
+        data?.Roles?.map(role => {
+          data?.roleId?.push(role.roleId)
+        })
+      });
       this.dataTable.map(item => item.displayName = item.firstName + ' ' + item.middleName + ' ' + item.lastName)
     }
   }

@@ -130,8 +130,8 @@
       <div class="col-12 col-lg-6">
         <mat-form-field appearance="fill">
           <mat-label>Role</mat-label>
-          <mat-select formControlName="roles" required multiple>
-            <mat-option *ngFor="let item of listRoles" [value]="item?.roleName | lowercase">
+          <mat-select formControlName="roleId" required multiple>
+            <mat-option *ngFor="let item of listRoles" [value]="item?.roleId | lowercase">
               {{ item?.displayName }}
             </mat-option>
           </mat-select>

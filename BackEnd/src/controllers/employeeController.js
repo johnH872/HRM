@@ -6,7 +6,18 @@ class employeeController {
     async getEmployeePaging(req, res, next) {
         var returnResult = new ReturnResult();
         try {
-            const employeePaging = await dbContext.User.findAll({where: {deletedAt: null}});
+            const employeePaging = await dbContext.User.findAll({
+                where: {deletedAt: null},
+                include: {
+                    model: dbContext.Role,
+                    through: {
+                      attributes: ['roleId',],
+                    }
+                },
+                order: [
+                    [dbContext.Role, 'priority', 'ASC']
+                ]
+            });
             returnResult.result = employeePaging;
             res.status(200).json(returnResult);
         } catch(error) {
@@ -49,8 +60,8 @@ class employeeController {
                         ownerId: model.ownerId,
                     });
                     if (saveEmployee) {
-                        if (model.roles && model.roles.length > 0) {
-                            model.roles.map(async item => {
+                        if (model.roleId && model.roleId.length > 0) {
+                            model.roleId.map(async item => {
                                 const employeeRole = await dbContext.User_Role.create({
                                     userId: saveEmployee.userId,
                                     roleId: item,
@@ -65,6 +76,7 @@ class employeeController {
                     }
                 }
             } else { // Edit
+                console.log(model);
                 // Find existing employee
                 const existEmployee = await dbContext.User.findOne({
                     where: {userId: model.userId}
@@ -86,18 +98,20 @@ class employeeController {
                         jobTitle: model.jobTitle ?? existEmployee.jobTitle,
                         ownerId: model.ownerId ?? existEmployee.ownerId,
                     }, {
-                        where: {userId: model.userId}
+                        where: {
+                            userId: model.userId
+                        }
                     });
                     if (saveEmployee) {
-                        if (model.roles && model.roles.length > 0) {
+                        if (model.roleId && model.roleId.length > 0) {
                             await dbContext.User_Role.destroy({
                                 where: {
-                                  userId: saveEmployee.userId,
+                                  userId: model.userId,
                                 }
                               });
-                            model.roles.map(async item => {
+                            model.roleId.map(async item => {
                                 await dbContext.User_Role.create({
-                                    userId: saveEmployee.userId,
+                                    userId: model.userId,
                                     roleId: item,
                                 });
                             });

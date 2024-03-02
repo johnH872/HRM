@@ -1,4 +1,5 @@
 import { compare, email, minLength, prop, required } from "@rxweb/reactive-form-validators";
+import { RoleModel } from "./role-model";
 
 export class EmployeeModel {
     @prop()
@@ -37,7 +38,8 @@ export class EmployeeModel {
     confirmPassword!: string;
     @prop()
     @required()
-    roles: string[];
-
+    roleId: string[];
+    
+    Roles: RoleModel[];
     displayName: string;
 }

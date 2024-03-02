@@ -44,6 +44,9 @@
           <p-columnFilter type="text" field="email" display="menu"></p-columnFilter>
           <p-sortIcon field="email"></p-sortIcon>
         </th>
+        <th pSortableColumn="email" style="width:15%">
+          Role
+        </th>
         <th pSortableColumn="phoneNumber" style="width:10%">
           Phone Number
           <p-columnFilter type="text" field="phoneNumber" display="menu"></p-columnFilter>
@@ -97,6 +100,9 @@
           {{ employee?.displayName }}
         </td>
         <td>{{ employee?.email }}</td>
+        <td *ngFor="let role of employee?.Roles">
+          {{ role?.displayName }}
+        </td>
         <td>{{ employee?.phoneNumber }}</td>
         <td>{{ employee?.jobTitle }}</td>
         <td>{{ employee?.ownerId }}</td>

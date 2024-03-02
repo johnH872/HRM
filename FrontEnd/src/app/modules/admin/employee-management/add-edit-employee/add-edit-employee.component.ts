@@ -58,7 +58,6 @@ export class AddEditEmployeeComponent implements OnInit {
     this.roleService.getRoles().subscribe(res => {
       if (res.result != null && res.result.length > 0) {
         this.listRoles = [...res.result];
-        console.log(this.listRoles);
       }
     });
   }
