@@ -76,13 +76,12 @@ class employeeController {
                     }
                 }
             } else { // Edit
-                console.log(model);
                 // Find existing employee
                 const existEmployee = await dbContext.User.findOne({
                     where: {userId: model.userId}
                 });
                 if (existEmployee) {
-                    if (model.password !== null) {
+                    if (model.password) {
                         model.password = await hash(model.password, 10);
                     }
                     const saveEmployee = await dbContext.User.update({
@@ -100,7 +99,9 @@ class employeeController {
                     }, {
                         where: {
                             userId: model.userId
-                        }
+                        },
+                        returning: true,
+                        plain: true
                     });
                     if (saveEmployee) {
                         if (model.roleId && model.roleId.length > 0) {
@@ -116,7 +117,9 @@ class employeeController {
                                 });
                             });
                         }
-                        result.result = saveEmployee;
+                        result.result = await dbContext.User.findOne({
+                            where: {userId: model.userId}
+                        });
                         return res.status(200).json(result);
                     } else {
                         result.message = 'Can not save employee';
@@ -142,7 +145,7 @@ class employeeController {
         } catch(error) {
             console.error(error);
         }
-        return result;
+        return res.status(200).json(result);
     }
 }
 
