@@ -54,7 +54,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
     }
   }
 
-  addEditEmployee(model: EmployeeModel = null) {
+  async addEditEmployee(model: EmployeeModel = null) {
     this.employeeModel = model;
     const attendanceRef = this.dialog.open(AddEditEmployeeComponent, {
       disableClose: true,
@@ -66,9 +66,9 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
         action: model === null ? TblActionType.Add : TblActionType.Edit,
       }
     });
-    attendanceRef.afterClosed().subscribe(response => {
+    attendanceRef.afterClosed().subscribe(async response => {
       if (response) {
-        
+        await this.refreshData();
       }
     });
   }

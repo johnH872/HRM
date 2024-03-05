@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NbAuthJWTToken, NbAuthService } from '@nebular/auth';
 import { NbToastrService } from '@nebular/theme';
 import { RxFormBuilder } from '@rxweb/reactive-form-validators';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { QuillConfiguration } from 'src/app/modules/shared/components/rich-inline-edit/rich-inline-edit.component';
 import { TblActionType } from 'src/app/modules/shared/enum/tbl-action-type.enum';
 import { EmployeeModel } from 'src/app/modules/shared/models/employee.model';
@@ -14,6 +14,9 @@ import { Helper } from 'src/app/modules/shared/utility/Helper';
 import { UserManagementService } from '../../user-management/user-management.service';
 import { RoleModel } from 'src/app/modules/shared/models/role-model';
 import { RoleManagementService } from 'src/app/modules/shared/services/role-management.service';
+import { DatastateService } from '../../datastate-management/datastate.service';
+import { FilterConfig } from 'src/app/modules/shared/components/dropdown-filter/filter-config';
+import { FilterType } from 'src/app/modules/shared/enum/filter-type.enum';
 
 @Component({
   selector: 'app-add-edit-employee',
@@ -30,6 +33,8 @@ export class AddEditEmployeeComponent implements OnInit {
   editorOptions = QuillConfiguration;
   user;
   listRoles: RoleModel[] = [];
+  listCountries: any;
+  configFilterContries: FilterConfig;
 
   constructor(
     public dialModalRef: MatDialogRef<AddEditEmployeeComponent>,
@@ -42,6 +47,7 @@ export class AddEditEmployeeComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private employeeService: EmployeeManagementService,
     private roleService: RoleManagementService,
+    private dataStateService: DatastateService,
   ) {
     this.action = data?.action;
     this.employeeModel = data?.model ?? new EmployeeModel();
@@ -50,6 +56,18 @@ export class AddEditEmployeeComponent implements OnInit {
         this.user = token.getPayload();
       }
     });
+    this.configFilterContries = {
+      filterType: FilterType.DropDown,
+      filterValue: this.dataStateService.getListCountries().pipe(map(resp => {
+        if (resp) {
+          return resp.map(item => Object.assign({ text: `${item?.name?.common}`, value: item?.name?.common, img: item?.flags?.png }));
+        } else return [];
+      })),
+      displayText: 'text',
+      displayValue: 'value',
+      displayImg: 'img',
+      firstLoad: true
+    } as FilterConfig;
   }
 
   ngOnInit() {
@@ -108,6 +126,12 @@ export class AddEditEmployeeComponent implements OnInit {
       }).add(() => {
         this.isLoading = !this.isLoading;
       });
+    }
+  }
+
+  onChooseNationality(e) {
+    if (e) {
+      this.frmEmployee?.get('nationality')?.setValue(e);
     }
   }
 }

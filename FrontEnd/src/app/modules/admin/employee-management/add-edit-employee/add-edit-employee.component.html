@@ -127,6 +127,12 @@
         </mat-form-field>
       </div>
 
+      <div class="col-12">
+        <app-dropdown-filter style="font-size: 14px; padding-bottom: 0;" [columnName]="'Nationality'" [filter]="configFilterContries"
+            [value]="frmEmployee?.get('nationality')?.value ?? null" [multiple]="false" (onFilter)="onChooseNationality($event)">
+        </app-dropdown-filter>
+      </div>
+
       <div class="col-12 col-lg-6">
         <mat-form-field appearance="fill">
           <mat-label>Role</mat-label>

@@ -1,0 +1,42 @@
+<mat-form-field color="primary" [appearance]="appearance">
+  <mat-label *ngIf="isUseLabel">{{columnName}}</mat-label>
+  <mat-select [formControl]="bankMultiCtrl" placeholder="{{columnName}}" [multiple]="multiple" #multiSelect
+    (openedChange)="changeValue($event)" [required]="required">
+    <mat-select-trigger *ngIf="customTemplate">
+      <ng-container *ngIf="customTemplate" [ngTemplateOutlet]="customTemplate" [ngTemplateOutletContext]="{
+          data: bankMultiCtrl?.value,
+          displayText: filter?.displayText,
+          displayValue: filter?.displayValue
+        }">
+      </ng-container>
+    </mat-select-trigger>
+    <mat-option>
+      <ngx-mat-select-search noEntriesFoundLabel="No matching item found" placeholderLabel=""
+        [showToggleAllCheckbox]="checkAll" [toggleAllCheckboxIndeterminate]="isIndeterminate"
+        [toggleAllCheckboxChecked]="isChecked" (toggleAll)="toggleSelectAll($event)"
+        [formControl]="bankMultiFilterCtrl"></ngx-mat-select-search>
+    </mat-option>
+    <ngx-skeleton-loader *ngIf="!filterOption" count="1" appearance="line"
+      [theme]="{ height: '40px', 'margin-bottom': '0px' }" fxFlexFill>
+    </ngx-skeleton-loader>
+    <mat-option *ngFor="let item of filteredBanksMulti | async" [value]="item" style="margin-top: 8px">
+      <ng-container *ngIf="customTemplate; else default" [ngTemplateOutlet]="customTemplate" [ngTemplateOutletContext]="{
+          data: item,
+          displayText: filter?.displayText,
+          displayValue: filter?.displayValue
+        }">
+      </ng-container>
+      <ng-template #default>
+        <img *ngIf="item[filter.displayImg]" src="{{item[filter.displayImg]}}" class="custom-display-img">
+        {{item[filter.displayText]}}
+      </ng-template>
+    </mat-option>
+  </mat-select>
+
+  <div *ngIf="suffixTemplate" matSuffix>
+    <ng-container [ngTemplateOutlet]="suffixTemplate"></ng-container>
+  </div>
+  <mat-hint *ngIf="hintTemplate">
+    <ng-container [ngTemplateOutlet]="hintTemplate"></ng-container>
+  </mat-hint>
+</mat-form-field>

@@ -67,6 +67,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { ButtonModule } from 'primeng/button';
 import { ToolbarModule } from 'primeng/toolbar';
 import { DialogModule } from 'primeng/dialog';
+import { DropdownFilterComponent } from './components/dropdown-filter/dropdown-filter.component';
 
 const materialModules = [
   MatFormFieldModule,
@@ -150,7 +151,8 @@ const primengModules = [
     ToolbarComponent,
     RichInlineEditComponent,
     ConfirmDialogComponent,
-    RatingStarComponent
+    RatingStarComponent,
+    DropdownFilterComponent,
   ],
   imports: [
     CommonModule,
@@ -199,7 +201,8 @@ const primengModules = [
     RichInlineEditComponent,
     ConfirmDialogComponent,
     RatingStarComponent,
-    NgxEchartsModule
+    NgxEchartsModule,
+    DropdownFilterComponent,
   ],
   providers: [
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},

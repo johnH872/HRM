@@ -14,6 +14,7 @@ export class DatastateService {
   constructor(
     private http: HttpClient
   ) { }
+
   getListProvince() {
     return this.http.get<any>(`https://provinces.open-api.vn/api/?depth=2`);
   }
@@ -36,5 +37,9 @@ export class DatastateService {
 
   getDataStateByTypeAndName(type: string = null, name: string = null) {
     return this.http.get<ReturnResult<DataStateModel>>(`${this.baseUrl}/getDataStateByTypeAndName?type=${type}&name=${name}` );
+  }
+
+  getListCountries() {
+    return this.http.get<any>(`https://restcountries.com/v3.1/all`);
   }
 }
