@@ -42,7 +42,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
 
   async refreshData() {
     this.loading = !this.loading;
-    var employeePagingResults = await this.employeeService.getEmployeePaging().pipe(takeUntil(this.destroy$)).toPromise();
+    var employeePagingResults = await this.employeeService.getAllEmployee().pipe(takeUntil(this.destroy$)).toPromise();
     if (employeePagingResults.result) {
       this.dataTable = employeePagingResults.result;
       this.dataTable.map(data => {

@@ -14,8 +14,8 @@ export class EmployeeManagementService {
 
   constructor(private http: HttpClient) { }
 
-  getEmployeePaging() {
-    return this.http.get<ReturnResult<EmployeeModel[]>>(`${this.baseUrl}/GetEmployeePaging`);
+  getAllEmployee() {
+    return this.http.get<ReturnResult<EmployeeModel[]>>(`${this.baseUrl}/GetAllEmployee`);
   }
 
   saveEmployee(model: EmployeeModel): Observable<ReturnResult<EmployeeModel>> {

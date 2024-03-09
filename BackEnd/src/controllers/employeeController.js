@@ -1,9 +1,13 @@
 import { hash } from "bcrypt";
 import { ReturnResult } from "../models/DTO/returnResult.js";
 import db from '../models/index.js'
+import { Page } from "../models/DTO/page.js";
+import { PagedData } from "../models/DTO/pagedData.js";
+import { Op, Sequelize } from "sequelize";
+import { filterData, mappingPage, pagingData } from "../utils/pagingAndFiltering.js";
 const dbContext = await db;
 class employeeController {
-    async getEmployeePaging(req, res, next) {
+    async getAllEmployee(req, res, next) {
         var returnResult = new ReturnResult();
         try {
             const employeePaging = await dbContext.User.findAll({
@@ -24,6 +28,37 @@ class employeeController {
             res.status(400).json(error);
             console.log(error)
         }
+    }
+
+    async getEmployeePaging(req, res, next) {
+        var returnResult = new ReturnResult();
+        var pagedData = new PagedData();
+        var page = new Page();
+        try {
+            page = mappingPage(page, req.body);
+            let queries = {};
+            
+            queries = pagingData(page, queries);
+            queries = filterData(page, queries);
+
+            // Custom filterName
+            var displayNameIndex = page.filter.findIndex(x => x.prop === 'employeeName' && x.value);
+            if(displayNameIndex !== -1) {
+                queries.where['$and'] = Sequelize.where(Sequelize.fn('concat', Sequelize.col('firstName'),' ', Sequelize.col('middleName') ,' ', Sequelize.col('lastName')), {
+                    [Op.substring]: page.filter[displayNameIndex].value,
+                  });
+            }
+
+            const employeePaging = await dbContext.User.findAll(queries);
+
+            pagedData.Data = employeePaging;
+            pagedData.Page = page;
+            returnResult.result = pagedData;
+        } catch(error) {
+            res.status(400).json(error);
+            console.log(error)
+        }
+        res.status(200).json(returnResult);
     }
 
     async saveEmployee(req, res, next) {
