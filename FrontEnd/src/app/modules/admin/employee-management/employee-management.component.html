@@ -5,26 +5,37 @@
       <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2"
         (click)="addEditEmployee()"></button>
       <button pButton pRipple [label]="Delete" icon="pi pi-trash" class="p-button-danger"
-        (click)="deleteSelectedProducts()" [disabled]="!selectedEmployees || !selectedEmployees?.length"></button>
+        (click)="deleteSelectedEmployee()" [disabled]="!selectedEmployees || !selectedEmployees?.length"></button>
     </ng-template>
 
     <ng-template pTemplate="right">
-      <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import"
+      <!-- <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import"
         class="mr-2 inline-block"></p-fileUpload>
-      <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
-      <p-button class="p-input-icon-left ml-auto" type="button" icon="pi pi-refresh" (click)="reset()"
-        styleClass="p-button-text"></p-button>
+      <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button> -->
+      <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash"
+          (click)="clear(table)"></button>
+      <button pButton label="Refresh" class="p-button-outlined" icon="pi pi-refresh" style="margin-left: 10px;"
+          (click)="reset()"></button>
     </ng-template>
   </p-toolbar>
-  <p-table #table [value]="dataTable" [paginator]="true" [rows]="5" [showCurrentPageReport]="true"
+  <p-table #table 
+    [value]="dataTable" 
+    [paginator]="true" 
+    [rows]="10" 
+    [showCurrentPageReport]="true"
     [tableStyle]="{ 'min-width': '50rem' }"
-    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" (onPage)="pageChange($event)"
-    [rowsPerPageOptions]="[10, 25, 50]" [loading]="loading" [globalFilterFields]="['displayName']" editMode="row"
-    [selection]="selectedEmployees" [rowHover]="true" dataKey="userId">
+    (onPage)="pageChange($event)"
+    [rowsPerPageOptions]="[10, 25, dataTable?.length]" 
+    [loading]="loading" 
+    [globalFilterFields]="['displayName']" 
+    editMode="row"
+    [(selection)]="selectedEmployees" 
+    [rowHover]="true"
+    [scrollable]="true" 
+    scrollHeight="480px" 
+    dataKey="userId">
     <ng-template pTemplate="caption">
       <div class="flex">
-        <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash"
-          (click)="clear(table)"></button>
         <span class="p-input-icon-left ml-auto">
           <i class="pi pi-search"></i>
           <input pInputText type="text" (input)="table.filterGlobal($event.target.value, 'contains')"
@@ -34,20 +45,25 @@
     </ng-template>
     <ng-template pTemplate="header">
       <tr>
-        <th pSortableColumn="displayName" style="width:15%">
+        <th style="width: 4rem">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th pSortableColumn="displayName" style="width:11%">
           Employee
           <p-columnFilter type="text" field="displayName" display="menu"></p-columnFilter>
           <p-sortIcon field="displayName"></p-sortIcon>
         </th>
-        <th pSortableColumn="email" style="width:15%">
+        <th pSortableColumn="email" style="width:11%">
           Email
           <p-columnFilter type="text" field="email" display="menu"></p-columnFilter>
           <p-sortIcon field="email"></p-sortIcon>
         </th>
-        <th pSortableColumn="email" style="width:15%">
+        <th pSortableColumn="role" style="width:8%">
           Role
+          <p-columnFilter type="text" field="role" display="menu"></p-columnFilter>
+          <p-sortIcon field="role"></p-sortIcon>
         </th>
-        <th pSortableColumn="phoneNumber" style="width:10%">
+        <th pSortableColumn="phoneNumber" style="width:14%">
           Phone Number
           <p-columnFilter type="text" field="phoneNumber" display="menu"></p-columnFilter>
           <p-sortIcon field="phoneNumber"></p-sortIcon>
@@ -57,7 +73,7 @@
           <p-columnFilter type="text" field="jobTitle" display="menu"></p-columnFilter>
           <p-sortIcon field="jobTitle"></p-sortIcon>
         </th>
-        <th style="width:10%">
+        <th style="width:8%">
           Manage By
           <p-columnFilter field="representative" matchMode="in" display="menu" [showMatchModes]="false"
             [showOperator]="false" [showAddButton]="false">
@@ -86,15 +102,21 @@
           <p-columnFilter type="text" field="gender" display="menu"></p-columnFilter>
           <p-sortIcon field="gender"></p-sortIcon>
         </th>
-        <th pSortableColumn="nationality" style="width:10%">
+        <th pSortableColumn="nationality" style="width:12%">
           Nationality
           <p-columnFilter type="text" field="nationality" display="menu"></p-columnFilter>
           <p-sortIcon field="nationality"></p-sortIcon>
+        </th>
+        <th pSortableColumn="nationality" style="width:12%">
+          Controlling
         </th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-employee let-editing="editing" let-ri="rowIndex">
       <tr [pEditableRow]="employee">
+        <td>
+          <p-tableCheckbox [value]="employee"></p-tableCheckbox>
+        </td>
         <td>
           <img [alt]="" src="{{ employee?.avatarUrl }}" width="32" style="vertical-align: middle" />
           {{ employee?.displayName }}

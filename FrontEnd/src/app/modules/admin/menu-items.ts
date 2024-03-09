@@ -9,27 +9,63 @@ export const MENU_ITEMS: NbMenuItem[] = [
   },
   {
     title: 'FEATURES',
-    group: true,
+    children: [
+      {
+        title: 'Employees',
+        icon: 'person-outline',
+        link: '/admin/employee',
+      },
+      {
+        title: 'Leave',
+        icon: 'briefcase-outline',
+        children: [
+          {
+            title: 'Leave Request',
+            icon: 'briefcase-outline',
+            link: '/admin/leave-request',
+          },
+          {
+            title: 'Leave Entitlement',
+            icon: 'briefcase-outline',
+            link: '/admin/leave-entitlement',
+          },
+          {
+            title: 'Leave Type',
+            icon: 'briefcase-outline',
+            link: '/admin/leave-type',
+          },
+        ],
+      },
+      {
+        title: 'Attendance',
+        icon: 'person-outline',
+        link: '/admin/attendance',
+      },
+      {
+        title: 'Calendar',
+        icon: 'person-outline',
+        link: '/admin/calendar',
+      },
+    ],
   },
   {
-    title: 'Employees',
-    icon: 'person-outline',
-    link: '/admin/employee',
-    home: true,
-  },
-  {
-    title: 'DataStates',
-    icon: 'bookmark-outline',
-    link: '/admin/datastate',
-  },
-  {
-    title: 'Reports',
-    icon: 'alert-triangle-outline',
-    link: '/admin/report',
-  },
-  {
-    title: 'Works',
-    icon: 'briefcase-outline',
-    link: '/admin/work',
+    title: 'System',
+    children: [
+      {
+        title: 'DataStates',
+        icon: 'bookmark-outline',
+        link: '/admin/datastate',
+      },
+      {
+        title: 'Roles',
+        icon: 'bookmark-outline',
+        link: '/admin/role',
+      },
+      {
+        title: 'Permissions',
+        icon: 'bookmark-outline',
+        link: '/admin/permission',
+      },
+    ],
   },
 ];

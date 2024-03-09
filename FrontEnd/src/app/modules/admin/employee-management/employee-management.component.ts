@@ -41,6 +41,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
   }
 
   async refreshData() {
+    this.loading = !this.loading;
     var employeePagingResults = await this.employeeService.getEmployeePaging().pipe(takeUntil(this.destroy$)).toPromise();
     if (employeePagingResults.result) {
       this.dataTable = employeePagingResults.result;
@@ -52,6 +53,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
       });
       this.dataTable.map(item => item.displayName = item.firstName + ' ' + item.middleName + ' ' + item.lastName)
     }
+    this.loading = !this.loading;
   }
 
   async addEditEmployee(model: EmployeeModel = null) {
@@ -81,8 +83,9 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
       this.first = this.first - this.rows;
   }
 
-  reset() {
-      this.first = 0;
+  async reset() {
+    this.first = 0;
+    await this.refreshData();
   }
 
   pageChange(event) {
@@ -94,19 +97,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
     table.clear();
   }
 
-  onRowEditInit(employee: EmployeeModel) {
-    
-  }
-
-  onRowEditSave(employee: EmployeeModel) {
-    
-  }
-
-  onRowEditCancel(employee: EmployeeModel, index: number) {
-    
-  }
-
-  saveEmployee() {
+  deleteSelectedEmployee() {
 
   }
 }
