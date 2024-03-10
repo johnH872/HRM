@@ -1,6 +1,7 @@
 import express, { json } from 'express';
 import 'dotenv/config';
 import cors from 'cors';
+import bodyParser from 'body-parser';
 
 const app = express();
 import route from './routes/indexRoutes.js';
@@ -22,6 +23,9 @@ sequelize.authenticate()
 //middleware
 app.use(json());
 app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use('/assets/images',express.static('assets/images'));
 
 //base route    
 route(app);
