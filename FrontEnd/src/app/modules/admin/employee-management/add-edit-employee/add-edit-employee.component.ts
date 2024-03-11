@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
@@ -23,7 +23,7 @@ import { FilterType } from 'src/app/modules/shared/enum/filter-type.enum';
   templateUrl: './add-edit-employee.component.html',
   styleUrls: ['./add-edit-employee.component.scss']
 })
-export class AddEditEmployeeComponent implements OnInit {
+export class AddEditEmployeeComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<void> = new Subject<void>();
   action: TblActionType;

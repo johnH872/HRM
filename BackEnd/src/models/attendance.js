@@ -60,6 +60,8 @@ export default (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Attendance',
+    paranoid: true,
+    timestamps: true
   });
   return Attendance;
 };

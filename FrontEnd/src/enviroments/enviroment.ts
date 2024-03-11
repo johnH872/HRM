@@ -15,4 +15,7 @@ export const environment = {
 
     apiEmployeeManagement: apiUrl + '/EmployeeManagement',
     apiRoleManagement: apiUrl + '/RoleManagement',
+    apiLeaveTypeManagement: apiUrl + '/LeaveTypeManagement',
+    apiLeaveEntitlementManagement: apiUrl + '/LeaveEntitlementManagement',
+    apiLeaveRequestManagement: apiUrl + '/LeaveRequestManagement',
 }

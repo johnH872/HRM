@@ -1,29 +1,29 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { EmployeeManagementService } from './employee-management.service';
 import { Subject, takeUntil } from 'rxjs';
-import { Table } from 'primeng/table';
+import { LeaveTypeModel } from './leave-type-management.model';
+import { LeaveTypeManagementService } from './leave-type-management.service';
 import { MatDialog } from '@angular/material/dialog';
-import { EmployeeModel } from '../../shared/models/employee.model';
-import { AddEditEmployeeComponent } from './add-edit-employee/add-edit-employee.component';
+import { AddEditLeaveTypeComponent } from './add-edit-leave-type/add-edit-leave-type.component';
 import { TblActionType } from '../../shared/enum/tbl-action-type.enum';
+import { Table } from 'primeng/table';
 
 @Component({
-  selector: 'app-employee-management',
-  templateUrl: './employee-management.component.html',
-  styleUrls: ['./employee-management.component.scss']
+  selector: 'app-leave-type-management',
+  templateUrl: './leave-type-management.component.html',
+  styleUrls: ['./leave-type-management.component.scss']
 })
-export class EmployeeManagementComponent implements OnInit, OnDestroy {
+export class LeaveTypeManagementComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
-  dataTable: EmployeeModel[];
-  employeeModel: EmployeeModel;
+  dataTable: LeaveTypeModel[];
+  leaveTypeModel: LeaveTypeModel;
 
   first = 0;
   rows = 10;
   loading: boolean = false;
-  selectedEmployees: EmployeeModel[] | null;
+  selectedLeaveTypes: LeaveTypeModel[] | null;
 
   constructor(
-    private employeeService: EmployeeManagementService,
+    private leaveTypeService: LeaveTypeManagementService,
     private dialog: MatDialog,
   ) {
 
@@ -42,23 +42,16 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
 
   async refreshData() {
     this.loading = !this.loading;
-    var employeePagingResults = await this.employeeService.getAllEmployee().pipe(takeUntil(this.destroy$)).toPromise();
+    var employeePagingResults = await this.leaveTypeService.getAllLeaveType().pipe(takeUntil(this.destroy$)).toPromise();
     if (employeePagingResults.result) {
       this.dataTable = employeePagingResults.result;
-      this.dataTable.map(data => {
-        data.roleId = [];
-        data?.Roles?.map(role => {
-          data?.roleId?.push(role.roleId)
-        })
-      });
-      this.dataTable.map(item => item.displayName = item.firstName + ' ' + item.middleName + ' ' + item.lastName)
     }
     this.loading = !this.loading;
   }
 
-  async addEditEmployee(model: EmployeeModel = null) {
-    this.employeeModel = model;
-    const attendanceRef = this.dialog.open(AddEditEmployeeComponent, {
+  async addEditLeaveType(model: LeaveTypeModel = null) {
+    this.leaveTypeModel = model;
+    const attendanceRef = this.dialog.open(AddEditLeaveTypeComponent, {
       disableClose: true,
       height: '100vh',
       width: '600px',
@@ -97,11 +90,11 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
     table.clear();
   }
 
-  deleteEmployee(model: EmployeeModel) {
-
+  deleteLeaveType(model: LeaveTypeModel) {
+    
   }
-  
-  deleteSelectedEmployee() {
+
+  deleteSelectedLeaveType() {
 
   }
 }

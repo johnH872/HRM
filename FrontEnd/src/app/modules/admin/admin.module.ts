@@ -23,6 +23,8 @@ import { AppyWorkComponent } from './work-management/work-apply-dialog/appy-work
 import { FindItemPipe } from './work-management/work-apply-dialog/appy-work/find-item.pipe';
 import { EmployeeManagementComponent } from './employee-management/employee-management.component';
 import { AddEditEmployeeComponent } from './employee-management/add-edit-employee/add-edit-employee.component';
+import { LeaveTypeManagementComponent } from './leave-type-management/leave-type-management.component';
+import { AddEditLeaveTypeComponent } from './leave-type-management/add-edit-leave-type/add-edit-leave-type.component';
 
 
 @NgModule({
@@ -45,7 +47,9 @@ import { AddEditEmployeeComponent } from './employee-management/add-edit-employe
     AppyWorkComponent,
     FindItemPipe,
     EmployeeManagementComponent,
-    AddEditEmployeeComponent
+    AddEditEmployeeComponent,
+    LeaveTypeManagementComponent,
+    AddEditLeaveTypeComponent
   ],
   imports: [
     ThemeModule,
