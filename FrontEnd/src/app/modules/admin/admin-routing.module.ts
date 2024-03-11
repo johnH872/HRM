@@ -7,6 +7,7 @@ import { ReportManagementComponent } from './report-management/report-management
 import { UserManagementComponent } from './user-management/user-management.component';
 import { WorkManagementComponent } from './work-management/work-management.component';
 import { EmployeeManagementComponent } from './employee-management/employee-management.component';
+import { LeaveTypeManagementComponent } from './leave-type-management/leave-type-management.component';
 
 const routes: Routes = [{
   path: '',
@@ -35,6 +36,10 @@ const routes: Routes = [{
     {
       path: 'employee',
       component: EmployeeManagementComponent,
+    },
+    {
+      path: 'leave-type',
+      component: LeaveTypeManagementComponent,
     },
     {
       path: '',

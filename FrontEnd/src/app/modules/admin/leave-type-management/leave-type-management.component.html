@@ -1,0 +1,103 @@
+<div class="card">
+  <!-- <p-toast></p-toast> -->
+  <p-toolbar styleClass="mb-4 gap-2">
+    <ng-template pTemplate="left">
+      <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2"
+        (click)="addEditLeaveType()"></button>
+      <button pButton pRipple [label]="Delete" icon="pi pi-trash" class="p-button-danger"
+        (click)="deleteSelectedLeaveType()" [disabled]="!selectedEmployees || !selectedEmployees?.length"></button>
+    </ng-template>
+
+    <ng-template pTemplate="right">
+      <!-- <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import"
+          class="mr-2 inline-block"></p-fileUpload>
+        <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button> -->
+      <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(table)"></button>
+      <button pButton label="Refresh" class="p-button-outlined" icon="pi pi-refresh" style="margin-left: 10px;"
+        (click)="reset()"></button>
+    </ng-template>
+  </p-toolbar>
+  <p-table #table [value]="dataTable" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+    [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)"
+    [rowsPerPageOptions]="[10, 25, dataTable?.length]" [loading]="loading" [globalFilterFields]="['leaveTypeName']"
+    editMode="row" [(selection)]="selectedLeaveTypes" [rowHover]="true" [scrollable]="true" scrollHeight="480px"
+    dataKey="userId">
+    <!-- <ng-template pTemplate="caption">
+      <div class="flex">
+        <span class="p-input-icon-left ml-auto">
+          <i class="pi pi-search"></i>
+          <input pInputText type="text" (input)="table.filterGlobal($event.target.value, 'contains')"
+            placeholder="Search by name" />
+        </span>
+      </div>
+    </ng-template> -->
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 4rem">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th pSortableColumn="leaveTypeName" style="width:11%">
+          Leave Type Name
+          <p-columnFilter type="text" field="leaveTypeName" display="menu"></p-columnFilter>
+          <p-sortIcon field="leaveTypeName"></p-sortIcon>
+        </th>
+        <th pSortableColumn="isPaidSalary" style="width:10%">
+          Is Paid Salary
+          <p-columnFilter type="text" field="isPaidSalary" display="menu"></p-columnFilter>
+          <p-sortIcon field="isPaidSalary"></p-sortIcon>
+        </th>
+        <th pSortableColumn="defaultStartDay" style="width:11%">
+          Default Start Day
+          <p-columnFilter type="text" field="defaultStartDay" display="menu"></p-columnFilter>
+          <p-sortIcon field="defaultStartDay"></p-sortIcon>
+        </th>
+        <th pSortableColumn="defaultStartMonth" style="width:8%">
+          Default Start Month
+          <p-columnFilter type="text" field="defaultStartMonth" display="menu"></p-columnFilter>
+          <p-sortIcon field="defaultStartMonth"></p-sortIcon>
+        </th>
+        <th pSortableColumn="defaultEndDay" style="width:14%">
+          Default End Day
+          <p-columnFilter type="text" field="defaultEndDay" display="menu"></p-columnFilter>
+          <p-sortIcon field="defaultEndDay"></p-sortIcon>
+        </th>
+        <th pSortableColumn="defaultEndMonth" style="width:10%">
+          Default End Month
+          <p-columnFilter type="text" field="defaultEndMonth" display="menu"></p-columnFilter>
+          <p-sortIcon field="defaultEndMonth"></p-sortIcon>
+        </th>
+        <th pSortableColumn="defaultBudget" style="width:10%">
+          Default Budget
+          <p-columnFilter type="text" field="defaultBudget" display="menu"></p-columnFilter>
+          <p-sortIcon field="defaultBudget"></p-sortIcon>
+        </th>
+        <th pSortableColumn="nationality" style="width:12%">
+          Controlling
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-leaveType let-editing="editing" let-ri="rowIndex">
+      <tr [pEditableRow]="leaveType">
+        <td>
+          <p-tableCheckbox [value]="leaveType"></p-tableCheckbox>
+        </td>
+        <td>{{ leaveType?.leaveTypeName }}</td>
+        <td>{{ leaveType?.isPaidSalary }}</td>
+        <td>{{ leaveType?.defaultStartDay }}</td>
+        <td>{{ leaveType?.defaultStartMonth }}</td>
+        <td>{{ leaveType?.defaultEndDay }}</td>
+        <td>{{ leaveType?.defaultEndMonth }}</td>
+        <td>{{ leaveType?.defaultBudget }}</td>
+        <td>
+          <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
+            (click)="addEditLeaveType(leaveType)"></button>
+          <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+            (click)="deleteLeaveType(leaveType)"></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="paginatorleft">
+      <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+    </ng-template>
+  </p-table>
+</div>

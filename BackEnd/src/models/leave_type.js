@@ -54,6 +54,8 @@ export default (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'LeaveType',
+    paranoid: true,
+    timestamps: true
   });
   return LeaveType;
 };

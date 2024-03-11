@@ -12,7 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { NbAuthModule } from '@nebular/auth';
 import { RxReactiveFormsModule } from '@rxweb/reactive-form-validators';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NbAlertModule, NbButtonGroupModule, NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbFormFieldModule, NbIconModule, NbInputModule, NbLayoutModule, NbMenuModule, NbRadioModule, NbSearchModule, NbSelectModule, NbSpinnerModule, NbTabsetModule } from '@nebular/theme';
+import { NbAlertModule, NbButtonGroupModule, NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbFormFieldModule, NbIconModule, NbInputModule, NbLayoutModule, NbMenuModule, NbRadioModule, NbSearchModule, NbSelectModule, NbSpinnerModule, NbTabsetModule, NbToggleModule } from '@nebular/theme';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { MatSelectModule } from '@angular/material/select';
 import { HttpClientModule } from '@angular/common/http';
@@ -68,6 +68,7 @@ import { ButtonModule } from 'primeng/button';
 import { ToolbarModule } from 'primeng/toolbar';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownFilterComponent } from './components/dropdown-filter/dropdown-filter.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 const materialModules = [
   MatFormFieldModule,
@@ -91,7 +92,8 @@ const materialModules = [
   QuillModule,
   MatListModule,
   MatDividerModule,
-  MatSliderModule
+  MatSliderModule,
+  MatSlideToggleModule,
 ];
 
 const nebularModules = [
@@ -107,7 +109,8 @@ const nebularModules = [
   NbSpinnerModule,
   NbDatepickerModule,
   NbSelectModule,
-  NbFormFieldModule
+  NbFormFieldModule,
+  NbToggleModule,
 ];
 
 const angularModules = [
@@ -118,7 +121,7 @@ const angularModules = [
   FlexLayoutModule,
   ColorPickerModule,
   NgxSkeletonLoaderModule,
-  NgxMatSelectSearchModule
+  NgxMatSelectSearchModule,
 ];
 
 const primengModules = [

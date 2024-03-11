@@ -58,6 +58,8 @@ export default (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'LeaveEntitlement',
+    paranoid: true,
+    timestamps: true
   });
   return LeaveEntitlement;
 };
