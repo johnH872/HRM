@@ -2,6 +2,8 @@ import { ReturnResult } from "../models/DTO/returnResult.js";
 import db from '../models/index.js';
 import path from 'path';
 import Resize from "../utils/resizeImage.js";
+import 'dotenv/config';
+import { uploadImage } from "../utils/cloundinary.js";
 const dbContext = await db;
 
 class roleController {
@@ -16,12 +18,17 @@ class roleController {
                 result.message = 'Please provide an image';
                 res.status(401).json(result);
             }
-            const filename = await fileUpload.save(req.file.buffer);
-            const fileLocalUrl = `http://localhost:5000/assets/images/${filename}`;
+            const fileName = await fileUpload.save(req.file.buffer);
+            const port = process.env.PORT || 3000;
+            var saveUrl = `http://localhost:${port}/assets/images/${fileName}`;
+            // Upload to cloundinary
+            var imageUrl = await uploadImage(`${imagePath}/${fileName}`);
+            if(imageUrl) saveUrl = imageUrl;
+
             var employeeId = req.params.id;
             if (employeeId) {
                 await dbContext.User.update({
-                    avatarUrl: fileLocalUrl
+                    avatarUrl: saveUrl
                 }, {
                     where: { userId: employeeId },
                 });
