@@ -7,7 +7,7 @@ const app = express();
 import route from './routes/indexRoutes.js';
 import { Sequelize } from 'sequelize';
 import dbConfigs from './config/db.config.js';
-import { generationLeaveEntitlement } from './cronJobs/generationLeaveEntitlementJobs.js';
+import { generationLeaveEntitlementJob } from './cronJobs/generationLeaveEntitlementJobs.js';
 
 //database connection
 const sequelize = new Sequelize(
@@ -33,7 +33,7 @@ route(app);
 
 // cron jobs
 // outDateWork.start();
-generationLeaveEntitlement.start();
+generationLeaveEntitlementJob.start();
 
 export default app;
 

@@ -8,9 +8,15 @@ export default (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      LeaveEntitlement.belongsTo(models.LeaveType, { as: 'leaveType' });
-      LeaveEntitlement.belongsTo(models.User, { as: 'employee' } );
-      LeaveEntitlement.hasMany(models.LeaveRequest);
+      LeaveEntitlement.belongsTo(models.LeaveType, {
+        foreignKey: 'leaveTypeId'
+      });
+      LeaveEntitlement.belongsTo(models.User, {
+        foreignKey: 'userId'
+      });
+      LeaveEntitlement.hasMany(models.LeaveRequest, {
+        foreignKey: 'leaveEntitlementId'
+      });
     }
   }
   LeaveEntitlement.init({

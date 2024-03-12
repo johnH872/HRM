@@ -72,6 +72,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { EmployeeSearchingComponent } from './components/employee-searching/employee-searching.component';
 import { NumberFormatPipe } from './pipes/number-format.pipe';
 import { HighlightTextSearchingPipe } from './pipes/highlight-text-searching.pipe';
+import { MatNativeDateModule } from '@angular/material/core';
 
 const materialModules = [
   MatFormFieldModule,
@@ -97,6 +98,7 @@ const materialModules = [
   MatDividerModule,
   MatSliderModule,
   MatSlideToggleModule,
+  MatNativeDateModule,
 ];
 
 const nebularModules = [

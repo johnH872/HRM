@@ -12,7 +12,7 @@ export class LeaveEntitlementModel {
     @prop()
     userId: string;
     @prop()
-    employee: EmployeeModel | null;
+    User: EmployeeModel | null;
     @prop()
     @numeric({ acceptValue: NumericValueType.PositiveNumber, allowDecimal: true, message: 'Only numberic is allowed' })
     availableLeave: number;

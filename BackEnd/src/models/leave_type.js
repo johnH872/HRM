@@ -9,7 +9,9 @@ export default (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      LeaveType.hasMany(models.LeaveEntitlement);
+      LeaveType.hasMany(models.LeaveEntitlement, {
+        foreignKey: 'leaveTypeId'
+      });
     }
   }
   LeaveType.init({

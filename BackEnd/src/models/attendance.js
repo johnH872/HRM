@@ -9,7 +9,9 @@ export default (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Attendance.belongsTo(models.User, { as: 'employee' } );
+      Attendance.belongsTo(models.User, {
+        foreignKey: 'userId',
+      });
     }
   }
   Attendance.init({

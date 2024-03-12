@@ -11,7 +11,6 @@ class employeeController {
         var returnResult = new ReturnResult();
         try {
             const employeePaging = await dbContext.User.findAll({
-                where: {deletedAt: null},
                 include: {
                     model: dbContext.Role,
                     through: {

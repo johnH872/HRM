@@ -13,8 +13,7 @@
 </div>
 <mat-divider></mat-divider>
 <mat-dialog-content class="mat-typography">
-  <form [formGroup]="frmLeaveEntitlement" class="container" (ngSubmit)="saveData()"
-    style="padding-top: 25px; padding-right: 50px; padding-left: 50px">
+  <form [formGroup]="frmLeaveEntitlement" class="container" (ngSubmit)="saveData()">
     <div class="row" *ngIf="action == 0" [ngClass]="{disabledNoOfCasesDiv: readonly}">
       <div class="col-12" style="margin-top: 20px;" [ngClass]="{disabledNoOfCasesDiv: action != 0}">
         <app-employee-searching required [banks]="listEmployees" (userSelect)="choosenEmployee($event)">
@@ -57,29 +56,29 @@
       </div>
       <div class="col-12" *ngIf="leaveTypeChosen?.leaveTypeId">
         <div class="alert alert-primary" role="alert" style="white-space: pre-line; margin-top: 10px;"
-          *ngIf="leaveTypeChosen?.leaveTypeId == seniorityLeaveTypeId">
+          *ngIf="leaveTypeChosen?.leaveTypeId == 2">
           {{employeeStartContractInfo}}
         </div>
         <div class="alert alert-warning" role="alert" style="margin-top: 10px;"
-          *ngIf="leaveTypeChosen?.leaveTypeId == annuallyLeaveTypeId && !readonly">
+          *ngIf="leaveTypeChosen?.leaveTypeId == 1 && !readonly">
           Available Leave and Usable Leave will be calculated by the system after saving.
         </div>
         <div class="alert alert-primary" role="alert" style="margin-top: 10px;"
-          *ngIf="leaveTypeChosen?.leaveTypeId == annuallyLeaveTypeId && readonly">
+          *ngIf="leaveTypeChosen?.leaveTypeId == 1 && readonly">
           Available Leave and Usable Leave has been calculated.
         </div>
-        <!-- <mat-form-field appearance="fill">
+        <mat-form-field appearance="fill">
           <mat-label>Choose Start Date - End Date</mat-label>
-          <mat-date-range-input [rangePicker]="picker" [formGroup]="frmDateRange" (click)="picker.open()">
-            <input matStartDate formControlName="startDate" placeholder="Start Date" required>
-            <input matEndDate formControlName="endDate" placeholder="End Date" required>
+          <mat-date-range-input [rangePicker]="picker" [formGroup]="frmDateRange">
+            <input matStartDate formControlName="startDate" placeholder="Start Date" required readonly>
+            <input matEndDate formControlName="endDate" placeholder="End Date" required readonly>
           </mat-date-range-input>
           <mat-icon
             [hidden]="frmDateRange?.controls?.startDate?.value == '' || frmDateRange?.controls?.endDate?.value == '' ? true : false"
             matSuffix (click)="clearDate($event)" style="cursor: pointer;">clear</mat-icon>
-          <mat-datepicker-toggle matPrefix [for]="picker" id="dateRange"></mat-datepicker-toggle>
+          <mat-datepicker-toggle matPrefix [for]="picker" id="dateRange" disabled></mat-datepicker-toggle>
           <mat-date-range-picker #picker></mat-date-range-picker>
-        </mat-form-field> -->
+        </mat-form-field>
         <mat-form-field appearance="fill">
           <mat-label>Leave Budget</mat-label>
           <input matInput formControlName="availableLeave" autocomplete="off" />
@@ -153,14 +152,14 @@
       <div class="col-12" style="margin-top: 20px;">
         <mat-form-field appearance="fill">
           <mat-label>Choose Start Date - End Date</mat-label>
-          <mat-date-range-input [rangePicker]="picker" [formGroup]="frmDateRange" (click)="picker.open()">
-            <input matStartDate formControlName="startDate" placeholder="Start Date" required>
-            <input matEndDate formControlName="endDate" placeholder="End Date" required>
+          <mat-date-range-input [rangePicker]="picker" [formGroup]="frmDateRange">
+            <input matStartDate formControlName="startDate" placeholder="Start Date" required readonly>
+            <input matEndDate formControlName="endDate" placeholder="End Date" required readonly>
           </mat-date-range-input>
           <mat-icon
             [hidden]="frmDateRange?.controls?.startDate?.value == '' || frmDateRange?.controls?.endDate?.value == '' ? true : false"
             matSuffix (click)="clearDate($event)" style="cursor: pointer;">clear</mat-icon>
-          <mat-datepicker-toggle matPrefix [for]="picker" id="dateRange"></mat-datepicker-toggle>
+          <mat-datepicker-toggle matPrefix [for]="picker" id="dateRange" disabled></mat-datepicker-toggle>
           <mat-date-range-picker #picker></mat-date-range-picker>
         </mat-form-field>
       </div>

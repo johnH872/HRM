@@ -9,8 +9,12 @@ export default (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      LeaveRequest.belongsTo(models.LeaveEntitlement, { as: 'leaveEntitlement' });
-      LeaveRequest.belongsTo(models.User, { as: 'employee' } );
+      LeaveRequest.belongsTo(models.LeaveEntitlement, { 
+        foreignKey: 'leaveEntitlementId'
+      });
+      LeaveRequest.belongsTo(models.User, {
+        foreignKey: 'userId'
+      });
     }
   }
   LeaveRequest.init({

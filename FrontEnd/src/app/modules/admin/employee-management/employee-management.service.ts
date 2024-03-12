@@ -23,6 +23,6 @@ export class EmployeeManagementService {
   }
 
   getEmployeeById(employeeId: string): Observable<ReturnResult<EmployeeModel>> {
-    return this.http.get<ReturnResult<EmployeeModel>>(`${this.baseUrl}/getEmployeeById?id=${employeeId}`);
+    return this.http.get<ReturnResult<EmployeeModel>>(`${this.baseUrl}/getEmployeeById/${employeeId}`);
   }
 }

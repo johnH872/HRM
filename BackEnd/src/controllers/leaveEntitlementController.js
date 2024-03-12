@@ -7,9 +7,17 @@ class LeaveEntitlementController {
         var returnResult = new ReturnResult();
         try {
             const leaveEntitlementPaging = await dbContext.LeaveEntitlement.findAll({
-                order: [
-                    ['isPaidSalary', 'DESC']
-                ]
+                include: [
+                    {
+                        model: dbContext.LeaveType,
+                    },
+                    {
+                        model: dbContext.User,
+                    },
+                ],
+                // order: [
+                //     ['isPaidSalary', 'DESC']
+                // ]
             });
             returnResult.result = leaveEntitlementPaging;
             res.status(200).json(returnResult);
