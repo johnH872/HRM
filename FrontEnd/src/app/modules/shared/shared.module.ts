@@ -12,7 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { NbAuthModule } from '@nebular/auth';
 import { RxReactiveFormsModule } from '@rxweb/reactive-form-validators';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NbAlertModule, NbButtonGroupModule, NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbFormFieldModule, NbIconModule, NbInputModule, NbLayoutModule, NbMenuModule, NbRadioModule, NbSearchModule, NbSelectModule, NbSpinnerModule, NbTabsetModule, NbToggleModule } from '@nebular/theme';
+import { NbAlertModule, NbButtonGroupModule, NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbFormFieldModule, NbIconModule, NbInputModule, NbLayoutModule, NbMenuModule, NbRadioModule, NbSearchModule, NbSelectModule, NbSpinnerModule, NbTabsetModule, NbToggleModule, NbUserModule } from '@nebular/theme';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { MatSelectModule } from '@angular/material/select';
 import { HttpClientModule } from '@angular/common/http';
@@ -69,6 +69,9 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownFilterComponent } from './components/dropdown-filter/dropdown-filter.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { EmployeeSearchingComponent } from './components/employee-searching/employee-searching.component';
+import { NumberFormatPipe } from './pipes/number-format.pipe';
+import { HighlightTextSearchingPipe } from './pipes/highlight-text-searching.pipe';
 
 const materialModules = [
   MatFormFieldModule,
@@ -111,6 +114,7 @@ const nebularModules = [
   NbSelectModule,
   NbFormFieldModule,
   NbToggleModule,
+  NbUserModule,
 ];
 
 const angularModules = [
@@ -156,6 +160,9 @@ const primengModules = [
     ConfirmDialogComponent,
     RatingStarComponent,
     DropdownFilterComponent,
+    EmployeeSearchingComponent,
+    NumberFormatPipe,
+    HighlightTextSearchingPipe,
   ],
   imports: [
     CommonModule,
@@ -206,6 +213,7 @@ const primengModules = [
     RatingStarComponent,
     NgxEchartsModule,
     DropdownFilterComponent,
+    EmployeeSearchingComponent,
   ],
   providers: [
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},

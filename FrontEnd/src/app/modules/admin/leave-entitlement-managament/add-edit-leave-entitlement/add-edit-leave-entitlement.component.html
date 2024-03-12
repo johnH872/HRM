@@ -1,0 +1,169 @@
+<div class="d-flex flex-wrap" mat-dialog-title style="margin: unset; padding: 1px 10px 1px 28px"
+  [nbSpinner]="isLoading">
+  <button mat-button color="primary" (click)="saveData()"
+    [disabled]="!frmLeaveEntitlement?.valid || !isAssignee || readonly || (action == 0 && !frmDateRange?.valid)">
+    <mat-icon fontSet=" material-icons-outlined">save</mat-icon>Save
+  </button>
+  <button mat-button color="primary" (click)="closeDialog()">
+    <mat-icon>clear</mat-icon>Cancel
+  </button>
+  <button mat-icon-button aria-label="Close the dialog" (click)="closeDialog()" class="ml-auto">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<mat-divider></mat-divider>
+<mat-dialog-content class="mat-typography">
+  <form [formGroup]="frmLeaveEntitlement" class="container" (ngSubmit)="saveData()"
+    style="padding-top: 25px; padding-right: 50px; padding-left: 50px">
+    <div class="row" *ngIf="action == 0" [ngClass]="{disabledNoOfCasesDiv: readonly}">
+      <div class="col-12" style="margin-top: 20px;" [ngClass]="{disabledNoOfCasesDiv: action != 0}">
+        <app-employee-searching required [banks]="listEmployees" (userSelect)="choosenEmployee($event)">
+        </app-employee-searching>
+      </div>
+      <div class="col-12" style="margin-top: 20px;">
+        <mat-form-field appearance="fill">
+          <mat-label>Effected Year</mat-label>
+          <input matInput formControlName="effectedYear" autocomplete="off"
+            (blur)="setDefaultRangeDate(frmLeaveEntitlement?.get('effectedYear')?.value)" />
+          <mat-error *ngIf="
+              frmLeaveEntitlement?.controls?.effectedYear?.errors &&
+              (frmLeaveEntitlement?.controls?.effectedYear?.dirty ||
+                frmLeaveEntitlement?.controls?.effectedYear?.touched)">
+            {{ frmLeaveEntitlement?.controls?.effectedYear["errorMessage"] }}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-12" style="margin-top: 20px;">
+        <mat-form-field [nbSpinner]="isLoadingLeaveType" nbSpinnerStatus="primary">
+          <mat-label>Select Leave Type</mat-label>
+          <mat-select required formControlName="leaveTypeId">
+            <mat-select-trigger>
+              {{leaveTypeChosen?.leaveTypeName}}
+            </mat-select-trigger>
+            <mat-option *ngFor="let leaveType of listLeaveTypes" [value]="leaveType?.leaveTypeId">
+              <div fxLayout="row" fxLayoutAlign="space-between center">
+                <div>
+                  {{leaveType?.leaveTypeName}}
+                </div>
+                <div *ngIf="leaveType?.isPaidSalary">
+                  <span class="badge badge-pill badge-primary" style="font-size: 12px"
+                    [style.background-color]="'#00a339'">
+                    Paid Leave
+                  </span>
+                </div>
+              </div>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-12" *ngIf="leaveTypeChosen?.leaveTypeId">
+        <div class="alert alert-primary" role="alert" style="white-space: pre-line; margin-top: 10px;"
+          *ngIf="leaveTypeChosen?.leaveTypeId == seniorityLeaveTypeId">
+          {{employeeStartContractInfo}}
+        </div>
+        <div class="alert alert-warning" role="alert" style="margin-top: 10px;"
+          *ngIf="leaveTypeChosen?.leaveTypeId == annuallyLeaveTypeId && !readonly">
+          Available Leave and Usable Leave will be calculated by the system after saving.
+        </div>
+        <div class="alert alert-primary" role="alert" style="margin-top: 10px;"
+          *ngIf="leaveTypeChosen?.leaveTypeId == annuallyLeaveTypeId && readonly">
+          Available Leave and Usable Leave has been calculated.
+        </div>
+        <!-- <mat-form-field appearance="fill">
+          <mat-label>Choose Start Date - End Date</mat-label>
+          <mat-date-range-input [rangePicker]="picker" [formGroup]="frmDateRange" (click)="picker.open()">
+            <input matStartDate formControlName="startDate" placeholder="Start Date" required>
+            <input matEndDate formControlName="endDate" placeholder="End Date" required>
+          </mat-date-range-input>
+          <mat-icon
+            [hidden]="frmDateRange?.controls?.startDate?.value == '' || frmDateRange?.controls?.endDate?.value == '' ? true : false"
+            matSuffix (click)="clearDate($event)" style="cursor: pointer;">clear</mat-icon>
+          <mat-datepicker-toggle matPrefix [for]="picker" id="dateRange"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field> -->
+        <mat-form-field appearance="fill">
+          <mat-label>Leave Budget</mat-label>
+          <input matInput formControlName="availableLeave" autocomplete="off" />
+          <mat-error *ngIf="
+              frmLeaveEntitlement?.controls?.availableLeave?.errors &&
+              (frmLeaveEntitlement?.controls?.availableLeave?.dirty ||
+                frmLeaveEntitlement?.controls?.availableLeave?.touched)
+            ">
+            {{ frmLeaveEntitlement?.controls?.availableLeave["errorMessage"] }}</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Usable Leave</mat-label>
+          <input matInput formControlName="usableLeave" autocomplete="off" />
+          <mat-error *ngIf="
+              frmLeaveEntitlement?.controls?.usableLeave?.errors &&
+              (frmLeaveEntitlement?.controls?.usableLeave?.dirty ||
+                frmLeaveEntitlement?.controls?.usableLeave?.touched)
+            ">
+            {{ frmLeaveEntitlement?.controls?.usableLeave["errorMessage"] }}</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row" *ngIf="action == 1">
+      <div class="col-12" style="margin-top: 20px;">
+        <app-employee-searching [banks]="listEmployees" [currentUser]="employeeChosen"
+          (userSelect)="choosenEmployee($event)" [readonly]="true">
+        </app-employee-searching>
+      </div>
+      <div class="col-12" style="margin-top: 20px;">
+        <mat-form-field appearance="fill">
+          <mat-label>Leave Type</mat-label>
+          <input matInput readonly [value]="leaveEntitlementModel?.leaveType?.leaveTypeName" autocomplete="off" />
+        </mat-form-field>
+      </div>
+      <div class="col-12" style="margin-top: 20px;">
+        <mat-form-field appearance="fill">
+          <mat-label>Budget</mat-label>
+          <input matInput formControlName="availableLeave" autocomplete="off" />
+          <mat-error *ngIf="
+              frmLeaveEntitlement?.controls?.availableLeave?.errors &&
+              (frmLeaveEntitlement?.controls?.availableLeave?.dirty ||
+                frmLeaveEntitlement?.controls?.availableLeave?.touched)
+            ">
+            {{ frmLeaveEntitlement?.controls?.availableLeave["errorMessage"] }}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-12" style="margin-top: 20px;">
+        <mat-form-field appearance="fill">
+          <mat-label>Earn Leave</mat-label>
+          <input matInput formControlName="usableLeave" autocomplete="off" />
+          <mat-error *ngIf="
+              frmLeaveEntitlement?.controls?.usableLeave?.errors &&
+              (frmLeaveEntitlement?.controls?.usableLeave?.dirty ||
+                frmLeaveEntitlement?.controls?.usableLeave?.touched)
+            ">
+            {{ frmLeaveEntitlement?.controls?.usableLeave["errorMessage"] }}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-12" style="margin-top: 20px;">
+        <mat-form-field appearance="fill">
+          <mat-label>Used Leave</mat-label>
+          <input matInput formControlName="usedLeave" autocomplete="off" />
+          <mat-error *ngIf="
+              frmLeaveEntitlement?.controls?.usedLeave?.errors &&
+              (frmLeaveEntitlement?.controls?.usedLeave?.dirty ||
+                frmLeaveEntitlement?.controls?.usedLeave?.touched)
+            ">
+            {{ frmLeaveEntitlement?.controls?.usedLeave["errorMessage"] }}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-12" style="margin-top: 20px;">
+        <mat-form-field appearance="fill">
+          <mat-label>Choose Start Date - End Date</mat-label>
+          <mat-date-range-input [rangePicker]="picker" [formGroup]="frmDateRange" (click)="picker.open()">
+            <input matStartDate formControlName="startDate" placeholder="Start Date" required>
+            <input matEndDate formControlName="endDate" placeholder="End Date" required>
+          </mat-date-range-input>
+          <mat-icon
+            [hidden]="frmDateRange?.controls?.startDate?.value == '' || frmDateRange?.controls?.endDate?.value == '' ? true : false"
+            matSuffix (click)="clearDate($event)" style="cursor: pointer;">clear</mat-icon>
+          <mat-datepicker-toggle matPrefix [for]="picker" id="dateRange"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>

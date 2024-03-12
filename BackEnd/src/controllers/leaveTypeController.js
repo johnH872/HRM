@@ -8,7 +8,7 @@ class LeaveTypeController {
         try {
             const leaveTypePaging = await dbContext.LeaveType.findAll({
                 order: [
-                    ['isPaidSalary', 'ASC']
+                    ['isPaidSalary', 'DESC']
                 ]
             });
             returnResult.result = leaveTypePaging;

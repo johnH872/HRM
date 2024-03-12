@@ -1,0 +1,16 @@
+::ng-deep  .mat-option.altus-search-option {
+    height: 50px !important;
+    align-items: center !important;
+    line-height: normal !important;
+}
+
+::ng-deep .mat-select-panel.mat-select-search-panel {
+    max-height: 60vh;
+}
+
+:host ::ng-deep #nb-user-headshot .user-picture {
+    border: 1px solid rgb(48, 122, 189);
+    color: rgb(48, 122, 189);
+    height: 30px !important;
+    width: 30px !important;
+}

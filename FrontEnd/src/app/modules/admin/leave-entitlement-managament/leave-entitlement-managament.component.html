@@ -1,0 +1,109 @@
+<div class="card">
+  <!-- <p-toast></p-toast> -->
+  <p-toolbar styleClass="mb-4 gap-2">
+    <ng-template pTemplate="left">
+      <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2"
+        (click)="addEditLeaveEntitlement()"></button>
+      <button pButton pRipple [label]="Delete" icon="pi pi-trash" class="p-button-danger"
+        (click)="deleteSelectedEntitlement()" [disabled]="!selectedLeaveEntitlements || !selectedLeaveEntitlements?.length"></button>
+    </ng-template>
+
+    <ng-template pTemplate="right">
+      <!-- <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import"
+            class="mr-2 inline-block"></p-fileUpload>
+          <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button> -->
+      <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(table)"></button>
+      <button pButton label="Refresh" class="p-button-outlined" icon="pi pi-refresh" style="margin-left: 10px;"
+        (click)="reset()"></button>
+    </ng-template>
+  </p-toolbar>
+  <p-table #table [value]="dataTable" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+    [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)"
+    [rowsPerPageOptions]="[10, 25, dataTable?.length]" [loading]="loading" [globalFilterFields]="['leaveTypeName']"
+    editMode="row" [(selection)]="selectedLeaveEntitlements" [rowHover]="true" [scrollable]="true" scrollHeight="480px"
+    dataKey="userId">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 4rem">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th pSortableColumn="employee.displayName" style="width:11%">
+          Employee
+          <p-columnFilter type="text" field="employee.displayName" display="menu"></p-columnFilter>
+          <p-sortIcon field="employee.displayName"></p-sortIcon>
+        </th>
+        <th pSortableColumn="leaveType.leaveTypeName" style="width:11%">
+          Leave Type Name
+          <p-columnFilter type="text" field="leaveType.leaveTypeName" display="menu"></p-columnFilter>
+          <p-sortIcon field="leaveType.leaveTypeName"></p-sortIcon>
+        </th>
+        <th pSortableColumn="availableLeave" style="width:10%">
+          Available Leave
+          <p-columnFilter type="text" field="availableLeave" display="menu"></p-columnFilter>
+          <p-sortIcon field="availableLeave"></p-sortIcon>
+        </th>
+        <th pSortableColumn="usableLeave" style="width:11%">
+          Usable Leave
+          <p-columnFilter type="text" field="usableLeave" display="menu"></p-columnFilter>
+          <p-sortIcon field="usableLeave"></p-sortIcon>
+        </th>
+        <th pSortableColumn="usedLeave" style="width:8%">
+          Used Leave
+          <p-columnFilter type="text" field="usedLeave" display="menu"></p-columnFilter>
+          <p-sortIcon field="usedLeave"></p-sortIcon>
+        </th>
+        <th pSortableColumn="remainLeave" style="width:14%">
+          Remain Leave
+          <p-columnFilter type="text" field="remainLeave" display="menu"></p-columnFilter>
+          <p-sortIcon field="remainLeave"></p-sortIcon>
+        </th>
+        <th pSortableColumn="startDate" style="width:10%">
+          Start Date
+          <p-columnFilter type="text" field="startDate" display="menu"></p-columnFilter>
+          <p-sortIcon field="startDate"></p-sortIcon>
+        </th>
+        <th pSortableColumn="endDate" style="width:10%">
+          End Date
+          <p-columnFilter type="text" field="endDate" display="menu"></p-columnFilter>
+          <p-sortIcon field="endDate"></p-sortIcon>
+        </th>
+        <th pSortableColumn="effectedYear" style="width:10%">
+          Effected Year
+          <p-columnFilter type="text" field="effectedYear" display="menu"></p-columnFilter>
+          <p-sortIcon field="effectedYear"></p-sortIcon>
+        </th>
+        <th pSortableColumn="nationality" style="width:12%">
+          Controlling
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-leaveEntitlement let-editing="editing" let-ri="rowIndex">
+      <tr [pEditableRow]="leaveEntitlement">
+        <td>
+          <p-tableCheckbox [value]="leaveEntitlement"></p-tableCheckbox>
+        </td>
+        <td>
+          <img [alt]="" src="{{ leaveEntitlement?.employee?.avatarUrl }}" width="32" style="vertical-align: middle" />
+          {{ leaveEntitlement?.employee?.displayName }}
+        </td>
+        <td>{{ leaveEntitlement?.leaveType?.leaveTypeName }}</td>
+        <td>{{ leaveEntitlement?.availableLeave }}</td>
+        <td>{{ leaveEntitlement?.usableLeave }}</td>
+        <td>{{ leaveEntitlement?.usedLeave }}</td>
+        <td>{{ leaveEntitlement?.remainLeave }}</td>
+        <td>{{ leaveEntitlement?.startDate }}</td>
+        <td>{{ leaveEntitlement?.endDate }}</td>
+        <td>{{ leaveEntitlement?.effectedYear }}</td>
+        <td>
+          <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
+            (click)="addEditLeaveEntitlement(leaveType)"></button>
+          <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+            (click)="deleteLeaveEntitlement(leaveType)"></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="paginatorleft">
+      <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+    </ng-template>
+  </p-table>
+</div>

@@ -5,7 +5,7 @@
       <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2"
         (click)="addEditLeaveType()"></button>
       <button pButton pRipple [label]="Delete" icon="pi pi-trash" class="p-button-danger"
-        (click)="deleteSelectedLeaveType()" [disabled]="!selectedEmployees || !selectedEmployees?.length"></button>
+        (click)="deleteSelectedLeaveType()" [disabled]="!selectedLeaveTypes || !selectedLeaveTypes?.length"></button>
     </ng-template>
 
     <ng-template pTemplate="right">

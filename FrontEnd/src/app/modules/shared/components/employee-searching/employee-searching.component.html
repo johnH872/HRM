@@ -1,0 +1,71 @@
+<ng-container *ngIf="isDropDown; else defaultEmployee">
+  <mat-form-field [nbSpinner]="employeeLoading">
+    <mat-select [formControl]="bankCtrl" matTooltip="Enter 3 words to search..." [ngStyle]="styleMatSelect"
+      [placeholder]="label" #singleSelect required (openedChange)="selectionChange($event)" [disabled]="readonly">
+      <mat-select-trigger>
+        <div *ngIf="bankCtrl?.value">
+          <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
+            <div>
+              <nb-user id="nb-user-headshot" fxFlex="30px" size="small" [onlyPicture]="true"
+                [picture]="bankCtrl?.value?.avatarUrl" [name]="bankCtrl?.value?.displayName">
+              </nb-user>
+            </div>
+            <div style="font-size:14px">
+              <div fxLayout="row" fxLayoutAlign="start start">
+                <strong
+                  [innerHTML]="(bankCtrl?.value?.displayName || 'Unknown')">
+                </strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-select-trigger>
+      <mat-option>
+        <ngx-mat-select-search [formControl]="bankFilterCtrl" [placeholderLabel]="placeholderLabel"
+          noEntriesFoundLabel="'No matching item found'"></ngx-mat-select-search>
+      </mat-option>
+
+      <mat-option *ngIf="banks && banks.length > 0" style="height: 35px !important;" [disabled]="true">About
+        {{totalResults | numberFormat}} result(s) match</mat-option>
+
+      <mat-option class="col altus-search-option" *ngFor="let item of filteredBanks | async" [value]="item">
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
+          <div>
+            <nb-user id="nb-user-headshot" fxFlex="30px" size="small" [onlyPicture]="true" [picture]="item?.avatarUrl"
+              [name]="item?.displayName">
+            </nb-user>
+          </div>
+          <div style="font-size:14px">
+            <div fxLayout="row" fxLayoutAlign="start start">
+              <strong
+                [innerHTML]="(item?.displayName || 'Unknown') | highlightTextSearching: bankFilterCtrl?.value">
+              </strong>
+            </div>
+          </div>
+        </div>
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</ng-container>
+
+<ng-template #defaultEmployee>
+  <div *ngIf="bankCtrl.value">
+    <ng-container [ngTemplateOutlet]="isNbUser ? nbUserTemplate : defaultImg"
+      [ngTemplateOutletContext]="{ item: bankCtrl.value }">
+    </ng-container>
+    <span>
+      <strong>{{bankCtrl?.value?.displayName}}</strong>
+    </span>
+  </div>
+</ng-template>
+
+<ng-template #defaultImg let-item="item">
+  <img class="user-img" [src]="item?.avatarUrl ?? 'assets/images/man.png'| safeIframe" alt="user-avatar"
+    style="margin-right: 5px;" (error)="item.avatarUrl = 'assets/images/man.png'">
+</ng-template>
+
+<ng-template #nbUserTemplate let-item="item">
+  <nb-user class="custom-avatar-outline" fxFlex="30px" size="small" [onlyPicture]="true" [picture]="item?.avatarUrl"
+    [name]="item?.displayName">
+  </nb-user>
+</ng-template>

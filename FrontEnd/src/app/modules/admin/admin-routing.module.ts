@@ -8,6 +8,7 @@ import { UserManagementComponent } from './user-management/user-management.compo
 import { WorkManagementComponent } from './work-management/work-management.component';
 import { EmployeeManagementComponent } from './employee-management/employee-management.component';
 import { LeaveTypeManagementComponent } from './leave-type-management/leave-type-management.component';
+import { LeaveEntitlementManagamentComponent } from './leave-entitlement-managament/leave-entitlement-managament.component';
 
 const routes: Routes = [{
   path: '',
@@ -40,6 +41,10 @@ const routes: Routes = [{
     {
       path: 'leave-type',
       component: LeaveTypeManagementComponent,
+    },
+    {
+      path: 'leave-entitlement',
+      component: LeaveEntitlementManagamentComponent,
     },
     {
       path: '',

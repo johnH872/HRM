@@ -21,4 +21,8 @@ export class EmployeeManagementService {
   saveEmployee(model: EmployeeModel): Observable<ReturnResult<EmployeeModel>> {
     return this.http.post<ReturnResult<EmployeeModel>>(`${this.baseUrl}/SaveEmployee`, model);
   }
+
+  getEmployeeById(employeeId: string): Observable<ReturnResult<EmployeeModel>> {
+    return this.http.get<ReturnResult<EmployeeModel>>(`${this.baseUrl}/getEmployeeById?id=${employeeId}`);
+  }
 }

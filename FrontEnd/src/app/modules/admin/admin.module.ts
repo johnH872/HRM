@@ -25,6 +25,8 @@ import { EmployeeManagementComponent } from './employee-management/employee-mana
 import { AddEditEmployeeComponent } from './employee-management/add-edit-employee/add-edit-employee.component';
 import { LeaveTypeManagementComponent } from './leave-type-management/leave-type-management.component';
 import { AddEditLeaveTypeComponent } from './leave-type-management/add-edit-leave-type/add-edit-leave-type.component';
+import { LeaveEntitlementManagamentComponent } from './leave-entitlement-managament/leave-entitlement-managament.component';
+import { AddEditLeaveEntitlementComponent } from './leave-entitlement-managament/add-edit-leave-entitlement/add-edit-leave-entitlement.component';
 
 
 @NgModule({
@@ -49,7 +51,9 @@ import { AddEditLeaveTypeComponent } from './leave-type-management/add-edit-leav
     EmployeeManagementComponent,
     AddEditEmployeeComponent,
     LeaveTypeManagementComponent,
-    AddEditLeaveTypeComponent
+    AddEditLeaveTypeComponent,
+    LeaveEntitlementManagamentComponent,
+    AddEditLeaveEntitlementComponent
   ],
   imports: [
     ThemeModule,
