@@ -81,19 +81,19 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    var res = await lastValueFrom(this.userService.getUserDetailByUserId(this.userLoggedIn.user.id));
-    if (res.result) {
-      this.userDetail = res.result;
-    }
-    this.currentTheme = this.themeService.currentTheme;
-    // catch menu event
-    this.menuServiceObservable = this.menuService.onItemClick().subscribe((event) => {
-      if (event.item['id'] === 'logout') {
-        this.tokenService.clear();
-        localStorage.clear();
-        this.router.navigateByUrl("/auth");
-      }
-    })
+    // var res = await lastValueFrom(this.userService.getUserDetailByUserId(this.userLoggedIn?.user?.id));
+    // if (res.result) {
+    //   this.userDetail = res.result;
+    // }
+    // this.currentTheme = this.themeService.currentTheme;
+    // // catch menu event
+    // this.menuServiceObservable = this.menuService.onItemClick().subscribe((event) => {
+    //   if (event.item['id'] === 'logout') {
+    //     this.tokenService.clear();
+    //     localStorage.clear();
+    //     this.router.navigateByUrl("/auth");
+    //   }
+    // })
 
     this.menuServiceObservable = this.menuService.onItemClick().subscribe((event) => {
       if (event.item['id'] === 'profile') {

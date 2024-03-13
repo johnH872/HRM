@@ -27,6 +27,9 @@ import { LeaveTypeManagementComponent } from './leave-type-management/leave-type
 import { AddEditLeaveTypeComponent } from './leave-type-management/add-edit-leave-type/add-edit-leave-type.component';
 import { LeaveEntitlementManagamentComponent } from './leave-entitlement-managament/leave-entitlement-managament.component';
 import { AddEditLeaveEntitlementComponent } from './leave-entitlement-managament/add-edit-leave-entitlement/add-edit-leave-entitlement.component';
+import { AttendanceManagmentComponent } from './attendance-managment/attendance-managment.component';
+import { PunchInOutComponent } from './attendance-managment/punch-in-out/punch-in-out.component';
+import { WebcamComponent } from './attendance-managment/webcam/webcam.component';
 
 
 @NgModule({
@@ -53,7 +56,10 @@ import { AddEditLeaveEntitlementComponent } from './leave-entitlement-managament
     LeaveTypeManagementComponent,
     AddEditLeaveTypeComponent,
     LeaveEntitlementManagamentComponent,
-    AddEditLeaveEntitlementComponent
+    AddEditLeaveEntitlementComponent,
+    AttendanceManagmentComponent,
+    PunchInOutComponent,
+    WebcamComponent
   ],
   imports: [
     ThemeModule,

@@ -68,4 +68,14 @@ export const MENU_ITEMS: NbMenuItem[] = [
       },
     ],
   },
+  {
+    title: 'Attendance',
+    children: [
+      {
+        title: 'Punch In/Out',
+        icon: 'checkmark-square-outline',
+        link: '/admin/punch-in-out',
+      }
+    ],
+  },
 ];
