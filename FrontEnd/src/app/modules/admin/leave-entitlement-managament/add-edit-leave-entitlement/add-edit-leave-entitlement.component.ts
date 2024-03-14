@@ -15,6 +15,7 @@ import { LeaveEntitlementManagamentService } from '../leave-entitlement-manageme
 import { LeaveTypeManagementService } from '../../leave-type-management/leave-type-management.service';
 import { ConfirmModalComponent } from 'src/app/modules/shared/components/confirm-modal/confirm-modal.component';
 import { LeaveType } from 'src/app/modules/shared/enum/leave-type.enum';
+import { DateFormatPipe } from 'src/app/modules/shared/pipes/date-time-format.pipe';
 
 @Component({
   selector: 'app-add-edit-leave-entitlement',
@@ -57,6 +58,7 @@ export class AddEditLeaveEntitlementComponent implements OnInit, OnDestroy, Afte
     private dialog: MatDialog,
     private leaveEntitlementService: LeaveEntitlementManagamentService,
     private leaveTypeService: LeaveTypeManagementService,
+    private dateFormatPipe: DateFormatPipe,
   ) {
     if (data.model) {
       this.id = data.model.id;
@@ -110,6 +112,7 @@ export class AddEditLeaveEntitlementComponent implements OnInit, OnDestroy, Afte
     this.leaveTypeService.getAllLeaveType().pipe(takeUntil(this.destroy$)).subscribe(res => {
       if (res.result) {
         this.listLeaveTypes = res.result;
+        this.listLeaveTypes = this.listLeaveTypes.filter(leaveType => leaveType.leaveTypeId !== LeaveType.Transfer);
       }
       this.isLoadingLeaveType = !this.isLoadingLeaveType;
     });
@@ -141,10 +144,7 @@ export class AddEditLeaveEntitlementComponent implements OnInit, OnDestroy, Afte
         if (this.employeeChosen?.dateStartContract) {
           dayStartContract = new Date(this.employeeChosen?.dateStartContract);
         }
-        if (!this.frmDateRange?.value?.startDate) {
-          this.employeeStartContractInfo = "Please choose Start Date - End Date";
-          return;
-        }
+
         var dayCaculation = new Date(this.frmDateRange?.value?.startDate);
         var totalSeniority = caculation_distance_day(dayStartContract, dayCaculation) / 365;
         if (totalSeniority < 0) totalSeniority = 0;
@@ -154,11 +154,13 @@ export class AddEditLeaveEntitlementComponent implements OnInit, OnDestroy, Afte
         } else if (totalSeniority >= 3 && totalSeniority < 5) {
           this.frmLeaveEntitlement.get('usableLeave').setValue(3);
           this.frmLeaveEntitlement.get('availableLeave').setValue(3);
-        } else if (totalSeniority > 5) {
+        } else if (totalSeniority >= 5) {
           this.frmLeaveEntitlement.get('usableLeave').setValue(3);
           this.frmLeaveEntitlement.get('availableLeave').setValue(3);
         }
-        this.employeeStartContractInfo = "";
+        this.employeeStartContractInfo = "This employee has started contract at " + this.dateFormatPipe.transform(dayStartContract.toDateString()) + ".\n" + 
+                                         "Up to " + this.dateFormatPipe.transform(dayCaculation.toDateString()) + 
+                                         " employee has " + Math.floor(totalSeniority) + " years of seniority.";
         break;
     }
   };
@@ -200,14 +202,14 @@ export class AddEditLeaveEntitlementComponent implements OnInit, OnDestroy, Afte
       this.leaveEntitlementService.saveLeaveEntitlement(model).pipe(takeUntil(this.destroy$)).subscribe(resp => {
         if (resp.result) {
           if (resp.result.leaveTypeId === LeaveType.Annually) {
-            this.toast.success(`Save leave request successfully`, 'Success');
+            this.toast.success(`Save leave entitlement successfully`, 'Success');
             this.leaveEntitlementModel = resp.result;
             this.frmLeaveEntitlement.get('availableLeave').setValue(resp.result.availableLeave);
             this.frmLeaveEntitlement.get('usableLeave').setValue(resp.result.usableLeave);
             this.readonly = true;
             this.isChange = false;
           } else {
-            this.toast.success(`Save leave request successfully`, 'Success');
+            this.toast.success(`Save leave entitlement successfully`, 'Success');
             this.dialModalRef.close(resp.result);
           }
         } else {

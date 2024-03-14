@@ -15,6 +15,7 @@ import { QuillModule } from 'ngx-quill'
 import { DatePipe } from '@angular/common';
 import { DatePipePipe } from './modules/shared/pipes/date-pipe.pipe';
 import { NgxEchartsModule } from 'ngx-echarts';
+import { DateFormatPipe, DateTimeFormatPipe } from './modules/shared/pipes/date-time-format.pipe';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,9 @@ import { NgxEchartsModule } from 'ngx-echarts';
       multi: true
     },
     DatePipe,
-    DatePipePipe
+    DatePipePipe,
+    DateTimeFormatPipe,
+    DateFormatPipe,
   ],
   bootstrap: [AppComponent]
 })

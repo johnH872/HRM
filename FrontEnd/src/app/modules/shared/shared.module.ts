@@ -73,6 +73,7 @@ import { EmployeeSearchingComponent } from './components/employee-searching/empl
 import { NumberFormatPipe } from './pipes/number-format.pipe';
 import { HighlightTextSearchingPipe } from './pipes/highlight-text-searching.pipe';
 import { MatNativeDateModule } from '@angular/material/core';
+import { DateFormatPipe, DateTimeFormatPipe } from './pipes/date-time-format.pipe';
 
 const materialModules = [
   MatFormFieldModule,
@@ -165,6 +166,8 @@ const primengModules = [
     EmployeeSearchingComponent,
     NumberFormatPipe,
     HighlightTextSearchingPipe,
+    DateTimeFormatPipe,
+    DateFormatPipe,
   ],
   imports: [
     CommonModule,

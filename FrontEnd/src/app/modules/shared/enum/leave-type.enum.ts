@@ -1,6 +1,6 @@
 export enum LeaveType {
-    Annually,
-    Seniority,
-    Transfer,
-    UnPaid,
+    Annually = 1,
+    Seniority = 2,
+    Transfer = 3,
+    UnPaid = 4,
 }

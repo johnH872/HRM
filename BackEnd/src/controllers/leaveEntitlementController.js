@@ -32,23 +32,33 @@ class LeaveEntitlementController {
         try {
             const model = req.body;
             if (model.leaveEntitlementId === null) { // Add new
-                const saveLeaveEntitlement = await dbContext.LeaveEntitlement.create({
-                    userId: model.userId,
-                    leaveTypeId: model.leaveTypeId,
-                    startDate: model.startDate,
-                    endDate: model.endDate,
-                    availableLeave: model.availableLeave,
-                    usableLeave: model.usableLeave,
-                    usedLeave: model.usedLeave,
-                    effectedYear: model.effectedYear,
+                var checkExistThisYearEntitlement = await dbContext.LeaveEntitlement.findOne({
+                    where: {
+                        userId: model.userId,
+                        leaveTypeId: model.leaveTypeId,
+                        effectedYear: model.effectedYear
+                    }
                 });
-                if (saveLeaveEntitlement) {
-                    result.result = saveLeaveEntitlement;
-                    return res.status(200).json(result);
+                if (checkExistThisYearEntitlement) {
+                    result.message = 'This leave element with this type for this year is already exists.';
                 } else {
-                    result.message = 'Can not save leave entitlement';
-                    return res.status(200).json(result);
+                    const saveLeaveEntitlement = await dbContext.LeaveEntitlement.create({
+                        userId: model.userId,
+                        leaveTypeId: model.leaveTypeId,
+                        startDate: model.startDate,
+                        endDate: model.endDate,
+                        availableLeave: model.availableLeave,
+                        usableLeave: model.usableLeave,
+                        usedLeave: model.usedLeave,
+                        effectedYear: model.effectedYear,
+                    });
+                    if (saveLeaveEntitlement) {
+                        result.result = saveLeaveEntitlement;
+                    } else {
+                        result.message = 'Can not save leave entitlement';
+                    }
                 }
+                return res.status(200).json(result);
             } else { // Edit
                 // Find existing leave entitlement
                 const existLeaveEntitlement = await dbContext.LeaveEntitlement.findOne({
