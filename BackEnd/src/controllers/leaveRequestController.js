@@ -2,24 +2,29 @@ import { ReturnResult } from "../models/DTO/returnResult.js";
 import db from '../models/index.js'
 const dbContext = await db;
 
-class LeaveEntitlementController {
-    async getAllLeaveEntitlement(req, res, next) {
+class LeaveRequestController {
+    async getAllLeaveRequest(req, res, next) {
         var returnResult = new ReturnResult();
         try {
-            const leaveEntitlementPaging = await dbContext.LeaveEntitlement.findAll({
+            const leaveRequestPaging = await dbContext.LeaveRequest.findAll({
                 include: [
                     {
-                        model: dbContext.LeaveType,
+                        model: dbContext.LeaveEntitlement,
+                        include: [
+                            {
+                                model: dbContext.LeaveType,
+                            },
+                        ],
                     },
                     {
                         model: dbContext.User,
                     },
                 ],
-                // order: [
-                //     ['isPaidSalary', 'DESC']
-                // ]
+                order: [
+                    ['status', 'ASC']
+                ]
             });
-            returnResult.result = leaveEntitlementPaging;
+            returnResult.result = leaveRequestPaging;
             res.status(200).json(returnResult);
         } catch(error) {
             res.status(400).json(error);
@@ -27,22 +32,22 @@ class LeaveEntitlementController {
         }
     }
 
-    async saveLeaveEntitlement(req, res, next) {
+    async saveLeaveRequest(req, res, next) {
         var result = new ReturnResult();
         try {
             const model = req.body;
-            if (model.leaveEntitlementId === null) { // Add new
-                var checkExistThisYearEntitlement = await dbContext.LeaveEntitlement.findOne({
+            if (model.leaveRequestId === null) { // Add new
+                var checkExistThisYearRequest = await dbContext.LeaveRequest.findOne({
                     where: {
                         userId: model.userId,
                         leaveTypeId: model.leaveTypeId,
                         effectedYear: model.effectedYear
                     }
                 });
-                if (checkExistThisYearEntitlement) {
+                if (checkExistThisYearRequest) {
                     result.message = 'This leave element with this type for this year is already exists.';
                 } else {
-                    const saveLeaveEntitlement = await dbContext.LeaveEntitlement.create({
+                    const saveLeaveRequest = await dbContext.LeaveRequest.create({
                         userId: model.userId,
                         leaveTypeId: model.leaveTypeId,
                         startDate: model.startDate,
@@ -52,42 +57,42 @@ class LeaveEntitlementController {
                         usedLeave: model.usedLeave,
                         effectedYear: model.effectedYear,
                     });
-                    if (saveLeaveEntitlement) {
-                        result.result = saveLeaveEntitlement;
+                    if (saveLeaveRequest) {
+                        result.result = saveLeaveRequest;
                     } else {
-                        result.message = 'Can not save leave entitlement';
+                        result.message = 'Can not save Leave Request';
                     }
                 }
             } else { // Edit
-                // Find existing leave entitlement
-                const existLeaveEntitlement = await dbContext.LeaveEntitlement.findOne({
+                // Find existing leave Request
+                const existLeaveRequest = await dbContext.LeaveRequest.findOne({
                     where: {
-                        leaveEntitlementId: model.leaveEntitlementId
+                        leaveRequestId: model.leaveRequestId
                     }
                 });
-                if (existLeaveEntitlement) {
-                    const saveLeaveEntitlement = await dbContext.LeaveEntitlement.update({
-                        availableLeave: model.availableLeave ?? existLeaveEntitlement.availableLeave,
-                        usableLeave: model.usableLeave ?? existLeaveEntitlement.usableLeave,
-                        usedLeave: model.usedLeave ?? existLeaveEntitlement.usedLeave,
+                if (existLeaveType) {
+                    const saveLeaveRequest = await dbContext.LeaveRequest.update({
+                        availableLeave: model.availableLeave ?? existLeaveRequest.availableLeave,
+                        usableLeave: model.usableLeave ?? existLeaveRequest.usableLeave,
+                        usedLeave: model.usedLeave ?? existLeaveRequest.usedLeave,
                     }, {
                         where: {
-                            leaveEntitlementId: model.leaveEntitlementId
+                            leaveRequestId: model.leaveRequestId
                         },
                         returning: true,
                         plain: true
                     });
-                    if (saveLeaveEntitlement) {
-                        result.result = await dbContext.LeaveEntitlement.findOne({
+                    if (saveLeaveRequest) {
+                        result.result = await dbContext.LeaveRequest.findOne({
                             where: {
-                                leaveEntitlementId: model.leaveEntitlementId
+                                leaveRequestId: model.leaveRequestId
                             }
                         });
                     } else {
-                        result.message = 'Can not save leave entitlement';
+                        result.message = 'Can not save Leave Request';
                     }
                 } else {
-                    result.message = 'Leave Entitlement not found';
+                    result.message = 'Leave Request not found';
                 }
             }
             return res.status(200).json(result);
@@ -97,18 +102,17 @@ class LeaveEntitlementController {
         }
     }
 
-    async getLeaveEntitlementByEmployeeId(req, res, next) {
+    async getLeaveRequestByEmployeeId(req, res, next) {
         var result = new ReturnResult;
         try {
             var employeeId = req.params.id;
-            const lstEntitlement = await dbContext.LeaveEntitlement.findAll({
+            const lstRequest = await dbContext.LeaveRequest.findAll({
                 where: {
                     userId: employeeId,
-                    effectedYear: new Date().getFullYear(),
                 }
             });
-            if(lstEntitlement) result.result = lstEntitlement;
-            else result.message = "Employee not have any entitlement";
+            if(lstRequest) result.result = lstRequest;
+            else result.message = "Employee not have any Leave Request";
         } catch(error) {
             console.error(error);
         }
@@ -116,4 +120,4 @@ class LeaveEntitlementController {
     }
 }
 
-export default new LeaveEntitlementController;
+export default new LeaveRequestController;

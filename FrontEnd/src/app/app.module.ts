@@ -52,9 +52,6 @@ import { DateFormatPipe, DateTimeFormatPipe } from './modules/shared/pipes/date-
       multi: true
     },
     DatePipe,
-    DatePipePipe,
-    DateTimeFormatPipe,
-    DateFormatPipe,
   ],
   bootstrap: [AppComponent]
 })

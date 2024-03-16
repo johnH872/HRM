@@ -1,32 +1,32 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { LeaveEntitlementModel } from './leave-entitlement-management.model';
-import { LeaveEntitlementManagamentService } from './leave-entitlement-management.service';
+import { LeaveRequestModel } from './leave-request-management.model';
+import { EmployeeModel } from '../../shared/models/employee.model';
+import { LeaveRequestManagementService } from './leave-request-management.service';
+import { EmployeeManagementService } from '../employee-management/employee-management.service';
 import { MatDialog } from '@angular/material/dialog';
-import { AddEditLeaveEntitlementComponent } from './add-edit-leave-entitlement/add-edit-leave-entitlement.component';
+import { AddEditLeaveRequestComponent } from './add-edit-leave-request/add-edit-leave-request.component';
 import { TblActionType } from '../../shared/enum/tbl-action-type.enum';
 import { Table } from 'primeng/table';
-import { EmployeeManagementService } from '../employee-management/employee-management.service';
-import { EmployeeModel } from '../../shared/models/employee.model';
 
 @Component({
-  selector: 'app-leave-entitlement-managament',
-  templateUrl: './leave-entitlement-managament.component.html',
-  styleUrls: ['./leave-entitlement-managament.component.scss']
+  selector: 'app-leave-request-management',
+  templateUrl: './leave-request-management.component.html',
+  styleUrls: ['./leave-request-management.component.scss']
 })
-export class LeaveEntitlementManagamentComponent implements OnInit, OnDestroy {
+export class LeaveRequestManagementComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
-  dataTable: LeaveEntitlementModel[];
-  leaveEntitlementModel: LeaveEntitlementModel;
+  dataTable: LeaveRequestModel[];
+  leaveRequestModel: LeaveRequestModel;
   listEmployees: EmployeeModel[] = [];
 
   first = 0;
   rows = 10;
   loading: boolean = false;
-  selectedLeaveEntitlements: LeaveEntitlementModel[] | null;
+  selectedLeaveRequests: LeaveRequestModel[] | null;
 
   constructor(
-    private leaveEntitlementService: LeaveEntitlementManagamentService,
+    private leaveRequestService: LeaveRequestManagementService,
     private employeeService: EmployeeManagementService,
     private dialog: MatDialog,
   ) {
@@ -54,16 +54,16 @@ export class LeaveEntitlementManagamentComponent implements OnInit, OnDestroy {
 
   async refreshData() {
     this.loading = !this.loading;
-    var leaveEntitlementPagingResults = await this.leaveEntitlementService.getAllLeaveEntitlement().pipe(takeUntil(this.destroy$)).toPromise();
-    if (leaveEntitlementPagingResults.result) {
-      this.dataTable = leaveEntitlementPagingResults.result;
+    var leaveRequestPagingResults = await this.leaveRequestService.getAllLeaveRequest().pipe(takeUntil(this.destroy$)).toPromise();
+    if (leaveRequestPagingResults.result) {
+      this.dataTable = leaveRequestPagingResults.result;
     }
     this.loading = !this.loading;
   }
 
-  async addEditLeaveEntitlement(model: LeaveEntitlementModel = null) {
-    this.leaveEntitlementModel = model;
-    const attendanceRef = this.dialog.open(AddEditLeaveEntitlementComponent, {
+  async addEditLeaveRequest(model: LeaveRequestModel = null) {
+    this.leaveRequestModel = model;
+    const attendanceRef = this.dialog.open(AddEditLeaveRequestComponent, {
       disableClose: true,
       height: '100vh',
       width: '600px',
@@ -103,11 +103,11 @@ export class LeaveEntitlementManagamentComponent implements OnInit, OnDestroy {
     table.clear();
   }
 
-  deleteLeaveEntitlement(model: LeaveEntitlementModel) {
+  deleteLeaveRequest(model: LeaveRequestModel) {
     
   }
 
-  deleteSelectedEntitlement() {
+  deleteSelectedRequest() {
 
   }
 }

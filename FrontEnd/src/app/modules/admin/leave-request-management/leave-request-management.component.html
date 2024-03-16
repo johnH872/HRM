@@ -3,15 +3,16 @@
   <p-toolbar styleClass="mb-4 gap-2">
     <ng-template pTemplate="left">
       <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2"
-        (click)="addEditLeaveEntitlement()"></button>
+        (click)="addEditLeaveRequest()"></button>
       <button pButton pRipple [label]="Delete" icon="pi pi-trash" class="p-button-danger"
-        (click)="deleteSelectedEntitlement()" [disabled]="!selectedLeaveEntitlements || !selectedLeaveEntitlements?.length"></button>
+        (click)="deleteSelectedRequest()"
+        [disabled]="!selectedLeaveRequests || !selectedLeaveRequests?.length"></button>
     </ng-template>
 
     <ng-template pTemplate="right">
       <!-- <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import"
-            class="mr-2 inline-block"></p-fileUpload>
-          <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button> -->
+              class="mr-2 inline-block"></p-fileUpload>
+            <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button> -->
       <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(table)"></button>
       <button pButton label="Refresh" class="p-button-outlined" icon="pi pi-refresh" style="margin-left: 10px;"
         (click)="reset()"></button>
@@ -20,7 +21,7 @@
   <p-table #table [value]="dataTable" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
     [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)"
     [rowsPerPageOptions]="[10, 25, dataTable?.length]" [loading]="loading" [globalFilterFields]="['leaveTypeName']"
-    editMode="row" [(selection)]="selectedLeaveEntitlements" [rowHover]="true" [scrollable]="true" scrollHeight="480px"
+    editMode="row" [(selection)]="selectedLeaveRequests" [rowHover]="true" [scrollable]="true" scrollHeight="480px"
     dataKey="userId">
     <ng-template pTemplate="header">
       <tr>
@@ -84,7 +85,8 @@
         </td>
         <td>
           <img [alt]="" src="{{ leaveEntitlement?.User?.avatarUrl }}" width="32" style="vertical-align: middle" />
-          {{ leaveEntitlement?.User?.firstName + " " + leaveEntitlement?.User?.middleName + " " + leaveEntitlement?.User?.lastName}}
+          {{ leaveEntitlement?.User?.firstName + " " + leaveEntitlement?.User?.middleName + " " +
+          leaveEntitlement?.User?.lastName}}
         </td>
         <td>{{ leaveEntitlement?.LeaveType?.leaveTypeName }}</td>
         <td>{{ leaveEntitlement?.availableLeave }}</td>
@@ -96,9 +98,9 @@
         <td>{{ leaveEntitlement?.effectedYear }}</td>
         <td>
           <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
-            (click)="addEditLeaveEntitlement(leaveEntitlement)"></button>
+            (click)="addEditLeaveRequest(leaveEntitlement)"></button>
           <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
-            (click)="deleteLeaveEntitlement(leaveEntitlement)"></button>
+            (click)="deleteLeaveRequest(leaveEntitlement)"></button>
         </td>
       </tr>
     </ng-template>

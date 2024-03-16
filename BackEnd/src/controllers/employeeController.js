@@ -11,6 +11,7 @@ class employeeController {
         var returnResult = new ReturnResult();
         try {
             const employeePaging = await dbContext.User.findAll({
+                attributes: ['userId', 'firstName', 'middleName', 'lastName', 'email', 'birth', 'gender', 'nationality', 'avatarUrl', 'phoneNumber', 'jobTitle', 'dateStartContract', 'ownerId'],
                 include: {
                     model: dbContext.Role,
                     through: {
@@ -71,7 +72,6 @@ class employeeController {
                 });
                 if (existEmployee) {
                     result.message = "Email already exists";
-                    return res.status(200).json(result);
                 } else {
                     // Set default password
                     if (model.password === null) {
@@ -104,10 +104,8 @@ class employeeController {
                             });
                         }
                         result.result = saveEmployee;
-                        return res.status(200).json(result);
                     } else {
                         result.message = 'Can not save employee';
-                        return res.status(200).json(result);
                     }
                 }
             } else { // Edit
@@ -121,7 +119,7 @@ class employeeController {
                     }
                     const saveEmployee = await dbContext.User.update({
                         email: model.email ?? existEmployee.email,
-                        password: model.password,
+                        password: model.password ?? existEmployee.password,
                         firstName: model.firstName ?? existEmployee.firstName,
                         middleName: model.middleName ?? existEmployee.middleName,
                         lastName: model.lastName ?? existEmployee.lastName,
@@ -156,16 +154,14 @@ class employeeController {
                         result.result = await dbContext.User.findOne({
                             where: {userId: model.userId}
                         });
-                        return res.status(200).json(result);
                     } else {
                         result.message = 'Can not save employee';
-                        return res.status(200).json(result);
                     }
                 } else {
                     result.message = 'Employee not found';
-                    return res.status(200).json(result);
                 }
             }
+            return res.status(200).json(result);
         } catch(error) {
             res.status(400).json(error);
             console.log(error);

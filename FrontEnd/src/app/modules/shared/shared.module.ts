@@ -154,7 +154,6 @@ const primengModules = [
 @NgModule({
   declarations: [
     HtmlSafetyPipe,
-    DatePipePipe,
     ConfirmModalComponent,
     NgxTableComponent,
     MatTableComponent,
@@ -166,6 +165,7 @@ const primengModules = [
     EmployeeSearchingComponent,
     NumberFormatPipe,
     HighlightTextSearchingPipe,
+    DatePipePipe,
     DateTimeFormatPipe,
     DateFormatPipe,
   ],
@@ -219,6 +219,9 @@ const primengModules = [
     NgxEchartsModule,
     DropdownFilterComponent,
     EmployeeSearchingComponent,
+    DatePipePipe,
+    DateTimeFormatPipe,
+    DateFormatPipe,
   ],
   providers: [
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},
@@ -229,6 +232,9 @@ const primengModules = [
     {
       provide: MessageService
     },
+    DatePipePipe,
+    DateTimeFormatPipe,
+    DateFormatPipe,
   ]
 })
 export class SharedModule { }
