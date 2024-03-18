@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { EmployeeModel } from '../../shared/models/employee.model';
 import { AddEditEmployeeComponent } from './add-edit-employee/add-edit-employee.component';
 import { TblActionType } from '../../shared/enum/tbl-action-type.enum';
+import { TrainEmployeeComponent } from './train-employee/train-employee.component';
 
 @Component({
   selector: 'app-employee-management',
@@ -103,5 +104,25 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
   
   deleteSelectedEmployee() {
 
+  }
+
+  addEmployeeFaceRecog(model: EmployeeModel = null) {
+    this.employeeModel = model;
+    const attendanceRef = this.dialog.open(TrainEmployeeComponent, {
+      disableClose: true,
+      height: '810px',
+      width: '780px',
+      backdropClass: 'custom-backdrop',
+      hasBackdrop: true,
+      autoFocus: false,
+      data: {
+        model: model,
+      }
+    });
+    attendanceRef.afterClosed().subscribe(async response => {
+      if (response) {
+        await this.refreshData();
+      }
+    });
   }
 }

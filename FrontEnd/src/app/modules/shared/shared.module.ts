@@ -74,6 +74,7 @@ import { NumberFormatPipe } from './pipes/number-format.pipe';
 import { HighlightTextSearchingPipe } from './pipes/highlight-text-searching.pipe';
 import { MatNativeDateModule } from '@angular/material/core';
 import { DateFormatPipe, DateTimeFormatPipe } from './pipes/date-time-format.pipe';
+import {MatStepperModule} from '@angular/material/stepper';
 
 const materialModules = [
   MatFormFieldModule,
@@ -100,6 +101,7 @@ const materialModules = [
   MatSliderModule,
   MatSlideToggleModule,
   MatNativeDateModule,
+  MatStepperModule
 ];
 
 const nebularModules = [

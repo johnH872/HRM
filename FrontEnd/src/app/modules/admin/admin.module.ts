@@ -32,6 +32,7 @@ import { PunchInOutComponent } from './attendance-managment/punch-in-out/punch-i
 import { WebcamComponent } from './attendance-managment/webcam/webcam.component';
 import { LeaveRequestManagementComponent } from './leave-request-management/leave-request-management.component';
 import { AddEditLeaveRequestComponent } from './leave-request-management/add-edit-leave-request/add-edit-leave-request.component';
+import { TrainEmployeeComponent } from './employee-management/train-employee/train-employee.component';
 
 
 @NgModule({
@@ -63,7 +64,8 @@ import { AddEditLeaveRequestComponent } from './leave-request-management/add-edi
     PunchInOutComponent,
     WebcamComponent,
     LeaveRequestManagementComponent,
-    AddEditLeaveRequestComponent
+    AddEditLeaveRequestComponent,
+    TrainEmployeeComponent
   ],
   imports: [
     ThemeModule,

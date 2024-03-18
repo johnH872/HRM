@@ -1,9 +1,10 @@
-<div class="video-container">
-    <video #video
-           [width]="WIDTH"
-           [height]="HEIGHT"
-           autoplay
-           muted>
-    </video>
-    <div #canvas></div>
+<div class="video-container" class="border">
+    <div fxLayout="row" >
+        <div fxFlex="none">
+            <video style="position: absolute;" #video [width]="WIDTH" [height]="HEIGHT" autoplay muted>
+            </video>
+            <div #canvas style="position: fixed;"></div>
+        </div>
+    </div>
+    <div #canvasImage></div>
 </div>
