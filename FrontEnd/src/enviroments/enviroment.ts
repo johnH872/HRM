@@ -11,15 +11,18 @@ export const environment = {
     host,
     apiUrl,
     apiWorkManagement: apiUrl + '/work',
-    apiAuth: apiUrl + '/auth',
-    apiUser: apiUrl + '/user',
     apiLocation: apiUrl + '/location',
-    apiDataStateManagement: apiUrl + '/dataState',
     apiPayment: apiUrl + '/payment',
     apiReport: apiUrl + '/report',
-
-    apiEmployeeManagement: apiUrl + '/EmployeeManagement',
+    
+    // API SYSTEM
+    apiAuth: apiUrl + '/auth',
+    apiUser: apiUrl + '/user',
+    apiDataStateManagement: apiUrl + '/DataStateManagement',
     apiRoleManagement: apiUrl + '/RoleManagement',
+
+    // API FEATURES
+    apiEmployeeManagement: apiUrl + '/EmployeeManagement',
     apiLeaveTypeManagement: apiUrl + '/LeaveTypeManagement',
     apiLeaveEntitlementManagement: apiUrl + '/LeaveEntitlementManagement',
     apiLeaveRequestManagement: apiUrl + '/LeaveRequestManagement',

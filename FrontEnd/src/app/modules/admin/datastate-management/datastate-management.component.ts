@@ -54,9 +54,9 @@ export class DatastateManagementComponent {
   }
 
   refreshData(reset: boolean = false): void {
-    // this.dataStateService.getAllDataState().subscribe(e => {
-    //   this.ngxTable.setData(e);
-    // })
+    this.dataStateService.getAllDataState().subscribe(e => {
+      this.ngxTable.setData(e);
+    })
   }
 
   successEventEdit(event: any) {

@@ -11,6 +11,7 @@ import { LeaveTypeManagementComponent } from './leave-type-management/leave-type
 import { LeaveEntitlementManagamentComponent } from './leave-entitlement-managament/leave-entitlement-managament.component';
 import { AttendanceManagmentComponent } from './attendance-managment/attendance-managment.component';
 import { PunchInOutComponent } from './attendance-managment/punch-in-out/punch-in-out.component';
+import { LeaveRequestManagementComponent } from './leave-request-management/leave-request-management.component';
 
 const routes: Routes = [{
   path: '',
@@ -47,6 +48,10 @@ const routes: Routes = [{
     {
       path: 'leave-entitlement',
       component: LeaveEntitlementManagamentComponent,
+    },
+    {
+      path: 'leave-request',
+      component: LeaveRequestManagementComponent,
     },
     {
       path: 'punch-in-out',

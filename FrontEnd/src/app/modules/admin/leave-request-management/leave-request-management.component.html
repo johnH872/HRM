@@ -28,79 +28,79 @@
         <th style="width: 4rem">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
+        <th pSortableColumn="reason" style="width:10%">
+          Reason
+          <p-columnFilter type="text" field="reason" display="menu"></p-columnFilter>
+          <p-sortIcon field="reason"></p-sortIcon>
+        </th>
         <th pSortableColumn="employee.displayName" style="width:11%">
           Employee
           <p-columnFilter type="text" field="employee.displayName" display="menu"></p-columnFilter>
           <p-sortIcon field="employee.displayName"></p-sortIcon>
         </th>
-        <th pSortableColumn="leaveType.leaveTypeName" style="width:11%">
-          Leave Type Name
-          <p-columnFilter type="text" field="leaveType.leaveTypeName" display="menu"></p-columnFilter>
-          <p-sortIcon field="leaveType.leaveTypeName"></p-sortIcon>
+        <th pSortableColumn="status" style="width:11%">
+          Status
+          <p-columnFilter type="text" field="status" display="menu"></p-columnFilter>
+          <p-sortIcon field="status"></p-sortIcon>
         </th>
-        <th pSortableColumn="availableLeave" style="width:10%">
-          Available Leave
-          <p-columnFilter type="text" field="availableLeave" display="menu"></p-columnFilter>
-          <p-sortIcon field="availableLeave"></p-sortIcon>
+        <th pSortableColumn="leaveDateFrom" style="width:11%">
+          Leave Entitlement
+          <p-columnFilter type="text" field="leaveDateFrom" display="menu"></p-columnFilter>
+          <p-sortIcon field="leaveDateFrom"></p-sortIcon>
         </th>
-        <th pSortableColumn="usableLeave" style="width:11%">
-          Usable Leave
-          <p-columnFilter type="text" field="usableLeave" display="menu"></p-columnFilter>
-          <p-sortIcon field="usableLeave"></p-sortIcon>
+        <th pSortableColumn="leaveDateFrom" style="width:11%">
+          Leave Date From
+          <p-columnFilter type="text" field="leaveDateFrom" display="menu"></p-columnFilter>
+          <p-sortIcon field="leaveDateFrom"></p-sortIcon>
         </th>
-        <th pSortableColumn="usedLeave" style="width:8%">
-          Used Leave
-          <p-columnFilter type="text" field="usedLeave" display="menu"></p-columnFilter>
-          <p-sortIcon field="usedLeave"></p-sortIcon>
+        <th pSortableColumn="leaveDateTo" style="width:8%">
+          Leave Date To
+          <p-columnFilter type="text" field="leaveDateTo" display="menu"></p-columnFilter>
+          <p-sortIcon field="leaveDateTo"></p-sortIcon>
         </th>
-        <th pSortableColumn="remainLeave" style="width:14%">
-          Remain Leave
-          <p-columnFilter type="text" field="remainLeave" display="menu"></p-columnFilter>
-          <p-sortIcon field="remainLeave"></p-sortIcon>
+        <th pSortableColumn="session" style="width:14%">
+          Session
+          <p-columnFilter type="text" field="session" display="menu"></p-columnFilter>
+          <p-sortIcon field="session"></p-sortIcon>
         </th>
-        <th pSortableColumn="startDate" style="width:10%">
-          Start Date
-          <p-columnFilter type="text" field="startDate" display="menu"></p-columnFilter>
-          <p-sortIcon field="startDate"></p-sortIcon>
+        <th pSortableColumn="numberOfHour" style="width:10%">
+          Number Of Hour
+          <p-columnFilter type="text" field="numberOfHour" display="menu"></p-columnFilter>
+          <p-sortIcon field="numberOfHour"></p-sortIcon>
         </th>
-        <th pSortableColumn="endDate" style="width:10%">
-          End Date
-          <p-columnFilter type="text" field="endDate" display="menu"></p-columnFilter>
-          <p-sortIcon field="endDate"></p-sortIcon>
-        </th>
-        <th pSortableColumn="effectedYear" style="width:10%">
-          Effected Year
-          <p-columnFilter type="text" field="effectedYear" display="menu"></p-columnFilter>
-          <p-sortIcon field="effectedYear"></p-sortIcon>
+        <th pSortableColumn="note" style="width:10%">
+          Note
+          <p-columnFilter type="text" field="note" display="menu"></p-columnFilter>
+          <p-sortIcon field="note"></p-sortIcon>
         </th>
         <th pSortableColumn="nationality" style="width:12%">
           Controlling
         </th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-leaveEntitlement let-editing="editing" let-ri="rowIndex">
-      <tr [pEditableRow]="leaveEntitlement">
+    <ng-template pTemplate="body" let-leaveRequest let-editing="editing" let-ri="rowIndex">
+      <tr [pEditableRow]="leaveRequest">
         <td>
-          <p-tableCheckbox [value]="leaveEntitlement"></p-tableCheckbox>
+          <p-tableCheckbox [value]="leaveRequest"></p-tableCheckbox>
         </td>
+        <td>{{ leaveRequest?.reason }}</td>
         <td>
-          <img [alt]="" src="{{ leaveEntitlement?.User?.avatarUrl }}" width="32" style="vertical-align: middle" />
-          {{ leaveEntitlement?.User?.firstName + " " + leaveEntitlement?.User?.middleName + " " +
-          leaveEntitlement?.User?.lastName}}
+          <img [alt]="" src="{{ leaveRequest?.User?.avatarUrl }}" width="32" style="vertical-align: middle" />
+          {{ leaveRequest?.User?.firstName + " " + leaveRequest?.User?.middleName + " " +
+          leaveRequest?.User?.lastName}}
         </td>
-        <td>{{ leaveEntitlement?.LeaveType?.leaveTypeName }}</td>
-        <td>{{ leaveEntitlement?.availableLeave }}</td>
-        <td>{{ leaveEntitlement?.usableLeave }}</td>
-        <td>{{ leaveEntitlement?.usedLeave }}</td>
-        <td>{{ leaveEntitlement?.usableLeave - leaveEntitlement?.usedLeave }}</td>
-        <td>{{ leaveEntitlement?.startDate | dateTimeFormat }}</td>
-        <td>{{ leaveEntitlement?.endDate | dateTimeFormat }}</td>
-        <td>{{ leaveEntitlement?.effectedYear }}</td>
+        <td>{{ leaveRequest?.LeaveEntitlement?.LeaveType?.leaveTypeName }}</td>
+        <td><ng-container *ngTemplateOutlet="status; context: { row: leaveRequest }"></ng-container></td>
+        <td>{{ leaveRequest?.leaveDateFrom | dateTimeFormat }}</td>
+        <td>{{ leaveRequest?.leaveDateTo | dateTimeFormat }}</td>
+        <td>{{ leaveRequest?.session }}</td>
+        <td>{{ leaveRequest?.numberOfHour }}</td>
+        <td>{{ leaveRequest?.note }}</td>
         <td>
           <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
-            (click)="addEditLeaveRequest(leaveEntitlement)"></button>
+            (click)="addEditLeaveRequest(leaveRequest)"></button>
           <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
-            (click)="deleteLeaveRequest(leaveEntitlement)"></button>
+            (click)="deleteLeaveRequest(leaveRequest)"></button>
         </td>
       </tr>
     </ng-template>
@@ -109,3 +109,11 @@
     </ng-template>
   </p-table>
 </div>
+
+<ng-template #status let-row="row">
+  <div class="badge badge-pill" [style.background-color]="handleDisplayStatus(row?.status, true)" [style.opacity]="isExpired(row)">
+    <div style="color: white; ">
+      {{handleDisplayStatus(row?.status)}}
+    </div>
+  </div>
+</ng-template>

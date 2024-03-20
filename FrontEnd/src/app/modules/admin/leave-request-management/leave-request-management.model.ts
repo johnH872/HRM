@@ -24,14 +24,12 @@ export class LeaveRequestModel {
     @numeric({ acceptValue: NumericValueType.PositiveNumber, allowDecimal: true, message: 'Only numberic is allowed' })
     numberOfHour: number = 0;
     @prop()
-    statusID: number;
+    status: number;
     @prop()
     note: string;
     @prop()
     @required()
-    title: string;
-    @prop()
-    leaveBudgetId: number;
+    reason: string;
     timeZone: number;
 
     ownerId: string;

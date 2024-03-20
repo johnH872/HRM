@@ -8,6 +8,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddEditLeaveRequestComponent } from './add-edit-leave-request/add-edit-leave-request.component';
 import { TblActionType } from '../../shared/enum/tbl-action-type.enum';
 import { Table } from 'primeng/table';
+import { DatastateService } from '../datastate-management/datastate.service';
+import { DataStateModel } from '../datastate-management/data-state.model';
 
 @Component({
   selector: 'app-leave-request-management',
@@ -19,6 +21,7 @@ export class LeaveRequestManagementComponent implements OnInit, OnDestroy {
   dataTable: LeaveRequestModel[];
   leaveRequestModel: LeaveRequestModel;
   listEmployees: EmployeeModel[] = [];
+  lstLeaveRequestState: DataStateModel[] = [];
 
   first = 0;
   rows = 10;
@@ -29,6 +32,7 @@ export class LeaveRequestManagementComponent implements OnInit, OnDestroy {
     private leaveRequestService: LeaveRequestManagementService,
     private employeeService: EmployeeManagementService,
     private dialog: MatDialog,
+    private dataStateService: DatastateService,
   ) {
     this.employeeService.getAllEmployee().pipe(takeUntil(this.destroy$)).subscribe(res => {
       if (res.result) {
@@ -37,6 +41,11 @@ export class LeaveRequestManagementComponent implements OnInit, OnDestroy {
           let fullName = `${employee.firstName} ${employee.middleName} ${employee.lastName}`;
           employee.displayName = fullName.trim() ? fullName : "Unknown";
         });
+      }
+    });
+    this.dataStateService.getDataStateByType("LEAVE_REQUEST").pipe(takeUntil(this.destroy$)).subscribe(resp => {
+      if (resp.result) {
+        this.lstLeaveRequestState = resp.result;
       }
     });
   }
@@ -109,5 +118,22 @@ export class LeaveRequestManagementComponent implements OnInit, OnDestroy {
 
   deleteSelectedRequest() {
 
+  }
+
+  handleDisplayStatus(state: number, isDisplayColor: boolean = false): string {
+    if (this.lstLeaveRequestState?.length <= 0) {
+      return isDisplayColor ? '#0000' : '';
+    }
+
+    if (isDisplayColor) {
+      var findColor = this.lstLeaveRequestState?.find(x => x.dataStateId === state);
+      if (findColor) return findColor?.colorCode;
+      else return '#0000';
+    }
+    else {
+      var findName = this.lstLeaveRequestState?.find(x => x.dataStateId === state);
+      if (findName) return findName?.dataStateName;
+      else return '';
+    }
   }
 }
