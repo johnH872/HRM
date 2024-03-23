@@ -7,6 +7,8 @@ import leaveTypeRoute from './leaveTypeRoute.js';
 import leaveEntitlementRoute from './leaveEntitlementRoute.js';
 import leaveRequestRoute from './leaveRequestRoute.js';
 import dataStateRoute from './dataStateRoute.js';
+import faceRecogRoute from './faceRecogRoute.js';
+import attendanceRoute from './attendanceRoute.js';
 
 const baseUrl = "/api"
 
@@ -20,5 +22,7 @@ function route(app) {
     app.use(`${baseUrl}/LeaveTypeManagement`, leaveTypeRoute);
     app.use(`${baseUrl}/LeaveEntitlementManagement`, leaveEntitlementRoute);
     app.use(`${baseUrl}/LeaveRequestManagement`, leaveRequestRoute);
+    app.use(`${baseUrl}/FaceRecog`, faceRecogRoute);
+    app.use(`${baseUrl}/AttendanceManagement`, attendanceRoute);
 }
 export default route;

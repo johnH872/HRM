@@ -54,7 +54,7 @@ async function generationLeaveEntitlement() {
         // Create a annually entitlement
         await dbContext.LeaveEntitlement.create({
           userId: employee.userId,
-          leaveTypeId: annuallyType.leaveTypeId,
+          leaveTypeId: annuallyType?.leaveTypeId,
           startDate: new Date(currentYear, annuallyType?.defaultStartMonth - 1, annuallyType?.defaultStartDay, 0, 0, 0),
           endDate: new Date(currentYear, annuallyType?.defaultEndMonth - 1, annuallyType?.defaultEndDay, 23, 59, 59),
           availableLeave: annuallyType?.defaultBudget ?? 0,

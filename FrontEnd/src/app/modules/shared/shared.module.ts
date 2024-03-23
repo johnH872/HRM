@@ -75,6 +75,8 @@ import { HighlightTextSearchingPipe } from './pipes/highlight-text-searching.pip
 import { MatNativeDateModule } from '@angular/material/core';
 import { DateFormatPipe, DateTimeFormatPipe } from './pipes/date-time-format.pipe';
 import {MatStepperModule} from '@angular/material/stepper';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { DateArrFormatPipe } from './pipes/date-arr-format.pipe';
 
 const materialModules = [
   MatFormFieldModule,
@@ -101,7 +103,8 @@ const materialModules = [
   MatSliderModule,
   MatSlideToggleModule,
   MatNativeDateModule,
-  MatStepperModule
+  MatStepperModule,
+  MatProgressBarModule
 ];
 
 const nebularModules = [
@@ -170,6 +173,7 @@ const primengModules = [
     DatePipePipe,
     DateTimeFormatPipe,
     DateFormatPipe,
+    DateArrFormatPipe,
   ],
   imports: [
     CommonModule,
@@ -224,6 +228,7 @@ const primengModules = [
     DatePipePipe,
     DateTimeFormatPipe,
     DateFormatPipe,
+    DateArrFormatPipe,
   ],
   providers: [
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},

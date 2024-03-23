@@ -1,3 +1,24 @@
-<div>
-    <app-webcam></app-webcam>
+<div class="d-flex flex-wrap align-items-center" mat-dialog-title style="margin: unset; padding: 1px 10px 1px 28px">
+    <button [nbSpinner]="isAddingRecord" [disabled]="isAddingRecord" mat-raised-button color="primary"
+        (click)="onClickPunchInOut()" style="margin-right: 20px;">
+        <mat-icon>add_alarm</mat-icon>Punch {{isPunchIn ? "in" : "out"}}
+    </button>
+    <span>Employee: {{employeeModel.firstName || ""}} {{employeeModel.middleName || ""}} {{employeeModel.lastName || ""}}</span>
+    <button mat-icon-button aria-label="Close the dialog" (click)="closeDialog()" class="ml-auto">
+        <mat-icon>close</mat-icon>
+    </button>
 </div>
+<mat-divider></mat-divider>
+<mat-dialog-content class="mat-typography pb-0">
+    <div fxLayout="column">
+        <h4 fxFlex="row"><b>Today - {{currentDate | date: 'dd MMM, yyyy'}} record:</b></h4>
+        <ul fxFlex="row">
+            <li>Punch in records: {{ punchInRecords | dateArrFormat : "Haven't punch in yet"}}</li>
+            <li>Punch out records: {{ punchOutRecords | dateArrFormat : "Haven't punch out yet"}}</li>
+        </ul>
+        <div fxLayout="row">
+            <app-webcam #webcamComp [isOpenCamera]="isOpenCamera" [mode]="webcamMode.Recognition"></app-webcam>
+        </div>
+    </div>
+    <p-toast position="bottom-right" key="toast1"></p-toast>
+</mat-dialog-content>

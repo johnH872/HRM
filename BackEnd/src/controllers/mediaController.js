@@ -16,7 +16,7 @@ class roleController {
             const fileUpload = new Resize(imagePath);
             if (!req.file) {
                 result.message = 'Please provide an image';
-                res.status(401).json(result);
+                return res.status(401).json(result);
             }
             const fileName = await fileUpload.save(req.file.buffer);
             const port = process.env.PORT || 3000;

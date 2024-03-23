@@ -26,4 +26,7 @@ export const environment = {
     apiLeaveTypeManagement: apiUrl + '/LeaveTypeManagement',
     apiLeaveEntitlementManagement: apiUrl + '/LeaveEntitlementManagement',
     apiLeaveRequestManagement: apiUrl + '/LeaveRequestManagement',
+    apiFaceRecog: apiUrl + '/FaceRecog',
+    apiMediaManagement: apiUrl + '/MediaManagement',
+    apiAttendanceManagement: apiUrl + '/AttendanceManagement',
 }

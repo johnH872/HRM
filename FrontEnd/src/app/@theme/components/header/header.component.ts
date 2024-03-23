@@ -12,6 +12,8 @@ import { UserManagementService } from 'src/app/modules/admin/user-management/use
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileDialogComponent } from 'src/app/modules/admin/profile-dialog/profile-dialog.component';
 import { MessageService } from 'primeng/api';
+import { EmployeeManagementService } from 'src/app/modules/admin/employee-management/employee-management.service';
+import { PunchInOutComponent } from 'src/app/modules/admin/attendance-managment/punch-in-out/punch-in-out.component';
 
 @Component({
   selector: 'ngx-header',
@@ -60,18 +62,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private authService: NbAuthService,
     private dialog: MatDialog,
     private messageService: MessageService,
-    private cdref: ChangeDetectorRef
+    private cdref: ChangeDetectorRef,
+    private employeeService: EmployeeManagementService
   ) {
     this.authService.onTokenChange().pipe(takeUntil(this.destroy$))
       .subscribe(async (token: NbAuthJWTToken) => {
         if (token.isValid()) {
-          this.userLoggedIn = token.getPayload(); // here we receive a payload from the token and assigns it to our `user` variable 
-          var res = await lastValueFrom(this.userService.getUserDetailByUserId(this.userLoggedIn.user.id));
-          if(res.result) {
-            this.userDetail = res.result;
-            userService._currentUserDetail.next(this.userDetail); 
-          }
-          cdref.detectChanges();
+          this.userLoggedIn = token.getPayload();
         }
       });
 
@@ -161,5 +158,25 @@ export class HeaderComponent implements OnInit, OnDestroy {
   navigateHome() {
     this.menuService.navigateHome();
     return false;
+  }
+
+  async onClickAttendance() {
+    var getEmployeeRes = await lastValueFrom(this.employeeService.getEmployeeById(this.userLoggedIn?.user?.userId || ""));
+    const attendanceRef = this.dialog.open(PunchInOutComponent, {
+      disableClose: true,
+      height: '810px',
+      width: '780px',
+      backdropClass: 'custom-backdrop',
+      hasBackdrop: true,
+      autoFocus: false,
+      data: {
+        model: getEmployeeRes.result,
+      }
+    });
+    attendanceRef.afterClosed().subscribe(async response => {
+      if (response) {
+        // await this.refreshData();
+      }
+    });
   }
 }

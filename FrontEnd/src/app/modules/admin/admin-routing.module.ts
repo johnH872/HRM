@@ -54,10 +54,6 @@ const routes: Routes = [{
       component: LeaveRequestManagementComponent,
     },
     {
-      path: 'punch-in-out',
-      component: PunchInOutComponent,
-    },
-    {
       path: '',
       redirectTo: 'dashboard',
       pathMatch: 'full',

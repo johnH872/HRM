@@ -1,71 +1,100 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NbToastrService } from '@nebular/theme';
+import { WebcamComponent } from '../webcam/webcam.component';
+import { EmployeeModel } from 'src/app/modules/shared/models/employee.model';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MessageService } from 'primeng/api';
+import { AttendanceManagementService } from '../attendance-management.service';
+import { AttendanceModel } from '../attendance.model';
+import { DateRangeModel } from 'src/app/modules/shared/models/dateRangeModel';
+import { lastValueFrom } from 'rxjs';
+import { WebcamMode } from '../webcam/webcamMode';
 
 @Component({
   selector: 'app-punch-in-out',
   templateUrl: './punch-in-out.component.html',
   styleUrls: ['./punch-in-out.component.scss']
 })
-export class PunchInOutComponent {
-  mediaStream: any;
-  recording : boolean = false;
-  @Input() imageUrl: string;
-  @Output() imageCreated = new EventEmitter();
-  @ViewChild('video') private video;
-  @ViewChild('canvas') private canvas;
+export class PunchInOutComponent implements OnInit {
+  @ViewChild('webcamComp', { static: true }) webcamComp: WebcamComponent;
+  employeeModel: EmployeeModel;
 
-  constructor(private ref: ChangeDetectorRef, private toast: NbToastrService) { }
-
-  ngOnInit() {
+  isOpenCamera: boolean = true;
+  isAddingRecord: boolean = false;
+  webcamMode = WebcamMode;
+  currentDate: Date = new Date();
+  attendanceRecords: AttendanceModel[] = [];
+  punchInRecords: Date[] = [];
+  punchOutRecords: Date[] = [];
+  isPunchIn: boolean = true;
+  constructor(
+    public dialModalRef: MatDialogRef<PunchInOutComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private messageService: MessageService,
+    private attendanceService: AttendanceManagementService
+  ) {
+    if (data.model) this.employeeModel = data.model;
   }
 
-  getCameraImage(mediaStream: MediaStream) {
-        // block UI and reset image
-    // this.blockUI.start();
-    this.imageUrl = undefined;
-    this.imageCreated.emit({imageUrl: undefined});
-    this.recording = true;
-    this.mediaStream = mediaStream;
-    // this.video.nativeElement.src = window.URL.createObjectURL(mediaStream);
-    this.ref.detectChanges();
-    setTimeout(() => {
-      // create screenshot and emit as dataUrl
-      var ctx = this.canvas.nativeElement.getContext('2d');
-      ctx.drawImage(this.video.nativeElement, 0, 0, 500, 380);
-      this.imageUrl = this.canvas.nativeElement.toDataURL()
-      this.imageCreated.emit({imageUrl: this.imageUrl});
-      
-      //stop video and blockUI
-      this.mediaStream.getVideoTracks()[0].stop();
-      this.recording = false;
-      // this.blockUI.stop();
-      this.ref.detectChanges();
-    }, 3000);
+  ngOnInit(): void {
+    this.initData();
   }
 
-  onStreamError() {
-    this.recording = false;
+  async initData() {
+    let dateRange: DateRangeModel = new DateRangeModel(new Date(), new Date());
+    var dateRangeRes = await lastValueFrom(this.attendanceService.getAttendanceByEmployeeId(this.employeeModel.userId, dateRange));
+    if(dateRangeRes?.result?.length > 0) {
+      this.punchInRecords = [],
+      this.punchOutRecords = [];
+      this.attendanceRecords = dateRangeRes.result;
+      for(var attendance of this.attendanceRecords) {
+        if(attendance.punchinDate) this.punchInRecords = this.punchInRecords.concat(attendance.punchinDate);
+        if(attendance.punchoutDate) this.punchOutRecords = this.punchOutRecords.concat(attendance.punchoutDate);
+      }
+      // Get first record because API order by date desc
+      var firstRecord = this.attendanceRecords[0];
+      this.isPunchIn = firstRecord.punchoutDate != null;
+    }
+    this.isAddingRecord = false;
   }
 
-  initCameraStream() {
+  closeDialog() {
+    this.webcamComp.turnOffCamera();
+    this.dialModalRef.close();
+  }
 
-    // request access to camera for video
-    // if(navigator.getUserMedia){
-    //   navigator.getUserMedia({
-    //     video:true
-    //   },
-    //     (mediaStream) => this.getCameraImage(mediaStream),
-    //     () => this.onStreamError()
-    //   )
-    // }
-    // else if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
-    //   navigator.mediaDevices.getUserMedia({video:true}).then(
-    //     mediaStream => this.getCameraImage(mediaStream),
-    //     () => this.onStreamError()
-    //   )
-    // }
-    // else {
-    //     this.snackbar.open('Media streams not supported - try upload', 'Error', {duration: 5000});
-    // }
+  async onClickPunchInOut() {
+    var checkFaceResult = await this.webcamComp.recogFaceNoInterval();
+    if(checkFaceResult) {
+      this.isAddingRecord = true;
+      let clickedTime = new Date();
+      let model: AttendanceModel = new AttendanceModel();
+      if(this.isPunchIn) {
+        model.punchinDate = clickedTime;
+        model.punchinTime = clickedTime.getMilliseconds();
+        model.punchinOffset = clickedTime.getTimezoneOffset();
+        model.punchinNote = "";
+      } else {
+        model.punchoutDate = clickedTime;
+        model.punchoutTime = clickedTime.getMilliseconds();
+        model.punchoutOffset = clickedTime.getTimezoneOffset();
+        model.punchoutNote = "";
+      }
+      this.attendanceService.punchInOut(this.isPunchIn, this.employeeModel.userId, model).subscribe(res => {
+        if(res.result) {
+          this.messageService.add({
+            key: 'toast1', severity: 'success', summary: 'Success',
+            detail: `Punched ${this.isPunchIn ? "in" : "out"} successfully!`, life: 2000
+          });
+          this.initData();
+        } 
+        this.isAddingRecord = false;
+      });
+    } else {
+      this.messageService.add({
+        key: 'toast1', severity: 'warn', summary: 'Warn',
+        detail: `Can't detect your face, please try again!`, life: 2000
+      });
+    }
   }
 }
