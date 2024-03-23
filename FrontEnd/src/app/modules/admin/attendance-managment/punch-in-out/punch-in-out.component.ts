@@ -64,7 +64,7 @@ export class PunchInOutComponent implements OnInit {
   }
 
   async onClickPunchInOut() {
-    var checkFaceResult = await this.webcamComp.recogFaceNoInterval();
+    var checkFaceResult = await this.webcamComp.recogFaceNoInterval(this.employeeModel.userId);
     if(checkFaceResult) {
       this.isAddingRecord = true;
       let clickedTime = new Date();

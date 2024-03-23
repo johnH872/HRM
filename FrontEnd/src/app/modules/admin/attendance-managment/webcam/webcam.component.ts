@@ -67,7 +67,7 @@ export class WebcamComponent implements OnInit, OnDestroy {
           this.detectFaces();
           break;
         case WebcamMode.Recognition:
-          this.detectFaces();
+          this.recogFace();
           break;
       }
     }
@@ -133,7 +133,7 @@ export class WebcamComponent implements OnInit, OnDestroy {
     });
   }
 
-  async recogFaceNoInterval(): Promise<boolean> {
+  async recogFaceNoInterval(userId: string): Promise<boolean> {
     var result = false
     const JSONparseFaceMatcher = await lastValueFrom(this.http.get("./assets/traning_model/faceMatcher.json"));
     const FaceMatcherFromJSON = faceapi.FaceMatcher.fromJSON(JSONparseFaceMatcher);
@@ -143,7 +143,7 @@ export class WebcamComponent implements OnInit, OnDestroy {
     if(this.detection) {
       const bestMatch = faceMatcher.findBestMatch(this.detection.descriptor);
       console.log(bestMatch.distance);
-      if(bestMatch.distance > 0.5) result = true;
+      if(bestMatch.distance > 0.5 && bestMatch.label === userId) result = true;
     }
     return result;
   }

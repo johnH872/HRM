@@ -8,7 +8,14 @@ class faceRecogController {
         var returnResult = new ReturnResult();
         try {
             returnResult.result = await addFaceToModel(req.params.id);
-        } catch(error) {
+            if (returnResult.result) {
+                await dbContext.User.update({
+                    isAppliedFace: true
+                }, {
+                    where: { userId: req.params.id },
+                });
+            }
+        } catch (error) {
             res.status(400).json(error);
             console.log(error)
         }
