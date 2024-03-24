@@ -1,7 +1,6 @@
 import path from 'path';
 import fs from 'fs'
 import * as faceapi from '@vladmandic/face-api';
-import * as tf from '@tensorflow/tfjs-node';
 import * as canvas from 'canvas';
 
 const { Canvas, Image, ImageData } = canvas
