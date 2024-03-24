@@ -29,8 +29,8 @@ export class LeaveEntitlementManagamentService {
         return this.http.post<ReturnResult<boolean>>(`${this.baseUrl}/DeleteLeaveEntitlements`, id);
     }
 
-    getLeaveEntitlementById(employeeId: string) {
-        return this.http.get<ReturnResult<LeaveEntitlementModel[]>>(`${this.baseUrl}/GetLeaveEntitlementById?employeeId=${employeeId}`);
+    getLeaveEntitlementByEmployeeId(employeeId: string) {
+        return this.http.get<ReturnResult<LeaveEntitlementModel[]>>(`${this.baseUrl}/GetLeaveEntitlementByEmployeeId?employeeId=${employeeId}`);
     }
 
     getLeaveEntitlementByIdToTransfer(employeeId: string) {

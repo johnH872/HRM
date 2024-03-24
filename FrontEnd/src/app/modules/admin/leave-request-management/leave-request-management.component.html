@@ -43,10 +43,10 @@
           <p-columnFilter type="text" field="status" display="menu"></p-columnFilter>
           <p-sortIcon field="status"></p-sortIcon>
         </th>
-        <th pSortableColumn="leaveDateFrom" style="width:11%">
+        <th pSortableColumn="leaveEntitlement" style="width:11%">
           Leave Entitlement
-          <p-columnFilter type="text" field="leaveDateFrom" display="menu"></p-columnFilter>
-          <p-sortIcon field="leaveDateFrom"></p-sortIcon>
+          <p-columnFilter type="text" field="leaveEntitlement" display="menu"></p-columnFilter>
+          <p-sortIcon field="leaveEntitlement"></p-sortIcon>
         </th>
         <th pSortableColumn="leaveDateFrom" style="width:11%">
           Leave Date From
@@ -89,8 +89,8 @@
           {{ leaveRequest?.User?.firstName + " " + leaveRequest?.User?.middleName + " " +
           leaveRequest?.User?.lastName}}
         </td>
-        <td>{{ leaveRequest?.LeaveEntitlement?.LeaveType?.leaveTypeName }}</td>
         <td><ng-container *ngTemplateOutlet="status; context: { row: leaveRequest }"></ng-container></td>
+        <td>{{ leaveRequest?.LeaveEntitlement?.LeaveType?.leaveTypeName }}</td>
         <td>{{ leaveRequest?.leaveDateFrom | dateTimeFormat }}</td>
         <td>{{ leaveRequest?.leaveDateTo | dateTimeFormat }}</td>
         <td>{{ leaveRequest?.session }}</td>

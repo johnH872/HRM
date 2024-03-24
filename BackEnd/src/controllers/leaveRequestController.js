@@ -1,6 +1,8 @@
 import { ReturnResult } from "../models/DTO/returnResult.js";
 import db from '../models/index.js'
+import { leaveRequestStatus } from '../models/enums/leaveRequestStatus.js';
 const dbContext = await db;
+const moment = require('moment');
 
 class LeaveRequestController {
     async getAllLeaveRequest(req, res, next) {
@@ -36,32 +38,25 @@ class LeaveRequestController {
         var result = new ReturnResult();
         try {
             const model = req.body;
+            model.numberOfHour = calculateNumberOfHours(model.leaveDateFrom, model.leaveDateTo);
             if (model.leaveRequestId === null) { // Add new
-                var checkExistThisYearRequest = await dbContext.LeaveRequest.findOne({
-                    where: {
-                        userId: model.userId,
-                        leaveTypeId: model.leaveTypeId,
-                        effectedYear: model.effectedYear
-                    }
+                model.status = leaveRequestStatus.WAITING;
+                const saveLeaveRequest = await dbContext.LeaveRequest.create({
+                    userId: model.userId,
+                    leaveEntitlementId: model.leaveEntitlementId,
+                    leaveDateFrom: model.leaveDateFrom,
+                    leaveDateTo: model.leaveDateTo,
+                    session: model.session,
+                    numberOfHour: model.numberOfHour,
+                    status: model.status,
+                    note: model.note,
+                    reason: model.reason
                 });
-                if (checkExistThisYearRequest) {
-                    result.message = 'This leave element with this type for this year is already exists.';
+                if (saveLeaveRequest) {
+                    result.result = saveLeaveRequest;
+                    await handleLeaveEntitlementForLeaveRequest(saveLeaveRequest.userId, saveLeaveRequest.leaveEntitlementId);
                 } else {
-                    const saveLeaveRequest = await dbContext.LeaveRequest.create({
-                        userId: model.userId,
-                        leaveTypeId: model.leaveTypeId,
-                        startDate: model.startDate,
-                        endDate: model.endDate,
-                        availableLeave: model.availableLeave,
-                        usableLeave: model.usableLeave,
-                        usedLeave: model.usedLeave,
-                        effectedYear: model.effectedYear,
-                    });
-                    if (saveLeaveRequest) {
-                        result.result = saveLeaveRequest;
-                    } else {
-                        result.message = 'Can not save Leave Request';
-                    }
+                    result.message = "Cannot save leave request";
                 }
             } else { // Edit
                 // Find existing leave Request
@@ -72,9 +67,15 @@ class LeaveRequestController {
                 });
                 if (existLeaveType) {
                     const saveLeaveRequest = await dbContext.LeaveRequest.update({
-                        availableLeave: model.availableLeave ?? existLeaveRequest.availableLeave,
-                        usableLeave: model.usableLeave ?? existLeaveRequest.usableLeave,
-                        usedLeave: model.usedLeave ?? existLeaveRequest.usedLeave,
+                        userId: model.userId ?? existLeaveRequest.userId,
+                        leaveEntitlementId: model.leaveEntitlementId ?? existLeaveRequest.leaveEntitlementId,
+                        leaveDateFrom: model.leaveDateFrom ?? existLeaveRequest.leaveDateFrom,
+                        leaveDateTo: model.leaveDateTo ?? existLeaveRequest.leaveDateTo,
+                        session: model.session ?? existLeaveRequest.session,
+                        numberOfHour: model.numberOfHour ?? existLeaveRequest.numberOfHour,
+                        status: model.status ?? existLeaveRequest.status,
+                        note: model.note ?? existLeaveRequest.note,
+                        reason: model.reason ?? existLeaveRequest.reason
                     }, {
                         where: {
                             leaveRequestId: model.leaveRequestId
@@ -88,6 +89,7 @@ class LeaveRequestController {
                                 leaveRequestId: model.leaveRequestId
                             }
                         });
+                        await handleLeaveEntitlementForLeaveRequest(result?.result?.userId, result?.result?.leaveEntitlementId);
                     } else {
                         result.message = 'Can not save Leave Request';
                     }
@@ -118,6 +120,61 @@ class LeaveRequestController {
         }
         return res.status(200).json(result);
     }
+
+    async handleLeaveEntitlementForLeaveRequest(userId, leaveEntitlementId) {
+        const totalNumberOfHoursUsed = await dbContext.LeaveRequest.sum('numberOfHour', { 
+            where: { 
+                userId: userId,
+                leaveEntitlementId: leaveEntitlementId 
+            } 
+        });
+
+        const existLeaveEntitlement = await dbContext.LeaveEntitlement.findOne({
+            where: {
+                leaveEntitlementId: leaveEntitlementId
+            }
+        });
+        if (existLeaveEntitlement) {
+            existLeaveEntitlement.usedLeave = totalNumberOfHoursUsed / 8;
+            await dbContext.LeaveEntitlement.update({
+                usedLeave: totalNumberOfHoursUsed / 8
+            }, {
+                where: {
+                    leaveEntitlementId: existLeaveEntitlement.leaveEntitlementId
+                },
+                returning: true,
+                plain: true
+            });
+        }
+    }
+}
+
+function calculateNumberOfHours(start, end) {
+    const start1 = moment(start, 'DD/MM/YYYY HH:mm');
+    const end1 = moment(end, 'DD/MM/YYYY HH:mm');
+
+    const startRange1 = moment(start1).set({ hour: 8, minute: 30 });
+    const endRange1 = moment(start1).set({ hour: 12, minute: 0 });
+    const startRange2 = moment(start1).set({ hour: 13, minute: 0 });
+    const endRange2 = moment(start1).set({ hour: 17, minute: 30 });
+
+    let totalHours = 0;
+
+    if (end1.isAfter(startRange1) && start1.isBefore(endRange1)) {
+        const rangeStart = start1.isBefore(startRange1) ? startRange1 : start1;
+        const rangeEnd = end1.isAfter(endRange1) ? endRange1 : end1;
+        const duration = moment.duration(rangeEnd.diff(rangeStart));
+        totalHours += duration.asHours();
+    }
+
+    if (end1.isAfter(startRange2) && start1.isBefore(endRange2)) {
+        const rangeStart = start1.isBefore(startRange2) ? startRange2 : start1;
+        const rangeEnd = end1.isAfter(endRange2) ? endRange2 : end1;
+        const duration = moment.duration(rangeEnd.diff(rangeStart));
+        totalHours += duration.asHours();
+    }
+
+    return totalHours;
 }
 
 export default new LeaveRequestController;
