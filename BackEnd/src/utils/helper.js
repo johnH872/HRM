@@ -3,7 +3,6 @@ import fs from 'fs'
 import * as faceapi from '@vladmandic/face-api';
 import * as tf from '@tensorflow/tfjs-node';
 import * as canvas from 'canvas';
-import sharp from 'sharp';
 
 const { Canvas, Image, ImageData } = canvas
 faceapi.env.monkeyPatch({ Canvas, Image, ImageData })

@@ -1,4 +1,4 @@
-import sharp from 'sharp';
+// import sharp from 'sharp';
 import { v4 as uuidv4 } from 'uuid';
 import { resolve } from 'path';
 
@@ -10,12 +10,12 @@ class Resize {
     const filename = Resize.filename();
     const filepath = this.filepath(filename);
 
-    await sharp(buffer)
-      .resize(300, 300, { // size image 300x300
-        // fit: _fit.inside,
-        withoutEnlargement: true
-      })
-      .toFile(filepath);
+    // await sharp(buffer)
+    //   .resize(300, 300, { // size image 300x300
+    //     // fit: _fit.inside,
+    //     withoutEnlargement: true
+    //   })
+    //   .toFile(filepath);
     
     return filename;
   }
