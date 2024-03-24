@@ -2,7 +2,7 @@ import { ReturnResult } from "../models/DTO/returnResult.js";
 import db from '../models/index.js'
 import { leaveRequestStatus } from '../models/enums/leaveRequestStatus.js';
 const dbContext = await db;
-const moment = require('moment');
+import moment from "moment/moment.js";
 
 class LeaveRequestController {
     async getAllLeaveRequest(req, res, next) {
