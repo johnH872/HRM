@@ -5,6 +5,6 @@ import leaveEntitlementController from "../controllers/leaveEntitlementControlle
 
 router.route('/GetAllLeaveEntitlement').get(leaveEntitlementController.getAllLeaveEntitlement);
 router.route('/SaveLeaveEntitlement').post(leaveEntitlementController.saveLeaveEntitlement);
-router.route('/GetLeaveEntitlementByEmployeeId/:id').get(leaveEntitlementController.getLeaveEntitlementByEmployeeId);
+router.route('/GetLeaveEntitlementByEmployeeId').get(leaveEntitlementController.getLeaveEntitlementByEmployeeId);
 
 export default router;

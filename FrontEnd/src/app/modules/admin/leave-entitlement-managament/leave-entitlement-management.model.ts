@@ -8,7 +8,7 @@ export class LeaveEntitlementModel {
     @prop()
     leaveTypeId: number;
     @prop()
-    leaveType: LeaveTypeModel | null;
+    LeaveType: LeaveTypeModel | null;
     @prop()
     userId: string;
     @prop()

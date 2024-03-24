@@ -11,15 +11,15 @@ class LeaveRequestController {
             const leaveRequestPaging = await dbContext.LeaveRequest.findAll({
                 include: [
                     {
+                        model: dbContext.User,
+                    },
+                    {
                         model: dbContext.LeaveEntitlement,
                         include: [
                             {
                                 model: dbContext.LeaveType,
                             },
                         ],
-                    },
-                    {
-                        model: dbContext.User,
                     },
                 ],
                 order: [
@@ -39,7 +39,7 @@ class LeaveRequestController {
         try {
             const model = req.body;
             model.numberOfHour = calculateNumberOfHours(model.leaveDateFrom, model.leaveDateTo);
-            if (model.leaveRequestId === null) { // Add new
+            if (model.leaveRequestId === null || model.leaveRequestId === 0) { // Add new
                 model.status = leaveRequestStatus.WAITING;
                 const saveLeaveRequest = await dbContext.LeaveRequest.create({
                     userId: model.userId,
@@ -65,7 +65,7 @@ class LeaveRequestController {
                         leaveRequestId: model.leaveRequestId
                     }
                 });
-                if (existLeaveType) {
+                if (existLeaveRequest) {
                     const saveLeaveRequest = await dbContext.LeaveRequest.update({
                         userId: model.userId ?? existLeaveRequest.userId,
                         leaveEntitlementId: model.leaveEntitlementId ?? existLeaveRequest.leaveEntitlementId,
@@ -121,60 +121,62 @@ class LeaveRequestController {
         return res.status(200).json(result);
     }
 
-    async handleLeaveEntitlementForLeaveRequest(userId, leaveEntitlementId) {
-        const totalNumberOfHoursUsed = await dbContext.LeaveRequest.sum('numberOfHour', { 
-            where: { 
-                userId: userId,
-                leaveEntitlementId: leaveEntitlementId 
-            } 
-        });
+}
 
-        const existLeaveEntitlement = await dbContext.LeaveEntitlement.findOne({
-            where: {
-                leaveEntitlementId: leaveEntitlementId
-            }
-        });
-        if (existLeaveEntitlement) {
-            existLeaveEntitlement.usedLeave = totalNumberOfHoursUsed / 8;
-            await dbContext.LeaveEntitlement.update({
-                usedLeave: totalNumberOfHoursUsed / 8
-            }, {
-                where: {
-                    leaveEntitlementId: existLeaveEntitlement.leaveEntitlementId
-                },
-                returning: true,
-                plain: true
-            });
+async function handleLeaveEntitlementForLeaveRequest(userId, leaveEntitlementId) {
+    const totalNumberOfHoursUsed = await dbContext.LeaveRequest.sum('numberOfHour', { 
+        where: { 
+            userId: userId,
+            leaveEntitlementId: leaveEntitlementId,
+            status: leaveRequestStatus.APPROVED,
+        } 
+    });
+
+    const existLeaveEntitlement = await dbContext.LeaveEntitlement.findOne({
+        where: {
+            leaveEntitlementId: leaveEntitlementId
         }
+    });
+    if (existLeaveEntitlement) {
+        existLeaveEntitlement.usedLeave = totalNumberOfHoursUsed / 8;
+        await dbContext.LeaveEntitlement.update({
+            usedLeave: totalNumberOfHoursUsed / 8
+        }, {
+            where: {
+                leaveEntitlementId: existLeaveEntitlement.leaveEntitlementId
+            },
+            returning: true,
+            plain: true
+        });
     }
 }
 
 function calculateNumberOfHours(start, end) {
-    const start1 = moment(start, 'DD/MM/YYYY HH:mm');
-    const end1 = moment(end, 'DD/MM/YYYY HH:mm');
+    const startMoment = moment(start).add(7, 'hours');
+    const endMoment = moment(end).add(7, 'hours');
+  
+    const startRange1 = moment(startMoment).set({ hour: 8, minute: 30 });
+    const endRange1 = moment(startMoment).set({ hour: 12, minute: 0 });
+    const startRange2 = moment(startMoment).set({ hour: 13, minute: 0 });
+    const endRange2 = moment(startMoment).set({ hour: 17, minute: 30 });
+  
+    let workingHours = 0;
 
-    const startRange1 = moment(start1).set({ hour: 8, minute: 30 });
-    const endRange1 = moment(start1).set({ hour: 12, minute: 0 });
-    const startRange2 = moment(start1).set({ hour: 13, minute: 0 });
-    const endRange2 = moment(start1).set({ hour: 17, minute: 30 });
-
-    let totalHours = 0;
-
-    if (end1.isAfter(startRange1) && start1.isBefore(endRange1)) {
-        const rangeStart = start1.isBefore(startRange1) ? startRange1 : start1;
-        const rangeEnd = end1.isAfter(endRange1) ? endRange1 : end1;
-        const duration = moment.duration(rangeEnd.diff(rangeStart));
-        totalHours += duration.asHours();
+    if (endMoment.isAfter(startRange1) && startMoment.isBefore(endRange1)) {
+      const rangeStart = startMoment.isBefore(startRange1) ? startRange1 : startMoment;
+      const rangeEnd = endMoment.isAfter(endRange1) ? endRange1 : endMoment;
+      const duration = moment.duration(rangeEnd.diff(rangeStart));
+      workingHours += duration.asHours();
     }
 
-    if (end1.isAfter(startRange2) && start1.isBefore(endRange2)) {
-        const rangeStart = start1.isBefore(startRange2) ? startRange2 : start1;
-        const rangeEnd = end1.isAfter(endRange2) ? endRange2 : end1;
-        const duration = moment.duration(rangeEnd.diff(rangeStart));
-        totalHours += duration.asHours();
+    if (endMoment.isAfter(startRange2) && startMoment.isBefore(endRange2)) {
+      const rangeStart = startMoment.isBefore(startRange2) ? startRange2 : startMoment;
+      const rangeEnd = endMoment.isAfter(endRange2) ? endRange2 : endMoment;
+      const duration = moment.duration(rangeEnd.diff(rangeStart));
+      workingHours += duration.asHours();
     }
-
-    return totalHours;
+  
+    return workingHours;
 }
 
 export default new LeaveRequestController;

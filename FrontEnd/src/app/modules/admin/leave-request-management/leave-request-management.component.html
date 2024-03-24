@@ -111,7 +111,7 @@
 </div>
 
 <ng-template #status let-row="row">
-  <div class="badge badge-pill" [style.background-color]="handleDisplayStatus(row?.status, true)" [style.opacity]="isExpired(row)">
+  <div class="badge badge-pill" [style.background-color]="handleDisplayStatus(row?.status, true)">
     <div style="color: white; ">
       {{handleDisplayStatus(row?.status)}}
     </div>

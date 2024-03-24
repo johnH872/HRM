@@ -100,8 +100,13 @@ class LeaveEntitlementController {
     async getLeaveEntitlementByEmployeeId(req, res, next) {
         var result = new ReturnResult;
         try {
-            var employeeId = req.params.id;
+            var employeeId = req.query.employeeId;
             const lstEntitlement = await dbContext.LeaveEntitlement.findAll({
+                include: [
+                    {
+                        model: dbContext.LeaveType,
+                    },
+                ],
                 where: {
                     userId: employeeId,
                     effectedYear: new Date().getFullYear(),

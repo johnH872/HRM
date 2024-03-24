@@ -192,7 +192,7 @@ export class AddEditLeaveRequestComponent implements OnInit, OnDestroy, AfterVie
       this.leaveEntitlementService.getLeaveEntitlementByEmployeeId(this.employeeChosen?.userId).pipe(takeUntil(this.destroy$)).subscribe(resp => {
         if (resp.result) {
           this.employeeListLeaveEntitlement = resp.result;
-          this.employeeListLeaveEntitlement = this.employeeListLeaveEntitlement.sort((a, b) => Number(b?.leaveType?.isPaidSalary) - Number(a?.leaveType?.isPaidSalary));
+          this.employeeListLeaveEntitlement = this.employeeListLeaveEntitlement.sort((a, b) => Number(b?.LeaveType?.isPaidSalary) - Number(a?.LeaveType?.isPaidSalary));
         }
       }).add(() => {
         if (this.action === TblActionType.Add) {
