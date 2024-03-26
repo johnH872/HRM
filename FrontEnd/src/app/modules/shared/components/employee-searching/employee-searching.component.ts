@@ -76,10 +76,10 @@ export class EmployeeSearchingComponent implements AfterViewInit, OnDestroy, OnC
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const changeMyTask = changes.currentUser;
-    if (changeMyTask && !changeMyTask.firstChange && JSON.stringify(changeMyTask.currentValue) !== JSON.stringify(changeMyTask.previousValue)) {
-      this.bankCtrl.setValue(this.banks?.find(x => x.userId === changeMyTask.currentValue.id));
-    }
+    // const changeMyTask = changes.currentUser;
+    // if (changeMyTask && !changeMyTask.firstChange && JSON.stringify(changeMyTask.currentValue) !== JSON.stringify(changeMyTask.previousValue)) {
+    //   this.bankCtrl.setValue(this.banks?.find(x => x.userId === changeMyTask.currentValue.id));
+    // }
   }
   /**
    * Sets the initial value after the filteredBanks are loaded initially

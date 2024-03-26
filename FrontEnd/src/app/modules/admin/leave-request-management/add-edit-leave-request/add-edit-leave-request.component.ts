@@ -17,6 +17,7 @@ import { LeaveRequestManagementService } from '../leave-request-management.servi
 import { LeaveEntitlementManagamentService } from '../../leave-entitlement-managament/leave-entitlement-management.service';
 import { DatePipe } from '@angular/common';
 import { NbAccessChecker } from '@nebular/security';
+import { LeaveRequestStatus } from 'src/app/modules/shared/enum/leave-request-status.enum';
 
 @Component({
   selector: 'app-add-edit-leave-request',
@@ -115,19 +116,18 @@ export class AddEditLeaveRequestComponent implements OnInit, OnDestroy, AfterVie
     //     this.timeEndDefault.setHours(18, 30, 0);
     //   }
     // });
-
     if (this.action === TblActionType.Add) {
-      if (!this.isMyLeaveRequest) {
-        this.employeeService.getEmployeeById(this.currentUser?.nameid).pipe(takeUntil(this.destroy$)).subscribe(res => {
-          if (res.result) {
-            this.getAssignee(res.result);
-          }
-        });
-      }
+      this.statusDefault = LeaveRequestStatus.WAITING;
+      this.employeeService.getEmployeeById(this.currentUser?.nameid).pipe(takeUntil(this.destroy$)).subscribe(res => {
+        if (res.result) {
+          this.getAssignee(res.result);
+        }
+      });
     }
     if (this.action === TblActionType.Edit) {
+      this.statusDefault = this.leaveRequestModel?.status;
       if (this.leaveRequestModel?.User) {
-        this.employeeChosen = this.leaveRequestModel?.User;
+        this.getAssignee(this.leaveRequestModel?.User);
       }
       else {
         this.employeeService.getEmployeeById(this.leaveRequestModel?.userId).pipe(takeUntil(this.destroy$)).subscribe(res => {

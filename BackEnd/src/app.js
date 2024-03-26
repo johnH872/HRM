@@ -8,6 +8,7 @@ import route from './routes/indexRoutes.js';
 import { Sequelize } from 'sequelize';
 import dbConfigs from './config/db.config.js';
 import { generationLeaveEntitlementJob } from './cronJobs/generationLeaveEntitlementJobs.js';
+import { balanceLeaveEntitlementJob } from './cronJobs/balanceLeaveEntitlementJobs.js';
 
 //database connection
 const sequelize = new Sequelize(
@@ -34,6 +35,7 @@ route(app);
 // cron jobs
 // outDateWork.start();
 generationLeaveEntitlementJob.start();
+balanceLeaveEntitlementJob.start();
 
 export default app;
 

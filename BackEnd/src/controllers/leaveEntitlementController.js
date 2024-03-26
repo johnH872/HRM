@@ -15,9 +15,9 @@ class LeaveEntitlementController {
                         model: dbContext.User,
                     },
                 ],
-                // order: [
-                //     ['isPaidSalary', 'DESC']
-                // ]
+                order: [
+                    ['isPaidSalary', 'DESC']
+                ]
             });
             returnResult.result = leaveEntitlementPaging;
             res.status(200).json(returnResult);

@@ -62,8 +62,8 @@
         </div>
       </div> -->
       <div class="col-12">
-        <app-employee-searching required [banks]="listEmployees"
-          (userSelect)="getAssignee($event)">
+        <app-employee-searching required [banks]="listEmployees" (userSelect)="getAssignee($event)" [currentUser]="employeeChosen"
+          [readonly]="true">
         </app-employee-searching>
       </div>
       <div class="col-12">
@@ -147,14 +147,14 @@
       <div class="col-12">
         <mat-form-field appearance="fill" [ngClass]="{disabledNoOfCasesDiv: true}">
           <mat-label>Status</mat-label>
-          <mat-select required formControlName="status" [(ngModel)]="statusDefault">
+          <mat-select required formControlName="status" [(ngModel)]="statusDefault" [disabled]="true">
             <mat-option *ngFor="let status of listStatus" [value]="status?.dataStateId">
               {{status?.dataStateName}}
             </mat-option>
           </mat-select>
         </mat-form-field>
       </div>
-      <div class="col-12" *ngIf="action != 0">
+      <div class="col-12" *ngIf="action !== 0">
         <mat-form-field appearance="fill">
           <mat-label>Hours</mat-label>
           <input required matInput formControlName="numberOfHour" autocomplete="off" [readonly]="!hasEditPermission" />
@@ -170,10 +170,9 @@
         <mat-form-field appearance="fill">
           <mat-label>Choose Leave Entitlement</mat-label>
           <mat-select formControlName="leaveEntitlementId" required (selectionChange)="selectionLeaveEntitlement($event)"
-            [(ngModel)]="leaveEntitlementChoosen ? leaveEntitlementChoosen.leaveEntitlementId : leaveEntitlementDefault">
+            [(ngModel)]="leaveEntitlementChoosen ? leaveEntitlementChoosen?.leaveEntitlementId : leaveEntitlementDefault">
             <mat-select-trigger>
-              {{leaveEntitlementChoosen?.LeaveType?.leaveTypeName}} ({{leaveEntitlementChoosen?.usableLeave -
-              leaveEntitlementChoosen?.usedLeave}})
+              {{leaveEntitlementChoosen?.LeaveType?.leaveTypeName}} ({{leaveEntitlementChoosen?.usableLeave - leaveEntitlementChoosen?.usedLeave}})
             </mat-select-trigger>
             <mat-option *ngFor="let leaveEntitlement of employeeListLeaveEntitlement"
               [value]="leaveEntitlement.leaveEntitlementId">

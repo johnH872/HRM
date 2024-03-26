@@ -1,6 +1,6 @@
 export enum LeaveRequestStatus {
-    WAITING = 0,
-    APPROVED = 1,
-    REJECTED = 2,
-    CANCELLED = 3,
+    WAITING = 1,
+    APPROVED = 2,
+    REJECTED = 3,
+    CANCELLED = 4,
 }
