@@ -3,6 +3,7 @@ import db from '../models/index.js'
 import { leaveRequestStatus } from '../models/enums/leaveRequestStatus.js';
 const dbContext = await db;
 import moment from "moment/moment.js";
+import { Op } from "sequelize";
 
 class LeaveRequestController {
     async getAllLeaveRequest(req, res, next) {
@@ -111,8 +112,43 @@ class LeaveRequestController {
         try {
             var employeeId = req.params.id;
             const lstRequest = await dbContext.LeaveRequest.findAll({
+                // include: [
+                //     {
+                //         model: dbContext.LeaveType,
+                //     },
+                // ],
                 where: {
                     userId: employeeId,
+                }
+            });
+            if(lstRequest) result.result = lstRequest;
+            else result.message = "Employee not have any Leave Request";
+        } catch(error) {
+            console.error(error);
+        }
+        return res.status(200).json(result);
+    }
+
+    async getLeaveRequestByFilter(req, res, next) {
+        var result = new ReturnResult;
+        try {
+            var employeeId = req.params.id;
+            var {start, end} = req.body;
+            console.log(start)
+            const lstRequest = await dbContext.LeaveRequest.findAll({
+                // include: [
+                //     {
+                //         model: dbContext.LeaveType,
+                //     },
+                // ],
+                where: {
+                    userId: employeeId,
+                    leaveDateFrom:  {
+                        [Op.gte]:  new Date(start),
+                    },
+                    leaveDateTo: {
+                        [Op.lte]: new Date(end)
+                    }
                 }
             });
             if(lstRequest) result.result = lstRequest;

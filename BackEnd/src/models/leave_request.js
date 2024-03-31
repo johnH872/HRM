@@ -9,6 +9,9 @@ export default (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      // LeaveEntitlement.belongsTo(models.DataState, {
+      //   foreignKey: 'status'
+      // });
       LeaveRequest.belongsTo(models.LeaveEntitlement, { 
         foreignKey: 'leaveEntitlementId'
       });

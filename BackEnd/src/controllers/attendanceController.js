@@ -1,17 +1,35 @@
 import { ReturnResult } from "../models/DTO/returnResult.js";
 import db from '../models/index.js'
 const dbContext = await db;
+import * as canvas from 'canvas';
+import * as faceapi from '@vladmandic/face-api'
+import { Op } from "sequelize";
+const { Canvas, Image, ImageData } = canvas
+faceapi.env.monkeyPatch({ Canvas, Image, ImageData })
 class attendanceController {
     async getAttendanceByEmployeeId(req, res, next) {
         var returnResult = new ReturnResult();
         try {
             const employeeId = req.params.id;
+            const dateRange = req.body;
+            if(!dateRange) {
+                dateRange = {
+                    start: new Date(),
+                    end: new Date()
+                }
+            }
             const employeeAttendances = await dbContext.Attendance.findAll({
-                where: { userId: employeeId },
+                where: { 
+                    userId: employeeId,
+                    punchinDate: {
+                        [Op.gte]: new Date(dateRange.start),
+                        [Op.lte]: new Date(dateRange.end),
+                    }
+                },
                 order: [
                     ['punchinDate', 'DESC'],
                     ['punchoutDate', 'DESC'],
-                ]
+                ],
             });
             returnResult.result = employeeAttendances || [];
             res.status(200).json(returnResult);
@@ -58,6 +76,21 @@ class attendanceController {
                 if (employeeAttendance) returnResult.result = true;
             }
             res.status(200).json(returnResult);
+        } catch (error) {
+            res.status(400).json(error);
+            console.log(error)
+        }
+    }
+
+    async punchInOutMobile(req, res, next) {
+        var returnResult = new ReturnResult();
+        try {
+            // Detect face through image
+            console.log(req.file)
+            // var image = await canvas.loadImage(`./assets/images/${file}`);
+            
+
+            // await punchInOut();
         } catch (error) {
             res.status(400).json(error);
             console.log(error)
