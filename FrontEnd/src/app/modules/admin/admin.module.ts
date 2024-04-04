@@ -33,6 +33,9 @@ import { WebcamComponent } from './attendance-managment/webcam/webcam.component'
 import { LeaveRequestManagementComponent } from './leave-request-management/leave-request-management.component';
 import { AddEditLeaveRequestComponent } from './leave-request-management/add-edit-leave-request/add-edit-leave-request.component';
 import { TrainEmployeeComponent } from './employee-management/train-employee/train-employee.component';
+import { ReportScheduleManagementComponent } from './report-schedule-management/report-schedule-management.component';
+import { HandleDisplayColorPipe } from './report-schedule-management/handle-display-color.pipe';
+import { CheckColorTodayPipe } from './report-schedule-management/check-color-today.pipe';
 
 
 @NgModule({
@@ -65,7 +68,10 @@ import { TrainEmployeeComponent } from './employee-management/train-employee/tra
     WebcamComponent,
     LeaveRequestManagementComponent,
     AddEditLeaveRequestComponent,
-    TrainEmployeeComponent
+    TrainEmployeeComponent,
+    ReportScheduleManagementComponent,
+    HandleDisplayColorPipe,
+    CheckColorTodayPipe
   ],
   imports: [
     ThemeModule,

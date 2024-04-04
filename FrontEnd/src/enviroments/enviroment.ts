@@ -29,4 +29,5 @@ export const environment = {
     apiFaceRecog: apiUrl + '/FaceRecog',
     apiMediaManagement: apiUrl + '/MediaManagement',
     apiAttendanceManagement: apiUrl + '/AttendanceManagement',
+    apiReportScheduleManagement: apiUrl + '/ReportScheduleManagement',
 }

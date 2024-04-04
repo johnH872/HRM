@@ -1,0 +1,138 @@
+.button-function {
+    margin-right: 10px !important;
+    background-color: #b45cea;
+  }
+  
+  .attendance-report-mode {
+    height: 40px;
+    align-items: center;
+  }
+  
+  table {
+    width: 100%;
+  }
+    
+  th.mat-header-cell,
+  td.mat-cell {
+    text-align: center;
+    border-left: 0.5px solid #e0e0e0;
+    border-right: 0.5px solid #e0e0e0;
+    padding: 0px !important;
+    border-color: #e0e0e0;
+  }
+  
+  .custom-font {
+    font-size: 14px;
+    color: white;
+  }
+  
+  .custom-group-header-font {
+    font-size: 16px;
+    color: white;
+  }
+  
+  .example-container {
+    position: relative;
+    padding-right: 17px;
+  }
+  
+  .example-table-container {
+    position: relative;
+    height: calc(100% - 326px);
+    max-height: 58vh;
+    overflow: auto;
+  }
+  
+  .table {
+    width: 100%;
+  }
+  
+  .header-color {
+    background-color: #307abd;
+    border-color: white;
+  }
+  
+  .first-header-color {
+    background-color: #307abd;
+    border-color: white;
+    text-align: center;
+    font-weight: bold;
+  }
+  
+  .bold-row {
+    font-weight: bold;
+  }
+  
+  .data-bold-row {
+    background-color: #ededed;
+  }
+  
+  .tableCellFixedMonth {
+    width: 70px;
+    min-width: 70px;
+  }
+  
+  .tableCellFixedWeek {
+    width: 180px;
+    min-width: 180px;
+  }
+  
+  .tableCellFixedDay {
+    width: 720px;
+    min-width: 240px;
+  }
+  
+  .first-table-cell-fixed {
+    width: 180px !important;
+    min-width: 180px !important;
+  }
+  
+  .total-table-cell-fixed {
+    width: 80px;
+    min-width: 80px;
+  }
+  
+  .report-header-row {
+    height: 32px;
+    max-height: 32px;
+  }
+  
+  .report-row {
+    height: 26px;
+    max-height: 26px;
+  }
+  
+  .icon-modified {
+    display: flex;
+    align-items: center;
+    font-size: large;
+    cursor: pointer;
+    color: #ffffff;
+  }
+  
+  .icon-leave {
+    display: flex;
+    align-items: center;
+    font-size: large;
+    cursor: pointer;
+    font-weight: bolder;
+  }
+  
+  .form-function-filter {
+    display: flex;
+    align-items: center;
+    max-height: 64px;
+  }
+  
+  :host::ng-deep .mat-form-field-flex {
+    padding-top: 0 !important;
+  }
+  
+  .d-none {
+    display: none !important;
+  }
+  
+  ::ng-deep .mat-menu-content {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }

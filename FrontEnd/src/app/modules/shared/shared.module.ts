@@ -77,6 +77,7 @@ import { DateFormatPipe, DateTimeFormatPipe } from './pipes/date-time-format.pip
 import {MatStepperModule} from '@angular/material/stepper';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { DateArrFormatPipe } from './pipes/date-arr-format.pipe';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 const materialModules = [
   MatFormFieldModule,
@@ -104,7 +105,8 @@ const materialModules = [
   MatSlideToggleModule,
   MatNativeDateModule,
   MatStepperModule,
-  MatProgressBarModule
+  MatProgressBarModule,
+  MatButtonToggleModule,
 ];
 
 const nebularModules = [

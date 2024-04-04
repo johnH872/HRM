@@ -42,9 +42,14 @@ export const MENU_ITEMS: NbMenuItem[] = [
         link: '/admin/attendance',
       },
       {
-        title: 'Calendar',
+        title: 'Work Calendar',
         icon: 'person-outline',
         link: '/admin/calendar',
+      },
+      {
+        title: 'Report Schedule',
+        icon: 'person-outline',
+        link: '/admin/report-schedule',
       },
     ],
   },

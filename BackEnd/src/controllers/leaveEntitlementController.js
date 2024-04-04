@@ -16,7 +16,7 @@ class LeaveEntitlementController {
                     },
                 ],
                 order: [
-                    ['isPaidSalary', 'DESC']
+                    [dbContext.LeaveType, 'isPaidSalary', 'DESC']
                 ]
             });
             returnResult.result = leaveEntitlementPaging;

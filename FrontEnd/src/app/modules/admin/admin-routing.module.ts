@@ -12,6 +12,7 @@ import { LeaveEntitlementManagamentComponent } from './leave-entitlement-managam
 import { AttendanceManagmentComponent } from './attendance-managment/attendance-managment.component';
 import { PunchInOutComponent } from './attendance-managment/punch-in-out/punch-in-out.component';
 import { LeaveRequestManagementComponent } from './leave-request-management/leave-request-management.component';
+import { ReportScheduleManagementComponent } from './report-schedule-management/report-schedule-management.component';
 
 const routes: Routes = [{
   path: '',
@@ -52,6 +53,10 @@ const routes: Routes = [{
     {
       path: 'leave-request',
       component: LeaveRequestManagementComponent,
+    },
+    {
+      path: 'report-schedule',
+      component: ReportScheduleManagementComponent,
     },
     {
       path: '',
