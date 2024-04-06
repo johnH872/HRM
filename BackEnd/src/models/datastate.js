@@ -9,6 +9,9 @@ export default (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      DataState.hasMany(models.LeaveRequest, {
+        foreignKey: 'status'
+      });
     }
   }
   DataState.init({

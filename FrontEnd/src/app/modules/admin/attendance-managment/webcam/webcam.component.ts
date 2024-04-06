@@ -3,6 +3,7 @@ import * as faceapi from '@vladmandic/face-api';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { WebcamMode } from './webcamMode';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-webcam',
@@ -10,16 +11,11 @@ import { WebcamMode } from './webcamMode';
   styleUrls: ['./webcam.component.scss']
 })
 export class WebcamComponent implements OnInit, OnDestroy {
-  WIDTH = 730;
-  HEIGHT = 600;
 
   @ViewChild('video', { static: true })
   public video: ElementRef;
   @ViewChild('canvas', { static: true })
   public canvasRef: ElementRef;
-  @ViewChild('canvasImage', { static: true })
-  public canvascanvasImageRef: HTMLCanvasElement;
-
   @Input() isOpenCamera: boolean = false;
   @Input() mode: number = WebcamMode.Detection;
   @Output() finishCapturing = new EventEmitter<any>();
@@ -80,11 +76,11 @@ export class WebcamComponent implements OnInit, OnDestroy {
       this.canvasEl.appendChild(this.canvas);
       this.canvas.setAttribute('id', 'canvass');
       this.displaySize = {
-        width: this.videoInput.width,
-        height: this.videoInput.height,
+        width: window.innerWidth,
+        height: window.innerHeight,
       };
       faceapi.matchDimensions(this.canvas, this.displaySize);
-      setInterval(async () => {
+      this.detectionInterval = setInterval(async () => {
         this.detection = await faceapi.detectSingleFace(this.videoInput, new faceapi.SsdMobilenetv1Options()).withFaceLandmarks().withFaceExpressions();
         this.canvas.getContext('2d').clearRect(0, 0, this.canvas.width, this.canvas.height);
         if (this.detection) {
@@ -92,9 +88,9 @@ export class WebcamComponent implements OnInit, OnDestroy {
             this.detection,
             this.displaySize
           );
-          faceapi.draw.drawDetections(this.canvas, this.resizedDetections);
+          // faceapi.draw.drawDetections(this.canvas, this.resizedDetections);
           // faceapi.draw.drawFaceLandmarks(this.canvas, this.resizedDetections);
-          faceapi.draw.drawFaceExpressions(this.canvas, this.resizedDetections);
+          // faceapi.draw.drawFaceExpressions(this.canvas, this.resizedDetections);
         }
       }, 300);
     });
@@ -116,7 +112,7 @@ export class WebcamComponent implements OnInit, OnDestroy {
       const labeledDescriptors = FaceMatcherFromJSON.labeledDescriptors;
       const faceMatcher = new faceapi.FaceMatcher(labeledDescriptors, 0.7);
 
-      setInterval(async () => {
+      this.captureInterval = setInterval(async () => {
         this.detection = await faceapi.detectSingleFace(this.videoInput, new faceapi.SsdMobilenetv1Options({ minConfidence: 0.75, maxResults: 1 })).withFaceLandmarks().withFaceDescriptor();
         this.canvas.getContext('2d').clearRect(0, 0, this.canvas.width, this.canvas.height);
         if (this.detection) {
@@ -140,10 +136,10 @@ export class WebcamComponent implements OnInit, OnDestroy {
     const labeledDescriptors = FaceMatcherFromJSON.labeledDescriptors;
     const faceMatcher = new faceapi.FaceMatcher(labeledDescriptors, 0.7);
     this.detection = await faceapi.detectSingleFace(this.videoInput, new faceapi.SsdMobilenetv1Options({ minConfidence: 0.75, maxResults: 1 })).withFaceLandmarks().withFaceDescriptor();
-    if(this.detection) {
+    if (this.detection) {
       const bestMatch = faceMatcher.findBestMatch(this.detection.descriptor);
       console.log(bestMatch.distance);
-      if(bestMatch.distance > 0.5 && bestMatch.label === userId) result = true;
+      if (bestMatch.distance > 0.5 && bestMatch.label === userId) result = true;
     }
     return result;
   }
@@ -151,18 +147,22 @@ export class WebcamComponent implements OnInit, OnDestroy {
   async captureImages(startIndex: number = 0) {
     var images = [];
     var interations = 0;
-    const canvasImage = this.canvascanvasImageRef || (this.canvascanvasImageRef = document.createElement('canvas'));
-    canvasImage.width = this.videoInput.width;
-    canvasImage.height = this.videoInput.height;
+    this.canvas.style.display = 'none';
+
+    console.log( this.videoInput.width,)
+
+    this.canvas.width = 80* window.innerWidth/100;
+    this.canvas.height = window.innerHeight;
 
     this.captureInterval = setInterval(async () => {
       try {
         this.canvas
           .getContext("2d")
-          .drawImage(this.videoInput, 0, 0, this.videoInput.width, this.videoInput.height);
+          .drawImage(this.videoInput, 0, 0,80* window.innerWidth/100, window.innerHeight);
         // Convert canvas data to a Blob
         this.canvas.toBlob(blob => {
           // Create a new File object
+          // saveAs(blob, `${startIndex * 10 + interations}.png`);
           const file = new File([blob], `${startIndex * 10 + interations}.png`, { type: 'image/jpg' });
           images.push(file);
         }, 'image/png');

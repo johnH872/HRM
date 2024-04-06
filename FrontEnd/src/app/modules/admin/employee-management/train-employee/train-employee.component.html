@@ -1,9 +1,14 @@
-<div class="d-flex flex-wrap align-items-center" mat-dialog-title style="margin: unset; padding: 1px 10px 1px 28px">
-    <button [nbSpinner]="isStartStep" [disabled]="isStartStep" mat-raised-button color="primary"  (click)="startDetection()" style="margin-right: 20px;">
+<div class="d-flex flex-wrap align-items-center justify-content-start" mat-dialog-title
+    style="margin: unset; padding: 5px 10px 5px 28px">
+    <p-button [loading]="isStartStep" [label]="'Start step ' + (currentStep + 1)" icon="pi pi-camera"
+        styleClass="p-button-primary" (click)="startDetection()"></p-button>
+    <!-- <button [nbSpinner]="isStartStep" [disabled]="isStartStep" mat-raised-button color="primary"  (click)="startDetection()" style="margin-right: 20px;">
         <mat-icon>face</mat-icon> Start step {{currentStep + 1}}
-    </button>
-    <span>Employee: {{employeeModel.firstName || ""}} {{employeeModel.middleName || ""}} {{employeeModel.lastName || ""}}</span>
-    <button mat-icon-button aria-label="Close the dialog" (click)="closeDialog()" class="ml-auto">
+    </button> -->
+    <span class="ml-auto">{{employeeModel.firstName || ""}} {{employeeModel.middleName || ""}} {{employeeModel.lastName
+        ||
+        ""}}</span>
+    <button mat-icon-button aria-label="Close the dialog" class="ml-auto" (click)="closeDialog()">
         <mat-icon>close</mat-icon>
     </button>
 </div>
@@ -11,30 +16,34 @@
 <mat-dialog-content class="mat-typography pb-0">
     <div fxLayout="column">
         <div fxLayout="row">
-            <mat-stepper [linear]="true" #stepper fxFlex="grow" >
-                <mat-step label="Font-face" [editable]="editableSteps[0]">
-                    <div fxLayout="row" fxLayoutAlign="none center" >
-                        <p style="text-align: center; margin-right: 10px; margin-bottom: 0 !important;">Font face</p> 
+            <mat-stepper [linear]="true" #stepper fxFlex="grow">
+                <mat-step label="Front-face" [editable]="editableSteps[0]">
+                    <div fxLayout="row" fxLayoutAlign="none center">
+                        <!-- <p style="text-align: center; margin-right: 10px; margin-bottom: 0 !important;">Font face</p> -->
+                        <mat-progress-bar *ngIf="isStartStep" mode="indeterminate"></mat-progress-bar>
                     </div>
                 </mat-step>
-                <mat-step label="Turn to the left" [editable]="editableSteps[1]">
-                    <div fxLayout="row" fxLayoutAlign="none center" >
-                        <p style="text-align: center; margin-right: 10px; margin-bottom: 0 !important;">Left face</p> 
+                <mat-step label="Bow down" [editable]="editableSteps[1]">
+                    <div fxLayout="row" fxLayoutAlign="none center">
+                        <!-- <p style="text-align: center; margin-right: 10px; margin-bottom: 0 !important;">Left face</p> -->
+                        <mat-progress-bar *ngIf="isStartStep" mode="indeterminate"></mat-progress-bar>
                     </div>
                 </mat-step>
-                <mat-step label="Turn to the right" [editable]="editableSteps[2]">
-                    <div fxLayout="row" fxLayoutAlign="none center" >
-                        <p style="text-align: center; margin-right: 10px; margin-bottom: 0 !important;">Right face</p>
+                <mat-step label="Raise one's head" [editable]="editableSteps[2]">
+                    <div fxLayout="row" fxLayoutAlign="none center">
+                        <!-- <p style="text-align: center; margin-right: 10px; margin-bottom: 0 !important;">Right face</p> -->
+                        <mat-progress-bar *ngIf="isStartStep" mode="indeterminate"></mat-progress-bar>
                     </div>
                 </mat-step>
                 <mat-step label="Training" [editable]="editableSteps[3]">
-                    <p>{{isStartStep ? "Adding your face. Please wait a few minutes." : "Click on the button above to start."}}</p>
+                    <p>{{isStartStep ? "Adding your face. Please wait for a few minutes." : "Click on the button above to start."}}</p>
                     <mat-progress-bar *ngIf="isStartStep" mode="indeterminate"></mat-progress-bar>
                 </mat-step>
             </mat-stepper>
         </div>
         <div fxLayout="row">
-            <app-webcam #webcamComp [isOpenCamera]="isOpenCamera" (finishCapturing)="finishCapturing($event)"></app-webcam>
+            <app-webcam #webcamComp [isOpenCamera]="isOpenCamera"
+                (finishCapturing)="finishCapturing($event)"></app-webcam>
         </div>
     </div>
 </mat-dialog-content>

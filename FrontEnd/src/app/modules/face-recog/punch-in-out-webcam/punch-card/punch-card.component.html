@@ -1,0 +1,28 @@
+<!-- <div class="d-flex flex-wrap" mat-dialog-title
+    style="margin: unset; padding: 1px 10px 1px 28px; justify-content: center; align-items: center;">
+    <button nbButton ghost (click)="closeDialog()" class="ml-auto">
+        <nb-icon icon="close-outline"></nb-icon>
+    </button>
+</div>
+<mat-divider></mat-divider> -->
+<mat-dialog-content class="p-0">
+    <p-card [header]="isPunchIn ? 'Punch in card' : 'Punch out card' " class="punch-card-container">
+        <ng-template pTemplate="header">
+            <img [src]="employeeModel.avatarUrl || defaultAvatar" class="user-img"/>
+        </ng-template>
+        <div fxLayout="column" fxLayoutAlign="start start">
+            <span class="text-align-start"><b>Fullname:</b> {{employeeModel.firstName}} {{employeeModel.middleName}} {{employeeModel.lastName}}</span>
+            <span><b>Role:</b> {{employeeModel.jobTitle || 'No role'}} </span>
+            <span><b>Gender:</b> {{employeeModel.gender}}</span>
+            <span><b>Email:</b> {{employeeModel.email}}</span>
+            <span><b>Phone:</b> {{employeeModel.phoneNumber}}</span>
+            <span><b>Birth:</b> {{employeeModel.birth | dateFormat}}</span>
+        </div>
+        <ng-template pTemplate="footer">
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                <p-button [loading]="isAddingRecord || isInitData" [disabled]="isAddingRecord || isInitData" label="Cancel" icon="pi pi-times" styleClass="p-button-secondary" (click)="onCancel()" ></p-button>
+                <p-button [loading]="isAddingRecord || isInitData" [disabled]="isAddingRecord || isInitData" [label]="isPunchIn ? 'Punch in' : 'Punch out'" icon="pi pi-check" (click)="onSubmit()" ></p-button>
+            </div>
+        </ng-template>
+    </p-card>
+</mat-dialog-content>

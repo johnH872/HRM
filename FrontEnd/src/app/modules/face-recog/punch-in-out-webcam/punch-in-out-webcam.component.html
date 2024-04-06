@@ -1,9 +1,10 @@
-<div class="video-container" class="border">
-    <div fxLayout="row" >
+<nb-layout>
+    <nb-layout-column>
         <div class="video-container">
             <video id="video" #video autoplay muted>
             </video>
             <div #canvas style="position: fixed;"></div>
         </div>
-    </div>
-</div>
+        <p-toast position="bottom-right" key="toast1"></p-toast>
+    </nb-layout-column>
+</nb-layout>
