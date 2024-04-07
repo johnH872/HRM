@@ -56,14 +56,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private themeService: NbThemeService,
     private userService: UserManagementService,
     private layoutService: LayoutService,
-    private tokenService: NbTokenService,
-    private router: Router,
     private breakpointService: NbMediaBreakpointsService,
     private authService: NbAuthService,
     private dialog: MatDialog,
     private messageService: MessageService,
-    private cdref: ChangeDetectorRef,
-    private employeeService: EmployeeManagementService
   ) {
     this.authService.onTokenChange().pipe(takeUntil(this.destroy$))
       .subscribe(async (token: NbAuthJWTToken) => {
@@ -78,19 +74,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    // var res = await lastValueFrom(this.userService.getUserDetailByUserId(this.userLoggedIn?.user?.id));
-    // if (res.result) {
-    //   this.userDetail = res.result;
-    // }
-    // this.currentTheme = this.themeService.currentTheme;
-    // // catch menu event
-    // this.menuServiceObservable = this.menuService.onItemClick().subscribe((event) => {
-    //   if (event.item['id'] === 'logout') {
-    //     this.tokenService.clear();
-    //     localStorage.clear();
-    //     this.router.navigateByUrl("/auth");
-    //   }
-    // })
 
     this.menuServiceObservable = this.menuService.onItemClick().subscribe((event) => {
       if (event.item['id'] === 'profile') {
@@ -158,25 +141,5 @@ export class HeaderComponent implements OnInit, OnDestroy {
   navigateHome() {
     this.menuService.navigateHome();
     return false;
-  }
-
-  async onClickAttendance() {
-    var getEmployeeRes = await lastValueFrom(this.employeeService.getEmployeeById(this.userLoggedIn?.user?.userId || ""));
-    const attendanceRef = this.dialog.open(PunchInOutComponent, {
-      disableClose: true,
-      height: '810px',
-      width: '780px',
-      backdropClass: 'custom-backdrop',
-      hasBackdrop: true,
-      autoFocus: false,
-      data: {
-        model: getEmployeeRes.result,
-      }
-    });
-    attendanceRef.afterClosed().subscribe(async response => {
-      if (response) {
-        // await this.refreshData();
-      }
-    });
   }
 }

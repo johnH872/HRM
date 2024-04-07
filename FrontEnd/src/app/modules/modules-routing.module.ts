@@ -1,9 +1,14 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
-import { AdminAuthGuardService} from "./admin-auth-guard.service";
+import { AdminAuthGuardService } from "./admin-auth-guard.service";
 import { AuthAuthGuardService } from "./auth-auth-guard.service";
 
 const routes: Routes = [
+    {
+        path: 'face',
+        loadChildren: () => import('./face-recog/face-recog.module')
+            .then(m => m.FaceRecogModule)
+    },
     {
         path: 'admin',
         canActivate: [AdminAuthGuardService],
@@ -16,7 +21,8 @@ const routes: Routes = [
         loadChildren: () => import('./home/home.module')
             .then(m => m.HomeModule)
     },
-    { path: '', redirectTo: 'admin', pathMatch: 'full'},
+
+    // { path: '', redirectTo: 'admin', pathMatch: 'full'},
     { path: '**', redirectTo: 'admin', pathMatch: 'full' },
 ];
 

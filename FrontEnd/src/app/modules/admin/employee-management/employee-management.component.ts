@@ -110,8 +110,8 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
     this.employeeModel = model;
     const attendanceRef = this.dialog.open(TrainEmployeeComponent, {
       disableClose: true,
-      height: '810px',
-      width: '780px',
+      height: "calc(100% - 30px)",
+      width: "80%",
       backdropClass: 'custom-backdrop',
       hasBackdrop: true,
       autoFocus: false,

@@ -78,6 +78,8 @@ import {MatStepperModule} from '@angular/material/stepper';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { DateArrFormatPipe } from './pipes/date-arr-format.pipe';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { CardModule } from 'primeng/card';
+import { StepsModule } from 'primeng/steps';
 
 const materialModules = [
   MatFormFieldModule,
@@ -156,6 +158,8 @@ const primengModules = [
   ButtonModule,
   ToolbarModule,
   DialogModule,
+  CardModule,
+  StepsModule
 ]
 
 @NgModule({

@@ -136,11 +136,11 @@ class LeaveRequestController {
             var {start, end} = req.body;
             console.log(start)
             const lstRequest = await dbContext.LeaveRequest.findAll({
-                // include: [
-                //     {
-                //         model: dbContext.LeaveType,
-                //     },
-                // ],
+                include: [
+                    {
+                        model: dbContext.DataState,
+                    },
+                ],
                 where: {
                     userId: employeeId,
                     leaveDateFrom:  {

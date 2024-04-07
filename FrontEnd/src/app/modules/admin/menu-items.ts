@@ -9,6 +9,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   },
   {
     title: 'FEATURES',
+    icon: 'bookmark-outline',
     children: [
       {
         title: 'Employees',
@@ -55,6 +56,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   },
   {
     title: 'System',
+    icon: 'settings-2-outline',
     children: [
       {
         title: 'DataStates',
@@ -72,15 +74,5 @@ export const MENU_ITEMS: NbMenuItem[] = [
         link: '/admin/permission',
       },
     ],
-  },
-  {
-    title: 'Attendance',
-    // children: [
-    //   {
-    //     title: 'Punch In/Out',
-    //     icon: 'checkmark-square-outline',
-    //     link: '/admin/punch-in-out',
-    //   }
-    // ],
   },
 ];

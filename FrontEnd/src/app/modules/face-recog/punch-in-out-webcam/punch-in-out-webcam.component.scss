@@ -1,0 +1,17 @@
+.video-container {
+    width:100%;
+    height:100vh;
+    overflow: auto;
+    background-image: url('../../../../assets/images/kitten-default.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+}
+
+.video-container video {
+    position: absolute;
+
+    object-fit: cover;
+    width:100%;
+    height:100%;
+}
