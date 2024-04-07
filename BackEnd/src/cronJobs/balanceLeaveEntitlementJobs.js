@@ -28,9 +28,6 @@ async function handleBalanceLeaveEntitlement() {
         'usableLeave',
         'usedLeave',
         'effectedYear',
-        'createdAt',
-        'updatedAt',
-        'deletedAt',
       ],
       include: [
         {
@@ -44,9 +41,6 @@ async function handleBalanceLeaveEntitlement() {
             'defaultEndMonth',
             'defaultBudget',
             'isPaidSalary',
-            'createdAt',
-            'updatedAt',
-            'deletedAt',
           ],
         },
         {
@@ -66,9 +60,6 @@ async function handleBalanceLeaveEntitlement() {
             'dateStartContract',
             'ownerId',
             'isAppliedFace',
-            'createdAt',
-            'updatedAt',
-            'deletedAt',
           ],
         },
       ],

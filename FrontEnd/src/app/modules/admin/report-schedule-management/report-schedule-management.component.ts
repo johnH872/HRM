@@ -36,15 +36,14 @@ export class ReportScheduleManagementComponent implements OnInit {
   footerData: ReportScheduleDatum;
   defaultHeader = ["userName"];
   listStatus = [
-    { codeColor: "#ff0009", value: "red", display: "Short of hours (< 9.5h)" },
+    { codeColor: "#ff0009", value: "red", display: "Short of hours (< 9h)" },
     { codeColor: "#ffaa00", value: "yellow", display: "Not punchout" },
-    { codeColor: "#8dc63f", value: "green", display: "Normal (9.5h to 10.5h)" },
-    { codeColor: "#008080", value: "purple", display: "Overtime (> 10.5h)" },
+    { codeColor: "#8dc63f", value: "green", display: "Normal (9h to 10h)" },
+    { codeColor: "#008080", value: "purple", display: "Overtime (> 10h)" },
   ];
   listStatusLeave = [
     { codeColor: "#996600", value: "noPaid", display: "Unpaid Leave" },
     { codeColor: "#3366cc", value: "paid", display: "Paid Leave" },
-    { codeColor: "#00ced1", value: "bonus", display: "Bonus Leave" },
   ];
   listStatusRole = [
     { codeColor: "#cc9966", value: "37461060-43d3-42f4-8967-f0ecf7f67f71", display: "Internship" },
@@ -129,19 +128,20 @@ export class ReportScheduleManagementComponent implements OnInit {
       this.dataSource = [];
       this.setupData(this.data.data, this.dataSource);
       this.footerData = {...this.dataSource[this.dataSource.length - 1]};
-      this.dataSource.pop();
+      // this.dataSource.pop();
     }
     this.isLoading = !this.isLoading;
   }
 
   setupData(input: ReportScheduleDatum[], output: ReportScheduleDatum[]) {
     for (var idx = 0; idx < input.length; idx++) {
-      input[idx] = {...input[idx], ...input[idx].attendanceMonthly}
-      input[idx] = {...input[idx], ...input[idx].attendanceModifiedMonthly}
+      // input[idx] = {...input[idx], ...input[idx].attendanceModifiedMonthly}
       input[idx] = {...input[idx], ...input[idx].leaveRequestMonthly}
+      console.log(input[idx]);
       input[idx] = {...input[idx], ...input[idx].leaveRequestTypeMonthly}
       input[idx] = {...input[idx], ...input[idx].attendanceDetailMonthly}
-      input[idx] = {...input[idx], ...input[idx].attendanceRequestMonthly}
+      // input[idx] = {...input[idx], ...input[idx].attendanceRequestMonthly}
+      input[idx] = {...input[idx], ...input[idx].attendanceMonthly}
       output.push(...[input[idx]]);
     }
   }

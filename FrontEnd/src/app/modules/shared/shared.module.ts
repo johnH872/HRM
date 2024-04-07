@@ -227,6 +227,7 @@ const primengModules = [
     NgxEchartsModule,
     DropdownFilterComponent,
     EmployeeSearchingComponent,
+    NumberFormatPipe,
     DatePipePipe,
     DateTimeFormatPipe,
     DateFormatPipe,
@@ -244,6 +245,7 @@ const primengModules = [
     DatePipePipe,
     DateTimeFormatPipe,
     DateFormatPipe,
+    NumberFormatPipe,
   ]
 })
 export class SharedModule { }

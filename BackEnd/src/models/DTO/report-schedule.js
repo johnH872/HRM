@@ -13,7 +13,7 @@ export class Datum {
 
 export class Column {
     year;
-    month = new Month();
+    month;
 }
 
 export class ReportScheduleDatum extends Datum {
