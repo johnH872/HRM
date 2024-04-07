@@ -26,6 +26,8 @@ export class ReportScheduleManagementComponent implements OnInit {
   user;
   frmGroup: FormGroup;
   timeMode = 'Week';
+  viewMode = 'Both';
+  typeMode = 'List';
   timeModeDisplay = 'This week';
   isLoading = false;
   reportScheduleModel: ReportScheduleModel;
@@ -137,7 +139,6 @@ export class ReportScheduleManagementComponent implements OnInit {
     for (var idx = 0; idx < input.length; idx++) {
       // input[idx] = {...input[idx], ...input[idx].attendanceModifiedMonthly}
       input[idx] = {...input[idx], ...input[idx].leaveRequestMonthly}
-      console.log(input[idx]);
       input[idx] = {...input[idx], ...input[idx].leaveRequestTypeMonthly}
       input[idx] = {...input[idx], ...input[idx].attendanceDetailMonthly}
       // input[idx] = {...input[idx], ...input[idx].attendanceRequestMonthly}
@@ -325,5 +326,10 @@ export class ReportScheduleManagementComponent implements OnInit {
 
   async onRefresh() {
     await this.changeAttendanceReportMode();
+  }
+
+  async changeViewMode() {
+    this.reportScheduleModel.viewMode = this.viewMode;
+    this.frmGroup = this.frmBuilder.formGroup(ReportScheduleModel, this.reportScheduleModel);
   }
 }

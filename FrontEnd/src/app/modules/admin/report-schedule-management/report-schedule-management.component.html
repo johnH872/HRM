@@ -3,11 +3,21 @@
     <div style="display:flex; justify-content: left">
       <mat-button-toggle-group class="attendance-report-mode" [(ngModel)]="timeMode"
         (change)="changeAttendanceReportMode(true)">
-        <mat-button-toggle value="Day">Day
+        <mat-button-toggle value="Day" [ngClass]="{'selected-button': timeMode === 'Day'}">Day
         </mat-button-toggle>
-        <mat-button-toggle value="Week" ngDefaultControl>Week
+        <mat-button-toggle value="Week" ngDefaultControl [ngClass]="{'selected-button': timeMode === 'Week'}">Week
         </mat-button-toggle>
-        <mat-button-toggle value="Month">Month
+        <mat-button-toggle value="Month" [ngClass]="{'selected-button': timeMode === 'Month'}">Month
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+    <div style="display:flex; justify-content: center;">
+      <mat-button-toggle-group class="attendance-report-mode" [(ngModel)]="typeMode">
+        <mat-button-toggle value="List" ngDefaultControl [ngClass]="{'selected-button-type': typeMode === 'List'}">
+          <mat-icon>lists</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle value="Grid" [ngClass]="{'selected-button-type': typeMode === 'Grid'}">
+          <mat-icon>auto_awesome_mosaic</mat-icon>
         </mat-button-toggle>
       </mat-button-toggle-group>
     </div>
@@ -32,6 +42,15 @@
   </div>
   <div fxLayout="row" fxLayoutAlign="space-between center">
     <div style="display:flex; justify-content: left">
+      <mat-button-toggle-group class="attendance-report-mode" [(ngModel)]="viewMode"
+        (change)="changeViewMode()">
+        <mat-button-toggle value="Attendance" [ngClass]="{'selected-button': viewMode === 'Attendance'}">Attendance
+        </mat-button-toggle>
+        <mat-button-toggle value="Leave" [ngClass]="{'selected-button': viewMode === 'Leave'}">Leave
+        </mat-button-toggle>
+        <mat-button-toggle value="Both" ngDefaultControl [ngClass]="{'selected-button': viewMode === 'Both'}">Both
+        </mat-button-toggle>
+      </mat-button-toggle-group>
     </div>
     <div style="display: flex; justify-content: right">
       <mat-toolbar style="background-color: #edf1f7; align-items: center;">
