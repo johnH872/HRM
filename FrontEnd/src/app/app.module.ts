@@ -13,10 +13,8 @@ import { HTTP_INTERCEPTORS, HttpClientModule, HttpClientJsonpModule, HttpClient 
 import { TokenInterceptor } from './TokenInterceptor';
 import { QuillModule } from 'ngx-quill'
 import { DatePipe } from '@angular/common';
-import { DatePipePipe } from './modules/shared/pipes/date-pipe.pipe';
 import { NgxEchartsModule } from 'ngx-echarts';
-import { DateFormatPipe, DateTimeFormatPipe } from './modules/shared/pipes/date-time-format.pipe';
-
+import { SocketService } from './socket.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -44,6 +42,7 @@ import { DateFormatPipe, DateTimeFormatPipe } from './modules/shared/pipes/date-
     NbCardModule,
     FontAwesomeModule,
     NgxEchartsModule.forRoot({ echarts: () => import('echarts') }),
+    
   ],
   providers: [
     {
@@ -52,6 +51,7 @@ import { DateFormatPipe, DateTimeFormatPipe } from './modules/shared/pipes/date-
       multi: true
     },
     DatePipe,
+    SocketService
   ],
   bootstrap: [AppComponent]
 })

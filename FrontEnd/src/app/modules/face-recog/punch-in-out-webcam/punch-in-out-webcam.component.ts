@@ -5,6 +5,8 @@ import { lastValueFrom } from 'rxjs';
 import { EmployeeManagementService } from '../../admin/employee-management/employee-management.service';
 import { MatDialog } from '@angular/material/dialog';
 import { PunchCardComponent } from './punch-card/punch-card.component';
+import { environment } from 'src/enviroments/enviroment';
+import { AlertCardComponent } from './alert-card/alert-card.component';
 
 @Component({
   selector: 'app-punch-in-out-webcam',
@@ -28,6 +30,7 @@ export class PunchInOutWebcamComponent implements OnInit, OnDestroy {
   cameraInterval: any;
   detectedMaps: Map<String, number> = new Map();
   isOpeningDialog: boolean = false;
+  cancelClickCouting: number = 0;
   constructor(
     private elRef: ElementRef,
     private http: HttpClient,
@@ -77,7 +80,7 @@ export class PunchInOutWebcamComponent implements OnInit, OnDestroy {
       };
       // Get face matcher models for face recognition
       faceapi.matchDimensions(this.canvas, this.displaySize);
-      const JSONparseFaceMatcher = await lastValueFrom(this.http.get("./assets/traning_model/faceMatcher.json"));
+      const JSONparseFaceMatcher = await lastValueFrom(this.http.get(environment.FACE_MATCHER_MODEL_URL));
       const FaceMatcherFromJSON = faceapi.FaceMatcher.fromJSON(JSONparseFaceMatcher);
       const labeledDescriptors = FaceMatcherFromJSON.labeledDescriptors;
       const faceMatcher = new faceapi.FaceMatcher(labeledDescriptors, 0.7);
@@ -94,28 +97,45 @@ export class PunchInOutWebcamComponent implements OnInit, OnDestroy {
             this.displaySize
           );
           const box = this.resizedDetections.detection.box;
-          if(!this.detectedMaps.has(bestMatch.label)) this.detectedMaps.set(bestMatch.label, 0);
-          else if(bestMatch.distance <= 0.45) {
-            var existedCount = this.detectedMaps.get(bestMatch.label);
-            ++existedCount;
-            this.detectedMaps.set(bestMatch.label, existedCount);
-            if(existedCount == 10) this.employeeManagementService.getEmployeeById(bestMatch?.label).subscribe(res => {
-              if(res.result) {
-                this.isOpeningDialog = true;
-                this.dialog.open(PunchCardComponent, {
-                  width: 'auto',
-                  height: 'auto',
-                  backdropClass: 'custom-backdrop',
-                  hasBackdrop: true,
-                  data: {
-                    model: res.result
-                  },
-                }).afterClosed().subscribe(closeRes => {
-                  this.isOpeningDialog = false;
-                  this.detectedMaps.clear();
-                });
+          // if(!this.detectedMaps.has(bestMatch.label)) this.detectedMaps.set(bestMatch.label, 0);
+          // else if(bestMatch.distance <= 0.45) {
+          //   var existedCount = this.detectedMaps.get(bestMatch.label);
+          //   ++existedCount;
+          //   this.detectedMaps.set(bestMatch.label, existedCount);
+          //   if(existedCount == 5 && this.cancelClickCouting != 3) this.employeeManagementService.getEmployeeById(bestMatch?.label).subscribe(res => {
+          //     if(res.result) {
+          //       this.isOpeningDialog = true;
+          //       this.dialog.open(PunchCardComponent, {
+          //         width: 'auto',
+          //         height: 'auto',
+          //         backdropClass: 'custom-backdrop',
+          //         hasBackdrop: true,
+          //         data: {
+          //           model: res.result
+          //         },
+          //       }).afterClosed().subscribe( closeRes => {
+          //         if(!closeRes) this.cancelClickCouting++;
+          //         this.isOpeningDialog = false;
+          //         this.detectedMaps.clear();
+          //       });
+          //     }
+          //   })
+          // }
+          if(this.cancelClickCouting == 0) {
+            this.isOpeningDialog = true;
+            this.dialog.open(AlertCardComponent, {
+              width: 'auto',
+              height: 'auto',
+              backdropClass: 'custom-backdrop',
+              hasBackdrop: true,
+              data: {
+                // model: res.result
               }
-            })
+            }).afterClosed().subscribe( closeRes => {
+              this.cancelClickCouting = 0;
+              this.isOpeningDialog = false;
+              this.detectedMaps.clear();
+            });
           }
           const drawBox = new faceapi.draw.DrawBox(box, { label: bestMatch.toString(true) });
           drawBox.draw(this.canvas);

@@ -1,0 +1,38 @@
+<mat-dialog-content class="punch-card-container">
+    <p-card styleClass="custom-card">
+        <div fxLayout="row" fxLayoutAlign="center center">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#000000">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                    <title>i</title>
+                    <g id="Complete">
+                        <g id="alert-circle">
+                            <g>
+                                <line x1="12" y1="8" x2="12" y2="12" fill="none" stroke="#d71e1f" stroke-linecap="round"
+                                    stroke-linejoin="round" stroke-width="2"></line>
+                                <line x1="12" y1="16" x2="12" y2="16" fill="none" stroke="#d71e1f"
+                                    stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></line>
+                                <circle id="_--Circle" data-name="--Circle" cx="12" cy="12" r="10" fill="none"
+                                    stroke="#d71e1f" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                </circle>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </svg>
+        </div>
+        <div fxLayout="column" fxLayoutAlign="start start" class="text-center">
+            <span class="main-text my-4">The face scanning process has encountered an error and was unable to verify
+                your identity. Would you
+                like to notify the administrator about this issue for further assistance?</span>
+            <span class="quote-text mb-2">We will take a picture of you and send it to your manager if you click on the
+                <b style="color: #d71e1f;">Send reprot</b> button.</span>
+            <span class="quote-text">We suggest you try few more times before duing this action.</span>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="end center" style="padding: unset !important; margin-top: 1.5rem;" class=" flex flex-wrap gap-3">
+            <p-button styleClass="p-button-sm p-button-secondary" label="Cancel" size="small"></p-button>
+            <p-button styleClass="p-button-sm p-button-danger" label="Send report" size="small"></p-button>
+        </div>
+    </p-card>
+</mat-dialog-content>

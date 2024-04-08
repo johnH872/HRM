@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import {v2 as cloudinary} from 'cloudinary';
+import { v2 as cloudinary } from 'cloudinary';
 
 cloudinary.config({
     cloud_name: process.env.CLOUD_NAME,
@@ -7,18 +7,36 @@ cloudinary.config({
     api_secret: process.env.API_SECRET,
 })
 
-const uploadImage = async(url) => {
+const uploadImage = async (url) => {
     try {
         var result = await cloudinary.uploader.upload(url);
-        if(result.url) {
+        if (result.url) {
             return result.url;
         } else return "";
     }
-    catch(error) {
+    catch (error) {
+        console.log(error);
+    }
+}
+
+const uploadFaceMatcherFile = async (url) => {
+    try {
+        var result = await cloudinary.uploader.upload(url, {
+            folder: "traning_model",
+            resource_type: "auto",
+            use_filename: true,
+            unique_filename: false
+        })
+        if (result.url) {
+            return result.url;
+        } else return "";
+    }
+    catch (error) {
         console.log(error);
     }
 }
 
 export {
-    uploadImage
+    uploadImage,
+    uploadFaceMatcherFile
 }
