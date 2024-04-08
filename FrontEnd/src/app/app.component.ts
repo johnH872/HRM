@@ -1,7 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ReactiveFormConfig } from '@rxweb/reactive-form-validators';
 // import Redis from 'ioredis';
-import { SocketService } from './socket.service';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -9,14 +8,14 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit {
   title = 'FrontEnd';
   socket: any;
   message: string = '';
   messages: string[] = [];
 
   constructor(
-    private socketService: SocketService,
+    // private socketService: SocketService,
     private httpClient: HttpClient
   ) {
 
@@ -68,7 +67,7 @@ export class AppComponent implements OnInit, OnDestroy {
     // });
   }
 
-  ngOnDestroy(): void {
-    this.socketService.disconnect();
-  }
+  // ngOnDestroy(): void {
+  //   this.socketService.disconnect();
+  // }
 }
