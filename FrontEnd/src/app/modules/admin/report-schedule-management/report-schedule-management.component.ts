@@ -138,11 +138,16 @@ export class ReportScheduleManagementComponent implements OnInit {
   setupData(input: ReportScheduleDatum[], output: ReportScheduleDatum[]) {
     for (var idx = 0; idx < input.length; idx++) {
       // input[idx] = {...input[idx], ...input[idx].attendanceModifiedMonthly}
-      input[idx] = {...input[idx], ...input[idx].leaveRequestMonthly}
-      input[idx] = {...input[idx], ...input[idx].leaveRequestTypeMonthly}
-      input[idx] = {...input[idx], ...input[idx].attendanceDetailMonthly}
+      // input[idx] = {...input[idx], ...input[idx].leaveRequestMonthly}
+      // input[idx] = {...input[idx], ...input[idx].leaveRequestTypeMonthly}
+      // input[idx] = {...input[idx], ...input[idx].attendanceDetailMonthly}
       // input[idx] = {...input[idx], ...input[idx].attendanceRequestMonthly}
-      input[idx] = {...input[idx], ...input[idx].attendanceMonthly}
+      // input[idx] = {...input[idx], ...input[idx].attendanceMonthly}
+      input[idx].attendanceMonthly.map(item => input[idx] = {...input[idx], ...item});
+      input[idx].attendanceDetailMonthly.map(item => input[idx] = {...input[idx], ...item});
+      input[idx].leaveRequestMonthly.map(item => input[idx] = {...input[idx], ...item});
+      input[idx].leaveRequestMonthly.map(item => input[idx] = {...input[idx], ...item});
+
       output.push(...[input[idx]]);
     }
   }

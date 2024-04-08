@@ -320,38 +320,33 @@ class ReportScheduleController {
                         case 'Week':
                             if (firstLeaveInDate != null && lastLeaveInDate != null && totalNumberOfHourInDay > 0) {
                                 dataOwner.leaveRequestMonthly.push({
-                                    key: key + '-leave',
-                                    value: `${firstLeaveInDate.leaveDateFrom.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} - 
+                                    [key + '-leave']: 
+                                            `${firstLeaveInDate.leaveDateFrom.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} - 
                                             ${lastLeaveInDate.leaveDateTo.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} 
                                             (${totalNumberOfHourInDay}h)`
                                 });
                                 dataOwner.leaveRequestTypeMonthly.push({
-                                    key: key + '-leaveType',
-                                    value: firstLeaveInDate.LeaveEntitlement.LeaveType.isPaidSalary ? 'Paid' : 'NoPaid'
+                                    [key + '-leaveType']: firstLeaveInDate.LeaveEntitlement.LeaveType.isPaidSalary ? 'Paid' : 'NoPaid'
                                 });
                             } else {
                                 dataOwner.leaveRequestMonthly.push({
-                                    key: key + '-leave',
-                                    value: null
+                                    [key + '-leave']: null
                                 });
                                 dataOwner.leaveRequestTypeMonthly.push({
-                                    key: key + '-leaveType',
-                                    value: null
+                                    [key + '-leaveType']: null
                                 });
                             }
                             if (dataFilterReport.listStatus.includes('red') && 0 < totalDurationInDay && totalDurationInDay < 9.00) {
                                 if (firstAttendanceInDay != null && lastAttendanceInDate != null) {
                                     dataOwner.attendanceMonthly.push({
-                                        key: key,
-                                        value: `${firstAttendanceInDay.punchinDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} - 
+                                        [key]: `${firstAttendanceInDay.punchinDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} - 
                                                 ${lastAttendanceInDate.punchoutDate ? lastAttendanceInDate.punchoutDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) : '??:??'} = 
                                                 ${totalDurationInDay}h`
                                     });
                                     totalDurationInRange += totalDurationInDay;
                                 } else {
                                     dataOwner.attendanceMonthly.push({
-                                        key: key,
-                                        value: `--`
+                                        [key]: `--`
                                     });
                                 }
                             }
@@ -359,8 +354,7 @@ class ReportScheduleController {
                                 if (firstAttendanceInDay != null && lastAttendanceInDate != null) {
                                     if (!lastAttendanceInDate.punchoutDate) {
                                         dataOwner.attendanceMonthly.push({
-                                            key: key,
-                                            value: `${firstAttendanceInDay.punchinDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} - 
+                                            [key]: `${firstAttendanceInDay.punchinDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} - 
                                                     ${lastAttendanceInDate.punchoutDate ? lastAttendanceInDate.punchoutDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) : '??:??'} = 
                                                     ${totalDurationInDay}h`
                                         });
@@ -368,40 +362,35 @@ class ReportScheduleController {
                                     }
                                 } else {
                                     dataOwner.attendanceMonthly.push({
-                                        key: key,
-                                        value: `--`
+                                        [key]: `--`
                                     });
                                 }
                             }
                             if (dataFilterReport.listStatus.includes('green') && 9.00 <= totalDurationInDay && totalDurationInDay < 10.00) {
                                 if (firstAttendanceInDay != null && lastAttendanceInDate != null) {
                                     dataOwner.attendanceMonthly.push({
-                                        key: key,
-                                        value: `${firstAttendanceInDay.punchinDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} - 
+                                        [key]: `${firstAttendanceInDay.punchinDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} - 
                                                 ${lastAttendanceInDate.punchoutDate ? lastAttendanceInDate.punchoutDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) : '??:??'} = 
                                                 ${totalDurationInDay}h`
                                     });
                                     totalDurationInRange += totalDurationInDay;
                                 } else {
                                     dataOwner.attendanceMonthly.push({
-                                        key: key,
-                                        value: `--`
+                                        [key]: `--`
                                     });
                                 }
                             }
                             if (dataFilterReport.listStatus.includes('purple') && totalDurationInDay >= 10.00) {
                                 if (firstAttendanceInDay != null && lastAttendanceInDate != null) {
                                     dataOwner.attendanceMonthly.push({
-                                        key: key,
-                                        value: `${firstAttendanceInDay.punchinDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} - 
+                                        [key]: `${firstAttendanceInDay.punchinDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} - 
                                                 ${lastAttendanceInDate.punchoutDate ? lastAttendanceInDate.punchoutDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) : '??:??'} = 
                                                 ${totalDurationInDay}h`
                                     });
                                     totalDurationInRange += totalDurationInDay;
                                 } else {
                                     dataOwner.attendanceMonthly.push({
-                                        key: key,
-                                        value: `--`
+                                        [key]: `--`
                                     });
                                 }
                             }
@@ -409,49 +398,42 @@ class ReportScheduleController {
                         case 'Month':
                             if (firstLeaveInDate != null && lastLeaveInDate != null && totalNumberOfHourInDay > 0) {
                                 dataOwner.leaveRequestMonthly.push({
-                                    key: key + '-leave',
-                                    value: `${firstLeaveInDate.leaveDateFrom.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} - 
+                                    [key + '-leave']: 
+                                            `${firstLeaveInDate.leaveDateFrom.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} - 
                                             ${lastLeaveInDate.leaveDateTo.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} 
                                             (${totalNumberOfHourInDay}h)`
                                 });
                                 dataOwner.leaveRequestTypeMonthly.push({
-                                    key: key + '-leaveType',
-                                    value: firstLeaveInDate.LeaveEntitlement.LeaveType.isPaidSalary ? 'Paid' : 'NoPaid'
+                                    [key + '-leaveType']: firstLeaveInDate.LeaveEntitlement.LeaveType.isPaidSalary ? 'Paid' : 'NoPaid'
                                 });
                             } else {
                                 dataOwner.leaveRequestMonthly.push({
-                                    key: key + '-leave',
-                                    value: null
+                                    [key + '-leave']: null
                                 });
                                 dataOwner.leaveRequestTypeMonthly.push({
-                                    key: key + '-leaveType',
-                                    value: null
+                                    [key + '-leaveType']: null
                                 });
                             }
                             if (dataFilterReport.listStatus.includes('yellow')) {
                                 dataOwner.attendanceMonthly.push({
-                                    key: key,
-                                    value: null
+                                    [key]: `${null}`
                                 });
                             }
                             if (dataFilterReport.listStatus.includes('red') && 0 < totalDurationInDay && totalDurationInDay < 9.00) {
                                 dataOwner.attendanceMonthly.push({
-                                    key: key,
-                                    value: `${totalDurationInDay}`
+                                    [key]: `${totalDurationInDay}`
                                 });
                                 totalDayWorkingInRange += totalDurationInDay;
                             }
                             if (dataFilterReport.listStatus.includes('green') && 9.00 <= totalDurationInDay && totalDurationInDay < 10.00) {
                                 dataOwner.attendanceMonthly.push({
-                                    key: key,
-                                    value: `${totalDurationInDay}`
+                                    [key]: `${totalDurationInDay}`
                                 });
                                 totalDayWorkingInRange += totalDurationInDay;
                             }
                             if (dataFilterReport.listStatus.includes('purple') && totalDurationInDay >= 10.00) {
                                 dataOwner.attendanceMonthly.push({
-                                    key: key,
-                                    value: `${totalDurationInDay}`
+                                    [key]: `${totalDurationInDay}`
                                 });
                                 totalDayWorkingInRange += totalDurationInDay;
                             }
@@ -459,8 +441,7 @@ class ReportScheduleController {
                     }
 
                     dataOwner.attendanceDetailMonthly.push({
-                        key: key + '-detail',
-                        value: lstAttendanceDetail
+                        [key + '-detail']: lstAttendanceDetail
                     });
                     currentDate.setDate(currentDate.getDate() + 1);
                 }
