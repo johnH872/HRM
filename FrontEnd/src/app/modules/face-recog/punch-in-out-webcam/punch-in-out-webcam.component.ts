@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { PunchCardComponent } from './punch-card/punch-card.component';
 import { environment } from 'src/enviroments/enviroment';
 import { AlertCardComponent } from './alert-card/alert-card.component';
+import { ReportAttendanceDialogComponent } from './report-attendance-dialog/report-attendance-dialog.component';
 
 @Component({
   selector: 'app-punch-in-out-webcam',
@@ -87,7 +88,7 @@ export class PunchInOutWebcamComponent implements OnInit, OnDestroy {
 
       faceapi.matchDimensions(this.canvas, this.displaySize);
       this.cameraInterval = setInterval(async () => {
-        if(this.isOpeningDialog) return;
+        if (this.isOpeningDialog) return;
         this.detection = await faceapi.detectSingleFace(this.videoInput, new faceapi.SsdMobilenetv1Options({ minConfidence: 0.75, maxResults: 1 })).withFaceLandmarks().withFaceDescriptor();
         this.canvas.getContext('2d').clearRect(0, 0, this.canvas.width, this.canvas.height);
         if (this.detection) {
@@ -121,7 +122,7 @@ export class PunchInOutWebcamComponent implements OnInit, OnDestroy {
           //     }
           //   })
           // }
-          if(this.cancelClickCouting == 0) {
+          if (this.cancelClickCouting == 0) {
             this.isOpeningDialog = true;
             this.dialog.open(AlertCardComponent, {
               width: 'auto',
@@ -131,10 +132,36 @@ export class PunchInOutWebcamComponent implements OnInit, OnDestroy {
               data: {
                 // model: res.result
               }
-            }).afterClosed().subscribe( closeRes => {
-              this.cancelClickCouting = 0;
-              this.isOpeningDialog = false;
-              this.detectedMaps.clear();
+            }).afterClosed().subscribe(closeRes => {
+              if (closeRes) {
+                this.canvas.style.display = 'none';
+
+                this.canvas
+                  .getContext("2d")
+                  .drawImage(this.videoInput, 0, 0, window.innerWidth, window.innerHeight);
+                var captureImg = this.canvas.toDataURL("image/png");
+                this.canvas.toBlob((blob: any) => {
+                  this.dialog.open(ReportAttendanceDialogComponent, {
+                    width: 'auto',
+                    height: 'auto',
+                    backdropClass: 'custom-backdrop',
+                    hasBackdrop: true,
+                    data: {
+                      blobImage: blob,
+                      captureImg: captureImg,
+                    }
+                  }).afterClosed().subscribe(res => {
+                    this.cancelClickCouting = 0;
+                    this.isOpeningDialog = false;
+                    this.detectedMaps.clear();
+                  })
+                }, 'image/png');
+
+              } else {
+                this.cancelClickCouting = 0;
+                this.isOpeningDialog = false;
+                this.detectedMaps.clear();
+              }
             });
           }
           const drawBox = new faceapi.draw.DrawBox(box, { label: bestMatch.toString(true) });

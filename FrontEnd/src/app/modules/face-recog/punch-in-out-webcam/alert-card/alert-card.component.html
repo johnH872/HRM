@@ -30,9 +30,9 @@
                 <b style="color: #d71e1f;">Send reprot</b> button.</span>
             <span class="quote-text">We suggest you try few more times before duing this action.</span>
         </div>
-        <div fxLayout="row" fxLayoutAlign="end center" style="padding: unset !important; margin-top: 1.5rem;" class=" flex flex-wrap gap-3">
-            <p-button styleClass="p-button-sm p-button-secondary" label="Cancel" size="small"></p-button>
-            <p-button styleClass="p-button-sm p-button-danger" label="Send report" size="small"></p-button>
+        <div fxLayout="row" fxLayoutAlign="end center" style="padding: unset !important; margin-top: 1.5rem;" class="flex flex-wrap gap-3">
+            <p-button (onClick)="closeDialog()" styleClass="p-button-sm p-button-secondary" label="Cancel" size="small"></p-button>
+            <p-button (onClick)="onClickReport()" styleClass="p-button-sm p-button-danger" label="Send report" size="small"></p-button>
         </div>
     </p-card>
 </mat-dialog-content>

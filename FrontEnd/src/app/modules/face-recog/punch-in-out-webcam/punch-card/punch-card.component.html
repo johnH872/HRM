@@ -8,7 +8,7 @@
 <mat-dialog-content class="p-0">
     <p-card [header]="isPunchIn ? 'Punch in card' : 'Punch out card' " class="punch-card-container">
         <ng-template pTemplate="header">
-            <img [src]="employeeModel.avatarUrl || defaultAvatar" class="user-img"/>
+            <img [src]="employeeModel?.avatarUrl || defaultAvatar" class="user-img"/>
         </ng-template>
         <div fxLayout="column" fxLayoutAlign="start start">
             <span class="text-align-start"><b>Fullname:</b> {{employeeModel.firstName}} {{employeeModel.middleName}} {{employeeModel.lastName}}</span>

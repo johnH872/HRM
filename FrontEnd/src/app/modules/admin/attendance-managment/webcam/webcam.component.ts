@@ -138,7 +138,6 @@ export class WebcamComponent implements OnInit, OnDestroy {
     this.detection = await faceapi.detectSingleFace(this.videoInput, new faceapi.SsdMobilenetv1Options({ minConfidence: 0.75, maxResults: 1 })).withFaceLandmarks().withFaceDescriptor();
     if (this.detection) {
       const bestMatch = faceMatcher.findBestMatch(this.detection.descriptor);
-      console.log(bestMatch.distance);
       if (bestMatch.distance > 0.5 && bestMatch.label === userId) result = true;
     }
     return result;
