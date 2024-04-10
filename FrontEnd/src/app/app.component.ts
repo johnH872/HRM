@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ReactiveFormConfig } from '@rxweb/reactive-form-validators';
+// import Redis from 'ioredis';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -8,6 +10,17 @@ import { ReactiveFormConfig } from '@rxweb/reactive-form-validators';
 })
 export class AppComponent implements OnInit {
   title = 'FrontEnd';
+  socket: any;
+  message: string = '';
+  messages: string[] = [];
+
+  constructor(
+    // private socketService: SocketService,
+    private httpClient: HttpClient
+  ) {
+
+  }
+
   ngOnInit(): void {
     ReactiveFormConfig.set({
       internationalization: {
@@ -44,5 +57,17 @@ export class AppComponent implements OnInit {
         numberic: 'Only numeric is allowed',
       }
     });
+
+    // this.socketService.setupSocketConnection();
+    // // Save facematcher data
+    // this.socketService.socket.on('message', (data: any) => {
+    //   this.httpClient.post('../assets/traning_model/faceMatcher.json', JSON.stringify(data)).subscribe(res => {
+    //     console.log('Updated file');
+    //   })
+    // });
   }
+
+  // ngOnDestroy(): void {
+  //   this.socketService.disconnect();
+  // }
 }
