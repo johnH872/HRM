@@ -129,7 +129,7 @@ export class ReportScheduleManagementComponent implements OnInit {
       this.headerData2 = [...this.defaultHeader, ...new Set(this.headerData.map(e => { return e.key })), ...['grandTotal']]; //Distinct a list to prevent duplicate column
       this.dataSource = [];
       this.setupData(this.data.data, this.dataSource);
-      this.footerData = {...this.dataSource[this.dataSource.length - 1]};
+      // this.footerData = {...this.dataSource[this.dataSource.length - 1]};
       // this.dataSource.pop();
     }
     this.isLoading = !this.isLoading;
