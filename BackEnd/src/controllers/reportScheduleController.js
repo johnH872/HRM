@@ -141,23 +141,17 @@ class ReportScheduleController {
                 attributes: [
                     'attendanceId',
                     'userId',
-                    [
-                        literal(`DATE_ADD(${'Attendance.punchinDate'}, INTERVAL ${timeZoneSetting} HOUR)`),
-                        'punchinDate'
-                    ],
+                    'punchinDate',
                     'punchinNote',
                     'punchinOffset',
-                    [
-                        literal(`DATE_ADD(${'Attendance.punchoutDate'}, INTERVAL ${timeZoneSetting} HOUR)`),
-                        'punchoutDate'
-                    ],
+                    'punchoutDate',
                     'punchoutNote',
                     'punchoutOffset',
                     [
                       literal(
                         `CASE 
                             WHEN ${'Attendance.punchoutTime'} > ${'Attendance.punchinTime'} 
-                                THEN ${'Attendance.punchoutTime'} - ${'Attendance.punchinTime'} / 3600000
+                                THEN (${'Attendance.punchoutTime'} - ${'Attendance.punchinTime'}) / 3600000
                             ELSE 0
                         END`
                       ),
@@ -222,14 +216,8 @@ class ReportScheduleController {
                     'leaveRequestId',
                     'userId',
                     'leaveEntitlementId',
-                    [
-                        literal(`DATE_ADD(LeaveRequest.leaveDateFrom, INTERVAL ${timeZoneSetting} HOUR)`),
-                        'leaveDateFrom'
-                    ],
-                    [
-                        literal(`DATE_ADD(LeaveRequest.leaveDateTo, INTERVAL ${timeZoneSetting} HOUR)`),
-                        'leaveDateTo'
-                    ],
+                    'leaveDateFrom',
+                    'leaveDateTo',
                     'session',
                     'numberOfHour',
                     'status',
@@ -258,59 +246,62 @@ class ReportScheduleController {
                     var lstAttendanceDetail = [];
                     var totalDurationInDay = 0;
 
-                    var firstAttendanceInDay = lstAttendancesModel.find(attendance => 
+                    var indexFirstAttendanceInDay = lstAttendancesModel.findIndex(attendance => 
                         attendance.userId = employee.userId &&
                         attendance.punchinDate.getDate() === currentDate.getDate() &&
                         attendance.punchinDate.getMonth() === currentDate.getMonth() &&
                         attendance.punchinDate.getFullYear() === currentDate.getFullYear());
+                    var firstAttendanceInDay = lstAttendancesModel[indexFirstAttendanceInDay];
                     var indexLastAttendanceInDay = lstAttendancesModel.findLastIndex(attendance => 
                         attendance.userId = employee.userId &&
                         attendance.punchinDate.getDate() === currentDate.getDate() &&
                         attendance.punchinDate.getMonth() === currentDate.getMonth() &&
                         attendance.punchinDate.getFullYear() === currentDate.getFullYear());
                     var lastAttendanceInDate = lstAttendancesModel[indexLastAttendanceInDay];
-
                     lstAttendancesModel.forEach(item => {
-                        if (item.userId === employee.userId &&
-                            item.punchinDate.getDate() === currentDate.getDate() &&
-                            item.punchinDate.getMonth() === currentDate.getMonth() &&
-                            item.punchinDate.getFullYear() === currentDate.getFullYear()) {
-                                totalDurationInDay += item.duration;
+                        var attendanceItem = item?.dataValues;
+                        if (attendanceItem.User.userId === employee.userId &&
+                            attendanceItem.punchinDate.getDate() === currentDate.getDate() &&
+                            attendanceItem.punchinDate.getMonth() === currentDate.getMonth() &&
+                            attendanceItem.punchinDate.getFullYear() === currentDate.getFullYear()) {
+                                totalDurationInDay += attendanceItem.duration;
                                 lstAttendanceDetail.push({
-                                    attendanceId: item.attendanceId,
-                                    userId: item.userId,
-                                    User: item.User,
-                                    punchinDate: item.punchinDate ? item.punchinDate.setHours(item.punchinDate.getHours() - timeZoneSetting) : item.punchinDate,
-                                    punchoutDate: item.punchoutDate ? item.punchoutDate.setHours(item.punchoutDate.getHours() - timeZoneSetting) : item.punchoutDate,
-                                    duration: item.duration,
+                                    attendanceId: attendanceItem.attendanceId,
+                                    userId: attendanceItem.userId,
+                                    User: attendanceItem.User,
+                                    punchinDate: attendanceItem.punchinDate,
+                                    punchoutDate: attendanceItem.punchoutDate,
+                                    duration: attendanceItem.duration,
                                 });
                             }
                     });
 
-                    var firstLeaveInDate = lstLeavesModel.find(leave => 
+                    var indexFirstLeaveInDate = lstLeavesModel.findIndex(leave => 
                         leave.userId === employee.userId && 
                         leave.leaveDateFrom.getDate() === currentDate.getDate());
+                    var firstLeaveInDate = lstLeavesModel[indexFirstLeaveInDate];
                     var indexLastLeaveInDate = lstLeavesModel.findLastIndex(leave => 
                         leave.userId === employee.userId && 
                         leave.leaveDateFrom.getDate() === currentDate.getDate());
                     var lastLeaveInDate = lstLeavesModel[indexLastLeaveInDate];
                     var totalNumberOfHourInDay = lstAttendancesModel.reduce((acc, leave) => acc + leave?.numberOfHour, 0);
                     lstLeavesModel.forEach(item => {
-                        if (item.userId === employee.userId &&
-                            item.leaveDateFrom.getDate() === currentDate.getDate()) {
+                        var leaveItem = item.dataValues;
+                        if (leaveItem.userId === employee.userId &&
+                            leaveItem.leaveDateFrom.getDate() === currentDate.getDate()) {
                             lstAttendanceDetail.push({
-                                leaveRequestId: item.leaveRequestId,
-                                userId: item.userId,
-                                User: item.User,
-                                reason: item.reason,
-                                leaveEntitlementId: item.leaveEntitlementId,
-                                LeaveEntitlement: item.LeaveEntitlement,
-                                leaveDateFrom: item.leaveDateFrom ? item.leaveDateFrom.setHours(item.leaveDateFrom.getHours() - timeZoneSetting) : item.leaveDateFrom,
-                                leaveDateTo: item.leaveDateTo ? item.leaveDateTo.setHours(item.leaveDateTo.getHours() - timeZoneSetting) : item.leaveDateTo,
-                                numberOfHour: item.numberOfHour,
-                                status: item.status,
-                                session: item.session,
-                                note: item.note,
+                                leaveRequestId: leaveItem.leaveRequestId,
+                                userId: leaveItem.userId,
+                                User: leaveItem.User,
+                                reason: leaveItem.reason,
+                                leaveEntitlementId: leaveItem.leaveEntitlementId,
+                                LeaveEntitlement: leaveItem.LeaveEntitlement,
+                                leaveDateFrom: leaveItem.leaveDateFrom,
+                                leaveDateTo: leaveItem.leaveDateTo,
+                                numberOfHour: leaveItem.numberOfHour,
+                                status: leaveItem.status,
+                                session: leaveItem.session,
+                                note: leaveItem.note,
                             });
                         }
                     });
@@ -339,9 +330,7 @@ class ReportScheduleController {
                             if (dataFilterReport.listStatus.includes('red') && 0 < totalDurationInDay && totalDurationInDay < 9.00) {
                                 if (firstAttendanceInDay != null && lastAttendanceInDate != null) {
                                     dataOwner.attendanceMonthly.push({
-                                        [key]: `${firstAttendanceInDay.punchinDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} - 
-                                                ${lastAttendanceInDate.punchoutDate ? lastAttendanceInDate.punchoutDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) : '??:??'} = 
-                                                ${totalDurationInDay}h`
+                                        [key]: `${firstAttendanceInDay.punchinDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} - ${lastAttendanceInDate.punchoutDate ? lastAttendanceInDate.punchoutDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) : '??:??'} = ${totalDurationInDay.toFixed(2)}h`
                                     });
                                     totalDurationInRange += totalDurationInDay;
                                 } else {
@@ -354,9 +343,7 @@ class ReportScheduleController {
                                 if (firstAttendanceInDay != null && lastAttendanceInDate != null) {
                                     if (!lastAttendanceInDate.punchoutDate) {
                                         dataOwner.attendanceMonthly.push({
-                                            [key]: `${firstAttendanceInDay.punchinDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} - 
-                                                    ${lastAttendanceInDate.punchoutDate ? lastAttendanceInDate.punchoutDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) : '??:??'} = 
-                                                    ${totalDurationInDay}h`
+                                            [key]: `${firstAttendanceInDay.punchinDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} - ${lastAttendanceInDate.punchoutDate ? lastAttendanceInDate.punchoutDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) : '??:??'} = ${totalDurationInDay.toFixed(2)}h`
                                         });
                                         totalDurationInRange += totalDurationInDay;
                                     }
@@ -369,9 +356,7 @@ class ReportScheduleController {
                             if (dataFilterReport.listStatus.includes('green') && 9.00 <= totalDurationInDay && totalDurationInDay < 10.00) {
                                 if (firstAttendanceInDay != null && lastAttendanceInDate != null) {
                                     dataOwner.attendanceMonthly.push({
-                                        [key]: `${firstAttendanceInDay.punchinDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} - 
-                                                ${lastAttendanceInDate.punchoutDate ? lastAttendanceInDate.punchoutDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) : '??:??'} = 
-                                                ${totalDurationInDay}h`
+                                        [key]: `${firstAttendanceInDay.punchinDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} - ${lastAttendanceInDate.punchoutDate ? lastAttendanceInDate.punchoutDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) : '??:??'} = ${totalDurationInDay.toFixed(2)}h`
                                     });
                                     totalDurationInRange += totalDurationInDay;
                                 } else {
@@ -383,9 +368,7 @@ class ReportScheduleController {
                             if (dataFilterReport.listStatus.includes('purple') && totalDurationInDay >= 10.00) {
                                 if (firstAttendanceInDay != null && lastAttendanceInDate != null) {
                                     dataOwner.attendanceMonthly.push({
-                                        [key]: `${firstAttendanceInDay.punchinDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} - 
-                                                ${lastAttendanceInDate.punchoutDate ? lastAttendanceInDate.punchoutDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) : '??:??'} = 
-                                                ${totalDurationInDay}h`
+                                        [key]: `${firstAttendanceInDay.punchinDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} - ${lastAttendanceInDate.punchoutDate ? lastAttendanceInDate.punchoutDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) : '??:??'} = ${totalDurationInDay.toFixed(2)}h`
                                     });
                                     totalDurationInRange += totalDurationInDay;
                                 } else {
@@ -421,19 +404,19 @@ class ReportScheduleController {
                             }
                             if (dataFilterReport.listStatus.includes('red') && 0 < totalDurationInDay && totalDurationInDay < 9.00) {
                                 dataOwner.attendanceMonthly.push({
-                                    [key]: `${totalDurationInDay}`
+                                    [key]: `${totalDurationInDay.toFixed(2)}`
                                 });
                                 totalDayWorkingInRange += totalDurationInDay;
                             }
                             if (dataFilterReport.listStatus.includes('green') && 9.00 <= totalDurationInDay && totalDurationInDay < 10.00) {
                                 dataOwner.attendanceMonthly.push({
-                                    [key]: `${totalDurationInDay}`
+                                    [key]: `${totalDurationInDay.toFixed(2)}`
                                 });
                                 totalDayWorkingInRange += totalDurationInDay;
                             }
                             if (dataFilterReport.listStatus.includes('purple') && totalDurationInDay >= 10.00) {
                                 dataOwner.attendanceMonthly.push({
-                                    [key]: `${totalDurationInDay}`
+                                    [key]: `${totalDurationInDay.toFixed(2)}`
                                 });
                                 totalDayWorkingInRange += totalDurationInDay;
                             }
@@ -474,7 +457,7 @@ function getAllColumnReport(dataFilterReport, timeZoneSetting) {
             case 'Month':
                 column?.month?.push({
                     key: `${currentDate.getMonth() + 1}/${currentDate.getDate()}`,
-                    value: `${currentDate.toLocaleDateString('en-US', { weekday: 'long' }).slice(0, 2)}, ${currentDate.getMonth() + 1}/${currentDate.getDate()}`
+                    value: `${currentDate.getMonth() + 1}/${currentDate.getDate()}`
                 });
                 break;
             case 'Week':

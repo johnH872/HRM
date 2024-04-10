@@ -126,15 +126,16 @@
     <div class="example-table-container" #dataTable>
       <table mat-table [dataSource]="dataSource">
         <ng-container matColumnDef="userName" sticky>
-          <th mat-header-cell *matHeaderCellDef style.text-align="center"
-            class="header-table-color custom-font first-table-cell-fixed"> Employee </th>
+          <th mat-header-cell *matHeaderCellDef
+            class="header-table-color first-table-cell-fixed"
+            style="text-align: center; background-color: #ea83ac;"> Employee </th>
           <td mat-cell *matCellDef="let element" [class.bold-row]="element.userName"
             style="text-align: left; border-color: #e0e0e0;">
             <b style="padding-left: 10px; cursor: pointer;" (click)="openEmployeeDetail(element.userId)">
               {{element.userName}} </b>
           </td>
-          <td mat-cell *matFooterCellDef style="text-align: center;"
-            class="first-header-table-color custom-font table-cell-fixed"> Available </td>
+          <!-- <td mat-cell *matFooterCellDef style="text-align: center;"
+            class="first-header-table-color custom-font table-cell-fixed"> Available </td> -->
         </ng-container>
 
         <ng-container *ngFor="let column of headerData">
@@ -142,7 +143,7 @@
             <ng-container *ngIf="timeMode === 'Month'">
               <th mat-header-cell *matHeaderCellDef [attr.colspan]="column.length" style="text-align: center;"
                 class="header-table-color custom-font tableCellFixedMonth"
-                [ngStyle]="{'background-color': (column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'today' ? '#87C44B !important' : ''}">
+                [ngStyle]="{'background-color': (column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'today' ? '#b45cea' : '#ea83ac'}">
                 {{column?.value}}
               </th>
               <td mat-cell *matCellDef="let element" class="data-bold-row custom-font" style="text-align: right;"
@@ -153,19 +154,13 @@
                   [matMenuTriggerFor]="(element[column.key] != null || element[column.key + '-leave'] != null) ? popoverCellDetail : nonDisplayMenu"
                   [matMenuTriggerData]="{ data: element[column.key + '-detail'], title: element.userName +  ' - ' + column?.value }">
                   <div style="padding-left: 8px;">
-                    <div fxLayout="column" fxLayoutAlign="center center">
-                      <mat-icon *ngIf="element[column.key + '-modified'] && element[column.key]"
-                        matTooltip="This record has been modified" class="icon-modified">error_outlined</mat-icon>
-                      <mat-icon *ngIf="element[column.key + '-leave'] ? true : false"
-                        matTooltip="[{{element[column.key + '-leaveType']}}] {{element[column.key + '-leave']}}"
-                        [ngStyle]="{'color': element[column.key + '-leaveType'] === 'Paid' ? '#3366cc' : (element[column.key + '-leaveType'] === 'NoPaid' ? '#996600' : '#00ced1')}"
-                        class="icon-leave">person_off</mat-icon>
-                      <mat-icon *ngIf="element[column.key + '-request'] ? true : false"
-                        class="icon-modified">sync_problem</mat-icon>
-                    </div>
+                    <mat-icon *ngIf="element[column.key + '-leave'] ? true : false"
+                      matTooltip="[{{element[column.key + '-leaveType']}}] {{element[column.key + '-leave']}}"
+                      [ngStyle]="{'color': element[column.key + '-leaveType'] === 'Paid' ? '#3366cc' : '#996600'}"
+                      class="icon-leave">person_off</mat-icon>
                   </div>
                   <div fxFlex="80" style="padding-right: 10px;">
-                    {{element[column.key]}}
+                    {{element[column.key] === 'null' ? '' : element[column.key]}}
                   </div>
                 </div>
               </td>
@@ -173,7 +168,7 @@
             <ng-container *ngIf="timeMode === 'Week'">
               <th mat-header-cell *matHeaderCellDef [attr.colspan]="column.length" style="text-align: center;"
                 class="header-table-color custom-font tableCellFixedWeek"
-                [ngStyle]="{'background-color': (column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'today' ? '#87C44B !important' : ''}">
+                [ngStyle]="{'background-color': (column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'today' ? '#b45cea' : '#ea83ac'}">
                 {{column?.value}}
               </th>
               <td mat-cell *matCellDef="let element" class="data-bold-row custom-font"
@@ -185,18 +180,12 @@
                   [matMenuTriggerFor]="(element[column.key] != '--' || element[column.key + '-leave'] != null) ? popoverCellDetail : nonDisplayMenu"
                   [matMenuTriggerData]="{ data: element[column.key + '-detail'], title: element.userName +  ' - ' + column?.value }">
                   <div fxFlex="15" style="display:flex; justify-content: right;">
-                    <div fxLayout="column" fxLayoutAlign="center center">
-                      <mat-icon *ngIf="element[column.key + '-modified'] && element[column.key]"
-                        matTooltip="This record has been modified" class="icon-modified">error_outlined</mat-icon>
-                      <mat-icon *ngIf="element[column.key + '-leave'] ? true : false"
-                        matTooltip="[{{element[column.key + '-leaveType']}}] {{element[column.key + '-leave']}}"
-                        [ngStyle]="{'color': element[column.key + '-leaveType'] === 'Paid' ? '#3366cc' : (element[column.key + '-leaveType'] === 'NoPaid' ? '#996600' : '#00ced1')}"
-                        class="icon-leave">person_off</mat-icon>
-                      <mat-icon *ngIf="element[column.key + '-request'] ? true : false"
-                        class="icon-modified">sync_problem</mat-icon>
-                    </div>
+                    <mat-icon *ngIf="element[column.key + '-leave'] ? true : false"
+                      matTooltip="[{{element[column.key + '-leaveType']}}] {{element[column.key + '-leave']}}"
+                      [ngStyle]="{'color': element[column.key + '-leaveType'] === 'Paid' ? '#3366cc' : '#996600'}"
+                      class="icon-leave">person_off</mat-icon>
                   </div>
-                  <div fxFlex="85" style="padding-right: 25px;">
+                  <div fxFlex="85" style="padding-right: 25px; text-align: center;">
                     {{element[column.key]}}
                   </div>
                 </div>
@@ -205,7 +194,7 @@
             <ng-container *ngIf="timeMode === 'Day'">
               <th mat-header-cell *matHeaderCellDef [attr.colspan]="column.length" style="text-align: center;"
                 class="header-table-color custom-font tableCellFixedDay"
-                [ngStyle]="{'background-color': (column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'today' ? '#87C44B !important' : ''}">
+                [ngStyle]="{'background-color': (column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'today' ? '#b45cea' : '#ea83ac'}">
                 {{column.value}}
               </th>
               <td mat-cell *matCellDef="let element" class="data-bold-row custom-font"
@@ -218,16 +207,10 @@
                   [matMenuTriggerData]="{ data: element[column.key + '-detail'], title: element.userName +  ' - ' + column?.value }">
                   <div fxFlex="40" style="display:flex; justify-content: right; padding-left: 20px;">
                     <div fxFlex="20" style="padding-left: 100px;">
-                      <div fxLayout="column" fxLayoutAlign="center center">
-                        <mat-icon *ngIf="element[column.key + '-modified'] && element[column.key]"
-                          matTooltip="This record has been modified" class="icon-modified">error_outlined</mat-icon>
-                        <mat-icon *ngIf="element[column.key + '-leave'] ? true : false"
-                          matTooltip="[{{element[column.key + '-leaveType']}}] {{element[column.key + '-leave']}}"
-                          [ngStyle]="{'color': element[column.key + '-leaveType'] === 'Paid' ? '#3366cc' : (element[column.key + '-leaveType'] === 'NoPaid' ? '#996600' : '#00ced1')}"
-                          class="icon-leave">person_off</mat-icon>
-                        <mat-icon *ngIf="element[column.key + '-request'] ? true : false"
-                          class="icon-modified">sync_problem</mat-icon>
-                      </div>
+                      <mat-icon *ngIf="element[column.key + '-leave'] ? true : false"
+                        matTooltip="[{{element[column.key + '-leaveType']}}] {{element[column.key + '-leave']}}"
+                        [ngStyle]="{'color': element[column.key + '-leaveType'] === 'Paid' ? '#3366cc' : '#996600'}"
+                        class="icon-leave">person_off</mat-icon>
                     </div>
                   </div>
                   <div fxFlex="60" style="padding-right: 486px;">
@@ -236,7 +219,7 @@
                 </div>
               </td>
             </ng-container>
-            <ng-container *ngIf="timeMode === 'Month'">
+            <!-- <ng-container *ngIf="timeMode === 'Month'">
               <td mat-cell *matFooterCellDef style="text-align: right;" [class.bold-row]="true" class="table-cell-fixed"
                 [style.opacity]="((column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'weekend' ? '40%' : '')">
                 <div style="padding-right: 10px;"> {{footerData[column.key] | numberFormat}} </div>
@@ -248,7 +231,7 @@
                 [style.opacity]="((column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'weekend' ? '40%' : '')">
                 <div> {{footerData[column.key] | numberFormat}} </div>
               </td>
-            </ng-container>
+            </ng-container> -->
           </ng-container>
         </ng-container>
 
@@ -263,14 +246,14 @@
             <b style="padding-right: 10px;" [ngStyle]="{'color': element.grandTotal > 0 ? 'white' : ''}">
               {{element.grandTotal | numberFormat}} </b>
           </td>
-          <td mat-cell *matFooterCellDef style="text-align: right;" [class.bold-row]="true" class="table-cell-fixed">
+          <!-- <td mat-cell *matFooterCellDef style="text-align: right;" [class.bold-row]="true" class="table-cell-fixed">
             <div style="padding-right: 10px;"> {{footerData.grandTotal | numberFormat}} </div>
-          </td>
+          </td> -->
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="headerData2;sticky: true" class="report-header-row"></tr>
         <tr mat-row *matRowDef="let row; columns: headerData2;" class="report-row"></tr>
-        <tr mat-footer-row *matFooterRowDef="headerData2; sticky: true" class="report-header-row"></tr>
+        <!-- <tr mat-footer-row *matFooterRowDef="headerData2; sticky: true" class="report-header-row"></tr> -->
       </table>
     </div>
   </div>
