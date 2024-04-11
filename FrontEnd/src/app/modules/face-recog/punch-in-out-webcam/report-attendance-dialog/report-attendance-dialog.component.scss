@@ -1,5 +1,5 @@
 .punch-card-container {
-    max-width: 500px;
+    width: 500px;
     padding: unset !important;
 }
 
@@ -38,6 +38,10 @@
 
 .src-img {
     object-fit: cover;
-    width:100%;
+    width:500px;
     height:100%;
+}
+
+::ng-deep .punch-card-container .p-dropdown {
+    width: 100%;
 }

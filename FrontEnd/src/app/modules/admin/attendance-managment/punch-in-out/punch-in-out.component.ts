@@ -80,16 +80,16 @@ export class PunchInOutComponent implements OnInit {
         model.punchoutOffset = clickedTime.getTimezoneOffset();
         model.punchoutNote = "";
       }
-      this.attendanceService.punchInOut(this.isPunchIn, this.employeeModel.userId, model).subscribe(res => {
-        if(res.result) {
-          this.messageService.add({
-            key: 'toast1', severity: 'success', summary: 'Success',
-            detail: `Punched ${this.isPunchIn ? "in" : "out"} successfully!`, life: 2000
-          });
-          this.initData();
-        } 
-        this.isAddingRecord = false;
-      });
+      // this.attendanceService.punchInOut(this.isPunchIn, this.employeeModel.userId, model).subscribe(res => {
+      //   if(res.result) {
+      //     this.messageService.add({
+      //       key: 'toast1', severity: 'success', summary: 'Success',
+      //       detail: `Punched ${this.isPunchIn ? "in" : "out"} successfully!`, life: 2000
+      //     });
+      //     this.initData();
+      //   } 
+      //   this.isAddingRecord = false;
+      // });
     } else {
       this.messageService.add({
         key: 'toast1', severity: 'warn', summary: 'Warn',

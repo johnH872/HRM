@@ -5,6 +5,7 @@ import { DateRangeModel } from '../../shared/models/dateRangeModel';
 import { Observable } from 'rxjs';
 import { ReturnResult } from '../../shared/models/return-result';
 import { AttendanceModel } from './attendance.model';
+import { ReportAttendanceModel } from '../../face-recog/punch-in-out-webcam/report-attendance-dialog/report-attendance.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,19 @@ export class AttendanceManagementService {
     return this.http.post<ReturnResult<AttendanceModel[]>>(`${this.baseUrl}/GetAttendanceByEmployeeId/${id}`, dateRange)
   }
 
-  punchInOut(isPunchIn: boolean, id: string, model: AttendanceModel): Observable<ReturnResult<AttendanceModel[]>> {
-    return this.http.post<ReturnResult<AttendanceModel[]>>(`${this.baseUrl}/PunchInOut/${isPunchIn}/${id}`, model)
+  punchInOut(isPunchIn: boolean, id: string, model: AttendanceModel, image: File): Observable<ReturnResult<AttendanceModel[]>> {
+    const formData: FormData = new FormData();
+    formData.append('image', image);
+    formData.append('model', JSON.stringify(model));
+    return this.http.post<ReturnResult<AttendanceModel[]>>(`${this.baseUrl}/PunchInOut/${isPunchIn}/${id}`, formData)
+  }
+
+  sendAttendanceReport(image: File, model: ReportAttendanceModel): Observable<ReturnResult<AttendanceModel[]>> {
+    const formData: FormData = new FormData();
+    formData.append('image', image);
+    formData.append('email', model.email as string);
+    formData.append('note', model.note as string);
+    formData.append('type', model.type as string);
+    return this.http.post<ReturnResult<AttendanceModel[]>>(`${this.baseUrl}/SendAttendanceReport`, formData)
   }
 }

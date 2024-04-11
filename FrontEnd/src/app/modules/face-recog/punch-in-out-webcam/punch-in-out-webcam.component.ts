@@ -98,31 +98,38 @@ export class PunchInOutWebcamComponent implements OnInit, OnDestroy {
             this.displaySize
           );
           const box = this.resizedDetections.detection.box;
-          // if(!this.detectedMaps.has(bestMatch.label)) this.detectedMaps.set(bestMatch.label, 0);
-          // else if(bestMatch.distance <= 0.45) {
-          //   var existedCount = this.detectedMaps.get(bestMatch.label);
-          //   ++existedCount;
-          //   this.detectedMaps.set(bestMatch.label, existedCount);
-          //   if(existedCount == 5 && this.cancelClickCouting != 3) this.employeeManagementService.getEmployeeById(bestMatch?.label).subscribe(res => {
-          //     if(res.result) {
-          //       this.isOpeningDialog = true;
-          //       this.dialog.open(PunchCardComponent, {
-          //         width: 'auto',
-          //         height: 'auto',
-          //         backdropClass: 'custom-backdrop',
-          //         hasBackdrop: true,
-          //         data: {
-          //           model: res.result
-          //         },
-          //       }).afterClosed().subscribe( closeRes => {
-          //         if(!closeRes) this.cancelClickCouting++;
-          //         this.isOpeningDialog = false;
-          //         this.detectedMaps.clear();
-          //       });
-          //     }
-          //   })
-          // }
-          if (this.cancelClickCouting == 0) {
+          if (!this.detectedMaps.has(bestMatch.label)) this.detectedMaps.set(bestMatch.label, 0);
+          else if (bestMatch.distance <= 0.45) {
+            var existedCount = this.detectedMaps.get(bestMatch.label);
+            ++existedCount;
+            this.detectedMaps.set(bestMatch.label, existedCount);
+            if (existedCount == 5 && this.cancelClickCouting != 3) this.employeeManagementService.getEmployeeById(bestMatch?.label).subscribe(res => {
+              this.canvas
+                .getContext("2d")
+                .drawImage(this.videoInput, 0, 0, window.innerWidth, window.innerHeight);
+
+              this.canvas.toBlob((blob: any) => {
+                if (res.result) {
+                  this.isOpeningDialog = true;
+                  this.dialog.open(PunchCardComponent, {
+                    width: 'auto',
+                    height: 'auto',
+                    backdropClass: 'custom-backdrop',
+                    hasBackdrop: true,
+                    data: {
+                      model: res.result,
+                      blobImage: blob
+                    },
+                  }).afterClosed().subscribe(closeRes => {
+                    if (!closeRes) this.cancelClickCouting++;
+                    this.isOpeningDialog = false;
+                    this.detectedMaps.clear();
+                  });
+                }
+              }, 'image/png');
+            })
+          }
+          if (this.cancelClickCouting == 3) {
             this.isOpeningDialog = true;
             this.dialog.open(AlertCardComponent, {
               width: 'auto',

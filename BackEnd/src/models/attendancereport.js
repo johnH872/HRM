@@ -27,6 +27,10 @@ export default (sequelize, DataTypes) => {
     imageUrl: {
       type: DataTypes.STRING
     },
+    type: {
+      allowNull: false,
+      type: DataTypes.STRING
+    },
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE
