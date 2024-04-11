@@ -3,6 +3,8 @@ import { Op, literal, col } from 'sequelize';
 import db from '../models/index.js'
 import { Column, ReportScheduleDatum, ReportScheduleResult } from "../models/DTO/report-schedule.js";
 import { leaveRequestStatus } from "../models/enums/leaveRequestStatus.js";
+import { format } from 'date-fns';
+
 const dbContext = await db;
 
 class ReportScheduleController {
@@ -312,10 +314,7 @@ class ReportScheduleController {
                         case 'Week':
                             if (firstLeaveInDate != null && lastLeaveInDate != null && totalNumberOfHourInDay > 0) {
                                 dataOwner.leaveRequestMonthly.push({
-                                    [key + '-leave']: 
-                                            `${firstLeaveInDate.leaveDateFrom.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} - 
-                                            ${lastLeaveInDate.leaveDateTo.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} 
-                                            (${totalNumberOfHourInDay}h)`
+                                    [key + '-leave']: `${format(firstLeaveInDate.leaveDateFrom, 'HH:mm')} - ${format(lastLeaveInDate.leaveDateTo, 'HH:mm')} (${totalNumberOfHourInDay}h)`
                                 });
                                 dataOwner.leaveRequestTypeMonthly.push({
                                     [key + '-leaveType']: firstLeaveInDate.LeaveEntitlement.LeaveType.isPaidSalary ? 'Paid' : 'NoPaid'
@@ -331,7 +330,7 @@ class ReportScheduleController {
                             if (dataFilterReport.listStatus.includes('red') && 0 < totalDurationInDay && totalDurationInDay < 9.00) {
                                 if (firstAttendanceInDay != null && lastAttendanceInDate != null) {
                                     dataOwner.attendanceMonthly.push({
-                                        [key]: `${firstAttendanceInDay.punchinDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} - ${lastAttendanceInDate.punchoutDate ? lastAttendanceInDate.punchoutDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) : '??:??'} = ${totalDurationInDay.toFixed(2)}h`
+                                        [key]: `${format(firstAttendanceInDay.punchinDate, 'HH:mm')} - ${lastAttendanceInDate.punchoutDate ? format(lastAttendanceInDate.punchoutDate, 'HH:mm') : '??:??'} = ${totalDurationInDay.toFixed(2)}h`
                                     });
                                     totalDurationInRange += totalDurationInDay;
                                 } else {
@@ -344,7 +343,7 @@ class ReportScheduleController {
                                 if (firstAttendanceInDay != null && lastAttendanceInDate != null) {
                                     if (!lastAttendanceInDate.punchoutDate) {
                                         dataOwner.attendanceMonthly.push({
-                                            [key]: `${firstAttendanceInDay.punchinDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} - ${lastAttendanceInDate.punchoutDate ? lastAttendanceInDate.punchoutDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) : '??:??'} = ${totalDurationInDay.toFixed(2)}h`
+                                            [key]: `${format(firstAttendanceInDay.punchinDate, 'HH:mm')} - ${lastAttendanceInDate.punchoutDate ? format(lastAttendanceInDate.punchoutDate, 'HH:mm') : '??:??'} = ${totalDurationInDay.toFixed(2)}h`
                                         });
                                         totalDurationInRange += totalDurationInDay;
                                     }
@@ -357,7 +356,7 @@ class ReportScheduleController {
                             if (dataFilterReport.listStatus.includes('green') && 9.00 <= totalDurationInDay && totalDurationInDay < 10.00) {
                                 if (firstAttendanceInDay != null && lastAttendanceInDate != null) {
                                     dataOwner.attendanceMonthly.push({
-                                        [key]: `${firstAttendanceInDay.punchinDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} - ${lastAttendanceInDate.punchoutDate ? lastAttendanceInDate.punchoutDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) : '??:??'} = ${totalDurationInDay.toFixed(2)}h`
+                                        [key]: `${format(firstAttendanceInDay.punchinDate, 'HH:mm')} - ${lastAttendanceInDate.punchoutDate ? format(lastAttendanceInDate.punchoutDate, 'HH:mm') : '??:??'} = ${totalDurationInDay.toFixed(2)}h`
                                     });
                                     totalDurationInRange += totalDurationInDay;
                                 } else {
@@ -369,7 +368,7 @@ class ReportScheduleController {
                             if (dataFilterReport.listStatus.includes('purple') && totalDurationInDay >= 10.00) {
                                 if (firstAttendanceInDay != null && lastAttendanceInDate != null) {
                                     dataOwner.attendanceMonthly.push({
-                                        [key]: `${firstAttendanceInDay.punchinDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} - ${lastAttendanceInDate.punchoutDate ? lastAttendanceInDate.punchoutDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) : '??:??'} = ${totalDurationInDay.toFixed(2)}h`
+                                        [key]: `${format(firstAttendanceInDay.punchinDate, 'HH:mm')} - ${lastAttendanceInDate.punchoutDate ? format(lastAttendanceInDate.punchoutDate, 'HH:mm') : '??:??'} = ${totalDurationInDay.toFixed(2)}h`
                                     });
                                     totalDurationInRange += totalDurationInDay;
                                 } else {
@@ -382,10 +381,7 @@ class ReportScheduleController {
                         case 'Month':
                             if (firstLeaveInDate != null && lastLeaveInDate != null && totalNumberOfHourInDay > 0) {
                                 dataOwner.leaveRequestMonthly.push({
-                                    [key + '-leave']: 
-                                            `${firstLeaveInDate.leaveDateFrom.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} - 
-                                            ${lastLeaveInDate.leaveDateTo.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} 
-                                            (${totalNumberOfHourInDay}h)`
+                                    [key + '-leave']: `${format(firstLeaveInDate.leaveDateFrom, 'HH:mm')} - ${format(lastLeaveInDate.leaveDateTo, 'HH:mm')} (${totalNumberOfHourInDay}h)`
                                 });
                                 dataOwner.leaveRequestTypeMonthly.push({
                                     [key + '-leaveType']: firstLeaveInDate.LeaveEntitlement.LeaveType.isPaidSalary ? 'Paid' : 'NoPaid'
