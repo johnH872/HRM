@@ -1,0 +1,42 @@
+<!-- <div class="d-flex flex-wrap" mat-dialog-title
+    style="margin: unset; padding: 1px 10px 1px 28px; justify-content: center; align-items: center;">
+    <button nbButton ghost (click)="closeDialog()" class="ml-auto">
+        <nb-icon icon="close-outline"></nb-icon>
+    </button>
+</div>
+<mat-divider></mat-divider> -->
+<mat-dialog-content class="p-0" style="max-width: 550px;">
+    <p-card class="punch-card-container">
+        <div fxLayout="row" fxLayoutAlign="center center">
+            <img [src]="captureImg" [width]="windowWith" [height]="windowHeight" class="src-img" />
+        </div>
+        <div fxLayout="column" fxLayoutAlign="start start" class="pt-4">
+            <form [formGroup]="frmReport" fxLayout="row wrap" class="w-100">
+                <span class="mb-1 w-100"><b>Email</b></span>
+                <span class="p-input-icon-left w-100">
+                    <i class="pi pi-at"></i>
+                    <input class="p-inputtext-sm w-100" id="email" type="text" pInputText formControlName="email"
+                        placeholder="Email" />
+                </span>
+                <mat-error class="mt-1 t-13px" *ngIf="
+                    frmReport.controls?.email?.errors &&
+                    (frmReport.controls?.email?.dirty ||
+                      frmReport.controls?.email?.touched)">
+                    {{ frmReport.controls.email["errorMessage"] }}</mat-error>
+
+                <span class="mb-1 mt-3 w-100"><b>Note</b></span>
+                <textarea class="w-100" rows="5" cols="30" pInputTextarea></textarea>
+                <mat-error class="mt-1 t-13px" *ngIf="
+                        frmReport.controls?.note?.errors &&
+                        (frmReport.controls?.note?.dirty ||
+                          frmReport.controls?.note?.touched)">
+                    {{ frmReport.controls.note["errorMessage"] }}</mat-error>
+            </form>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="end center" style="padding: unset !important; margin-top: 1.5rem;"
+            class="flex flex-wrap gap-3">
+            <p-button (onClick)="closeDialog()" styleClass="p-button-sm p-button-secondary" label="Cancel"></p-button>
+            <p-button icon="pi pi-send" styleClass="p-button-sm p-button-info" label="Submit"></p-button>
+        </div>
+    </p-card>
+</mat-dialog-content>
