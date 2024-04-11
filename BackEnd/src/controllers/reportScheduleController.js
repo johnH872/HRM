@@ -284,11 +284,12 @@ class ReportScheduleController {
                         leave.userId === employee.userId && 
                         leave.leaveDateFrom.getDate() === currentDate.getDate());
                     var lastLeaveInDate = lstLeavesModel[indexLastLeaveInDate];
-                    var totalNumberOfHourInDay = lstAttendancesModel.reduce((acc, leave) => acc + leave?.numberOfHour, 0);
+                    var totalNumberOfHourInDay = 0;
                     lstLeavesModel.forEach(item => {
                         var leaveItem = item.dataValues;
                         if (leaveItem.userId === employee.userId &&
                             leaveItem.leaveDateFrom.getDate() === currentDate.getDate()) {
+                            totalNumberOfHourInDay += item.numberOfHour;
                             lstAttendanceDetail.push({
                                 leaveRequestId: leaveItem.leaveRequestId,
                                 userId: leaveItem.userId,
@@ -399,7 +400,7 @@ class ReportScheduleController {
                             }
                             if (dataFilterReport.listStatus.includes('yellow')) {
                                 dataOwner.attendanceMonthly.push({
-                                    [key]: `${null}`
+                                    [key]: null
                                 });
                             }
                             if (dataFilterReport.listStatus.includes('red') && 0 < totalDurationInDay && totalDurationInDay < 9.00) {

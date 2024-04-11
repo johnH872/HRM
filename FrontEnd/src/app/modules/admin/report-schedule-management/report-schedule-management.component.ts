@@ -146,7 +146,7 @@ export class ReportScheduleManagementComponent implements OnInit {
       input[idx].attendanceMonthly.map(item => input[idx] = {...input[idx], ...item});
       input[idx].attendanceDetailMonthly.map(item => input[idx] = {...input[idx], ...item});
       input[idx].leaveRequestMonthly.map(item => input[idx] = {...input[idx], ...item});
-      input[idx].leaveRequestMonthly.map(item => input[idx] = {...input[idx], ...item});
+      input[idx].leaveRequestTypeMonthly.map(item => input[idx] = {...input[idx], ...item});
 
       output.push(...[input[idx]]);
     }
@@ -335,6 +335,6 @@ export class ReportScheduleManagementComponent implements OnInit {
 
   async changeViewMode() {
     this.reportScheduleModel.viewMode = this.viewMode;
-    this.frmGroup = this.frmBuilder.formGroup(ReportScheduleModel, this.reportScheduleModel);
+    await this.changeAttendanceReportMode();
   }
 }
