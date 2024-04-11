@@ -37,6 +37,8 @@
         <button mat-raised-button style="background-color: #b45cea; color: white;" class="button-app-function" (click)="nextData()">
           <mat-icon>arrow_forward_ios</mat-icon>
         </button>
+        <button mat-raised-button style="background-color: #b45cea; color: white;" [matMenuTriggerFor]="exportMenu" [nbSpinner]="btnExportState"
+          class="button-app-function">Export</button>
       </mat-toolbar>
     </div>
   </div>
@@ -88,8 +90,6 @@
           (click)="applyFilter()">
           Apply Filter
         </button>
-        <button mat-raised-button style="background-color: #b45cea; color: white;" [matMenuTriggerFor]="exportMenu" [nbSpinner]="btnExportState"
-          class="button-app-function">Export</button>
       </mat-toolbar>
     </div>
   </div>
@@ -128,7 +128,7 @@
         <ng-container matColumnDef="userName" sticky>
           <th mat-header-cell *matHeaderCellDef
             class="header-table-color first-table-cell-fixed"
-            style="text-align: center; background-color: #ea83ac;"> Employee </th>
+            style="text-align: center; background-color: #b45cea; color: white;"> Employee </th>
           <td mat-cell *matCellDef="let element" [class.bold-row]="element.userName"
             style="text-align: left; border-color: #e0e0e0;">
             <b style="padding-left: 10px; cursor: pointer;" (click)="openEmployeeDetail(element.userId)">
@@ -142,82 +142,187 @@
           <ng-container [matColumnDef]="column.key">
             <ng-container *ngIf="timeMode === 'Month'">
               <th mat-header-cell *matHeaderCellDef [attr.colspan]="column.length" style="text-align: center;"
-                class="header-table-color custom-font tableCellFixedMonth"
-                [ngStyle]="{'background-color': (column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'today' ? '#b45cea' : '#ea83ac'}">
-                {{column?.value}}
+                  class="header-table-color custom-font tableCellFixedMonth"
+                  [ngStyle]="{'background-color': (column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'today' ? '#8dc63f' : '#ea83ac'}">
+                  {{column?.value}}
               </th>
-              <td mat-cell *matCellDef="let element" class="data-bold-row custom-font" style="text-align: right;"
-                [style.background-color]="element[column.key] ? (element[column.key] | handleDisplayColor: timeMode: (element[column.key + '-leaveType'] !== 'NoPaid' ? element[column.key + '-leave'] : null)) : (element[column.key + '-leave'] ? '#d7d7d7' : '')"
-                [style.opacity]="((column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'weekend' ? '40%' : '')">
-                <div fxLayout="row" fxLayoutAlign="space-between center"
-                  [ngStyle]="{'cursor': (element[column.key] != null || element[column.key + '-leave'] != null) ? 'pointer' : null}"
-                  [matMenuTriggerFor]="(element[column.key] != null || element[column.key + '-leave'] != null) ? popoverCellDetail : nonDisplayMenu"
-                  [matMenuTriggerData]="{ data: element[column.key + '-detail'], title: element.userName +  ' - ' + column?.value }">
-                  <div style="padding-left: 8px;">
-                    <mat-icon *ngIf="element[column.key + '-leave'] ? true : false"
-                      matTooltip="[{{element[column.key + '-leaveType']}}] {{element[column.key + '-leave']}}"
-                      [ngStyle]="{'color': element[column.key + '-leaveType'] === 'Paid' ? '#3366cc' : '#996600'}"
-                      class="icon-leave">person_off</mat-icon>
+              <ng-container *ngIf="viewMode === 'Attendance'">
+                <td mat-cell *matCellDef="let element" class="data-bold-row custom-font" style="text-align: right;"
+                  [style.background-color]="element[column.key] ? (element[column.key] | handleDisplayColor: timeMode: (element[column.key + '-leaveType'] !== 'NoPaid' ? element[column.key + '-leave'] : null)) : (element[column.key + '-leave'] ? '#d7d7d7' : '')"
+                  [style.opacity]="((column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'weekend' ? '40%' : '')">
+                  <div fxLayout="row" fxLayoutAlign="center center"
+                    [ngStyle]="{'cursor': (element[column.key] != null || element[column.key + '-leave'] != null) ? 'pointer' : null}"
+                    [matMenuTriggerFor]="(element[column.key] != null || element[column.key + '-leave'] != null) ? popoverCellDetail : nonDisplayMenu"
+                    [matMenuTriggerData]="{ data: element[column.key + '-detail'], title: element.userName +  ' - ' + column?.value }">
+                    {{element[column.key] === null ? '' : element[column.key]}}
                   </div>
-                  <div fxFlex="80" style="padding-right: 10px;">
-                    {{element[column.key] === 'null' ? '' : element[column.key]}}
+                </td>
+              </ng-container>
+              <ng-container *ngIf="viewMode === 'Leave'">
+                <td mat-cell *matCellDef="let element" class="data-bold-row custom-font" style="text-align: right;"
+                  [style.background-color]="element[column.key] ? (element[column.key] | handleDisplayColor: timeMode: (element[column.key + '-leaveType'] !== 'NoPaid' ? element[column.key + '-leave'] : null)) : (element[column.key + '-leave'] ? '#d7d7d7' : '')"
+                  [style.opacity]="((column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'weekend' ? '40%' : '')">
+                  <div fxLayout="row" fxLayoutAlign="space-between center"
+                    [ngStyle]="{'cursor': (element[column.key] != null || element[column.key + '-leave'] != null) ? 'pointer' : null}"
+                    [matMenuTriggerFor]="(element[column.key] != null || element[column.key + '-leave'] != null) ? popoverCellDetail : nonDisplayMenu"
+                    [matMenuTriggerData]="{ data: element[column.key + '-detail'], title: element.userName +  ' - ' + column?.value }">
+                    <div style="padding-left: 8px;">
+                      <mat-icon *ngIf="element[column.key + '-leave'] ? true : false"
+                        [ngStyle]="{'color': element[column.key + '-leaveType'] === 'Paid' ? '#3366cc' : '#996600'}"
+                        class="icon-leave">person_off</mat-icon>
+                    </div>
+                    <div fxFlex="80" style="padding-right: 10px;" *ngIf="element[column.key + '-leave'] ? true : false">
+                      [{{element[column.key + '-leaveType']}}] {{element[column.key + '-leave']}}
+                    </div>
                   </div>
-                </div>
-              </td>
-            </ng-container>
-            <ng-container *ngIf="timeMode === 'Week'">
-              <th mat-header-cell *matHeaderCellDef [attr.colspan]="column.length" style="text-align: center;"
-                class="header-table-color custom-font tableCellFixedWeek"
-                [ngStyle]="{'background-color': (column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'today' ? '#b45cea' : '#ea83ac'}">
-                {{column?.value}}
-              </th>
-              <td mat-cell *matCellDef="let element" class="data-bold-row custom-font"
-                [style.color]="element[column.key] === '--' ? 'black': 'white'"
-                [style.background-color]="(element[column.key] !== '--' && element[column.key]) ? (element[column.key] | handleDisplayColor: timeMode: (element[column.key + '-leaveType'] !== 'NoPaid' ? element[column.key + '-leave'] : null)) : (element[column.key + '-leave'] ? '#d7d7d7' : '')"
-                [style.opacity]="((column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'weekend' ? '40%' : '')">
-                <div fxLayout="row" fxLayoutAlign="space-between center"
-                  [ngStyle]="{'cursor': (element[column.key] != '--' || element[column.key + '-leave'] != null) ? 'pointer' : null}"
-                  [matMenuTriggerFor]="(element[column.key] != '--' || element[column.key + '-leave'] != null) ? popoverCellDetail : nonDisplayMenu"
-                  [matMenuTriggerData]="{ data: element[column.key + '-detail'], title: element.userName +  ' - ' + column?.value }">
-                  <div fxFlex="15" style="display:flex; justify-content: right;">
-                    <mat-icon *ngIf="element[column.key + '-leave'] ? true : false"
-                      matTooltip="[{{element[column.key + '-leaveType']}}] {{element[column.key + '-leave']}}"
-                      [ngStyle]="{'color': element[column.key + '-leaveType'] === 'Paid' ? '#3366cc' : '#996600'}"
-                      class="icon-leave">person_off</mat-icon>
-                  </div>
-                  <div fxFlex="85" style="padding-right: 25px; text-align: center;">
-                    {{element[column.key]}}
-                  </div>
-                </div>
-              </td>
-            </ng-container>
-            <ng-container *ngIf="timeMode === 'Day'">
-              <th mat-header-cell *matHeaderCellDef [attr.colspan]="column.length" style="text-align: center;"
-                class="header-table-color custom-font tableCellFixedDay"
-                [ngStyle]="{'background-color': (column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'today' ? '#b45cea' : '#ea83ac'}">
-                {{column.value}}
-              </th>
-              <td mat-cell *matCellDef="let element" class="data-bold-row custom-font"
-                [style.color]="element[column.key] === '--' ? 'black': 'white'"
-                [style.background-color]="(element[column.key] !== '--' && element[column.key]) ? (element[column.key] | handleDisplayColor: timeMode: (element[column.key + '-leaveType'] !== 'NoPaid' ? element[column.key + '-leave'] : null)) : (element[column.key + '-leave'] ? '#d7d7d7' : '')"
-                [style.opacity]="((column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'weekend' ? '40%' : '')">
-                <div fxLayout="row" fxLayoutAlign="space-between center"
-                  [ngStyle]="{'cursor': (element[column.key] != '--' || element[column.key + '-leave'] != null) ? 'pointer' : null}"
-                  [matMenuTriggerFor]="(element[column.key] != '--' || element[column.key + '-leave'] != null) ? popoverCellDetail : nonDisplayMenu"
-                  [matMenuTriggerData]="{ data: element[column.key + '-detail'], title: element.userName +  ' - ' + column?.value }">
-                  <div fxFlex="40" style="display:flex; justify-content: right; padding-left: 20px;">
-                    <div fxFlex="20" style="padding-left: 100px;">
+                </td>
+              </ng-container>
+              <ng-container *ngIf="viewMode === 'Both'">
+                <td mat-cell *matCellDef="let element" class="data-bold-row custom-font" style="text-align: right;"
+                  [style.background-color]="element[column.key] ? (element[column.key] | handleDisplayColor: timeMode: (element[column.key + '-leaveType'] !== 'NoPaid' ? element[column.key + '-leave'] : null)) : (element[column.key + '-leave'] ? '#d7d7d7' : '')"
+                  [style.opacity]="((column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'weekend' ? '40%' : '')">
+                  <div fxLayout="row" fxLayoutAlign="space-between center"
+                    [ngStyle]="{'cursor': (element[column.key] != null || element[column.key + '-leave'] != null) ? 'pointer' : null}"
+                    [matMenuTriggerFor]="(element[column.key] != null || element[column.key + '-leave'] != null) ? popoverCellDetail : nonDisplayMenu"
+                    [matMenuTriggerData]="{ data: element[column.key + '-detail'], title: element.userName +  ' - ' + column?.value }">
+                    <div style="padding-left: 8px;">
                       <mat-icon *ngIf="element[column.key + '-leave'] ? true : false"
                         matTooltip="[{{element[column.key + '-leaveType']}}] {{element[column.key + '-leave']}}"
                         [ngStyle]="{'color': element[column.key + '-leaveType'] === 'Paid' ? '#3366cc' : '#996600'}"
                         class="icon-leave">person_off</mat-icon>
                     </div>
+                    <div fxFlex="80" style="padding-right: 10px;">
+                      {{element[column.key] === null ? '' : element[column.key]}}
+                    </div>
                   </div>
-                  <div fxFlex="60" style="padding-right: 486px;">
+                </td>
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="timeMode === 'Week'">
+              <th mat-header-cell *matHeaderCellDef [attr.colspan]="column.length" style="text-align: center;"
+                class="header-table-color custom-font tableCellFixedWeek"
+                [ngStyle]="{'background-color': (column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'today' ? '#8dc63f' : '#ea83ac'}">
+                {{column?.value}}
+              </th>
+              <ng-container *ngIf="viewMode === 'Attendance'">
+                <td mat-cell *matCellDef="let element" class="data-bold-row custom-font"
+                  [style.color]="element[column.key] === '--' ? 'black': 'white'"
+                  [style.background-color]="(element[column.key] !== '--' && element[column.key]) ? (element[column.key] | handleDisplayColor: timeMode: (element[column.key + '-leaveType'] !== 'NoPaid' ? element[column.key + '-leave'] : null)) : (element[column.key + '-leave'] ? '#d7d7d7' : '')"
+                  [style.opacity]="((column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'weekend' ? '40%' : '')">
+                  <div fxLayout="row" fxLayoutAlign="center center"
+                    [ngStyle]="{'cursor': (element[column.key] != '--' || element[column.key + '-leave'] != null) ? 'pointer' : null}"
+                    [matMenuTriggerFor]="(element[column.key] != '--' || element[column.key + '-leave'] != null) ? popoverCellDetail : nonDisplayMenu"
+                    [matMenuTriggerData]="{ data: element[column.key + '-detail'], title: element.userName +  ' - ' + column?.value }">
                     {{element[column.key]}}
                   </div>
-                </div>
-              </td>
+                </td>
+              </ng-container>
+              <ng-container *ngIf="viewMode === 'Leave'">
+                <td mat-cell *matCellDef="let element" class="data-bold-row custom-font"
+                  [style.color]="element[column.key] === '--' ? 'black': 'white'"
+                  [style.background-color]="(element[column.key] !== '--' && element[column.key]) ? (element[column.key] | handleDisplayColor: timeMode: (element[column.key + '-leaveType'] !== 'NoPaid' ? element[column.key + '-leave'] : null)) : (element[column.key + '-leave'] ? '#d7d7d7' : '')"
+                  [style.opacity]="((column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'weekend' ? '40%' : '')">
+                  <div fxLayout="row" fxLayoutAlign="space-between center"
+                    [ngStyle]="{'cursor': (element[column.key] != '--' || element[column.key + '-leave'] != null) ? 'pointer' : null}"
+                    [matMenuTriggerFor]="(element[column.key] != '--' || element[column.key + '-leave'] != null) ? popoverCellDetail : nonDisplayMenu"
+                    [matMenuTriggerData]="{ data: element[column.key + '-detail'], title: element.userName +  ' - ' + column?.value }">
+                    <div fxFlex="15" style="display:flex; justify-content: right;">
+                      <mat-icon *ngIf="element[column.key + '-leave'] ? true : false"
+                        [ngStyle]="{'color': element[column.key + '-leaveType'] === 'Paid' ? '#3366cc' : '#996600'}"
+                        class="icon-leave">person_off</mat-icon>
+                    </div>
+                    <div fxFlex="85" style="padding-right: 25px; text-align: center;" *ngIf="element[column.key + '-leave'] ? true : false">
+                      [{{element[column.key + '-leaveType']}}] {{element[column.key + '-leave']}}
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+              <ng-container *ngIf="viewMode === 'Both'">
+                <td mat-cell *matCellDef="let element" class="data-bold-row custom-font"
+                  [style.color]="element[column.key] === '--' ? 'black': 'white'"
+                  [style.background-color]="(element[column.key] !== '--' && element[column.key]) ? (element[column.key] | handleDisplayColor: timeMode: (element[column.key + '-leaveType'] !== 'NoPaid' ? element[column.key + '-leave'] : null)) : (element[column.key + '-leave'] ? '#d7d7d7' : '')"
+                  [style.opacity]="((column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'weekend' ? '40%' : '')">
+                  <div fxLayout="row" fxLayoutAlign="space-between center"
+                    [ngStyle]="{'cursor': (element[column.key] != '--' || element[column.key + '-leave'] != null) ? 'pointer' : null}"
+                    [matMenuTriggerFor]="(element[column.key] != '--' || element[column.key + '-leave'] != null) ? popoverCellDetail : nonDisplayMenu"
+                    [matMenuTriggerData]="{ data: element[column.key + '-detail'], title: element.userName +  ' - ' + column?.value }">
+                    <div fxFlex="15" style="display:flex; justify-content: right;">
+                      <mat-icon *ngIf="element[column.key + '-leave'] ? true : false"
+                        matTooltip="[{{element[column.key + '-leaveType']}}] {{element[column.key + '-leave']}}"
+                        [ngStyle]="{'color': element[column.key + '-leaveType'] === 'Paid' ? '#3366cc' : '#996600'}"
+                        class="icon-leave">person_off</mat-icon>
+                    </div>
+                    <div fxFlex="85" style="padding-right: 25px; text-align: center;">
+                      {{element[column.key]}}
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="timeMode === 'Day'">
+              <th mat-header-cell *matHeaderCellDef [attr.colspan]="column.length" style="text-align: center;"
+                class="header-table-color custom-font tableCellFixedDay"
+                [ngStyle]="{'background-color': (column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'today' ? '#8dc63f' : '#ea83ac'}">
+                {{column.value}}
+              </th>
+              <ng-container *ngIf="viewMode === 'Attendance'">
+                <td mat-cell *matCellDef="let element" class="data-bold-row custom-font"
+                  [style.color]="element[column.key] === '--' ? 'black': 'white'"
+                  [style.background-color]="(element[column.key] !== '--' && element[column.key]) ? (element[column.key] | handleDisplayColor: timeMode: (element[column.key + '-leaveType'] !== 'NoPaid' ? element[column.key + '-leave'] : null)) : (element[column.key + '-leave'] ? '#d7d7d7' : '')"
+                  [style.opacity]="((column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'weekend' ? '40%' : '')">
+                  <div fxLayout="row" fxLayoutAlign="center center"
+                    [ngStyle]="{'cursor': (element[column.key] != '--' || element[column.key + '-leave'] != null) ? 'pointer' : null}"
+                    [matMenuTriggerFor]="(element[column.key] != '--' || element[column.key + '-leave'] != null) ? popoverCellDetail : nonDisplayMenu"
+                    [matMenuTriggerData]="{ data: element[column.key + '-detail'], title: element.userName +  ' - ' + column?.value }">
+                    {{element[column.key]}}
+                  </div>
+                </td>
+              </ng-container>
+              <ng-container *ngIf="viewMode === 'Leave'">
+                <td mat-cell *matCellDef="let element" class="data-bold-row custom-font"
+                  [style.color]="element[column.key] === '--' ? 'black': 'white'"
+                  [style.background-color]="(element[column.key] !== '--' && element[column.key]) ? (element[column.key] | handleDisplayColor: timeMode: (element[column.key + '-leaveType'] !== 'NoPaid' ? element[column.key + '-leave'] : null)) : (element[column.key + '-leave'] ? '#d7d7d7' : '')"
+                  [style.opacity]="((column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'weekend' ? '40%' : '')">
+                  <div fxLayout="row" fxLayoutAlign="space-between center"
+                    [ngStyle]="{'cursor': (element[column.key] != '--' || element[column.key + '-leave'] != null) ? 'pointer' : null}"
+                    [matMenuTriggerFor]="(element[column.key] != '--' || element[column.key + '-leave'] != null) ? popoverCellDetail : nonDisplayMenu"
+                    [matMenuTriggerData]="{ data: element[column.key + '-detail'], title: element.userName +  ' - ' + column?.value }">
+                    <div fxFlex="40" style="display:flex; justify-content: right; padding-left: 20px;">
+                      <div fxFlex="20" style="padding-left: 100px;">
+                        <mat-icon *ngIf="element[column.key + '-leave'] ? true : false"
+                          [ngStyle]="{'color': element[column.key + '-leaveType'] === 'Paid' ? '#3366cc' : '#996600'}"
+                          class="icon-leave">person_off</mat-icon>
+                      </div>
+                    </div>
+                    <div fxFlex="60" style="padding-right: 486px;" *ngIf="element[column.key + '-leave'] ? true : false">
+                      [{{element[column.key + '-leaveType']}}] {{element[column.key + '-leave']}}
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+              <ng-container *ngIf="viewMode === 'Both'">
+                <td mat-cell *matCellDef="let element" class="data-bold-row custom-font"
+                  [style.color]="element[column.key] === '--' ? 'black': 'white'"
+                  [style.background-color]="(element[column.key] !== '--' && element[column.key]) ? (element[column.key] | handleDisplayColor: timeMode: (element[column.key + '-leaveType'] !== 'NoPaid' ? element[column.key + '-leave'] : null)) : (element[column.key + '-leave'] ? '#d7d7d7' : '')"
+                  [style.opacity]="((column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'weekend' ? '40%' : '')">
+                  <div fxLayout="row" fxLayoutAlign="space-between center"
+                    [ngStyle]="{'cursor': (element[column.key] != '--' || element[column.key + '-leave'] != null) ? 'pointer' : null}"
+                    [matMenuTriggerFor]="(element[column.key] != '--' || element[column.key + '-leave'] != null) ? popoverCellDetail : nonDisplayMenu"
+                    [matMenuTriggerData]="{ data: element[column.key + '-detail'], title: element.userName +  ' - ' + column?.value }">
+                    <div fxFlex="40" style="display:flex; justify-content: right; padding-left: 20px;">
+                      <div fxFlex="20" style="padding-left: 100px;">
+                        <mat-icon *ngIf="element[column.key + '-leave'] ? true : false"
+                          matTooltip="[{{element[column.key + '-leaveType']}}] {{element[column.key + '-leave']}}"
+                          [ngStyle]="{'color': element[column.key + '-leaveType'] === 'Paid' ? '#3366cc' : '#996600'}"
+                          class="icon-leave">person_off</mat-icon>
+                      </div>
+                    </div>
+                    <div fxFlex="60" style="padding-right: 486px;">
+                      {{element[column.key]}}
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
             </ng-container>
             <!-- <ng-container *ngIf="timeMode === 'Month'">
               <td mat-cell *matFooterCellDef style="text-align: right;" [class.bold-row]="true" class="table-cell-fixed"
@@ -236,14 +341,15 @@
         </ng-container>
 
         <ng-container matColumnDef="grandTotal" stickyEnd>
-          <th mat-header-cell *matHeaderCellDef style="text-align: center;"
-            class="header-table-color custom-font total-table-cell-fixed">
+          <th mat-header-cell *matHeaderCellDef
+            class="header-table-color total-table-cell-fixed"
+            style="text-align: center; background-color: #b45cea; color: white;">
             <b>Total</b>
           </th>
           <td mat-cell *matCellDef="let element" [class.bold-row]="element.userName"
             style="text-align: right; border-color: #e0e0e0;"
             [ngStyle]="{'background-color': element.grandTotalColor === 'red' ? '#ff0009' : (element.grandTotalColor === 'green' ? '#8dc63f' : (element.grandTotalColor === 'purple' ? '#008080' : ''))}">
-            <b style="padding-right: 10px;" [ngStyle]="{'color': element.grandTotal > 0 ? 'white' : ''}">
+            <b *ngIf="viewMode !== 'Leave'" style="padding-right: 10px;" [ngStyle]="{'color': element.grandTotal > 0 ? 'white' : ''}">
               {{element.grandTotal | numberFormat}} </b>
           </td>
           <!-- <td mat-cell *matFooterCellDef style="text-align: right;" [class.bold-row]="true" class="table-cell-fixed">
