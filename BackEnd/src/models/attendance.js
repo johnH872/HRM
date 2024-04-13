@@ -48,6 +48,12 @@ export default (sequelize, DataTypes) => {
     punchoutOffset: {
       type: DataTypes.INTEGER
     },
+    punchInImageUrl: {
+      type: DataTypes.STRING
+    },
+    punchOutImageUrl: {
+      type: DataTypes.STRING
+    },
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE

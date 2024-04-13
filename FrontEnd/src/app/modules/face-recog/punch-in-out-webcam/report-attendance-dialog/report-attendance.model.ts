@@ -7,7 +7,9 @@ export class ReportAttendanceModel {
     createdAt: Date | null;
     @email()
     @required()
-    email: String | null;
+    email: String;
     @prop()
-    note: String | null;
+    note: String;
+    @prop()
+    type: Object; 
 }   

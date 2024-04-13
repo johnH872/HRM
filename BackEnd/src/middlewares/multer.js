@@ -2,6 +2,7 @@ import multer from 'multer';
 import db from '../models/index.js';
 import path from 'path';
 import fs from 'fs';
+import { generateRandomString } from '../utils/helper.js';
 const dbContext = await db;
 
 var storage2 = multer.diskStorage({
@@ -13,8 +14,21 @@ var storage2 = multer.diskStorage({
   }
 });
 
+var attendanceStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+      cb(null, './assets/attendance_img')
+  },
+  filename: function (req, file, cb) {
+      cb(null, `${generateRandomString(5)}_${new Date().valueOf()}.png`)
+  }
+});
+
 const basicUpload = multer({
   storage: storage2
+});
+
+const attendanceUpload = multer({
+  storage: attendanceStorage
 });
 
 const storage = multer.diskStorage({
@@ -43,5 +57,6 @@ const customDirUpload = multer({ storage: storage })
 
 export {
   basicUpload,
-  customDirUpload
+  customDirUpload,
+  attendanceUpload
 };

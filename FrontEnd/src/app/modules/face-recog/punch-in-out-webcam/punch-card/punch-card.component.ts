@@ -22,6 +22,8 @@ export class PunchCardComponent implements OnInit {
   attendanceRecords: AttendanceModel[] = [];
   isAddingRecord = false;
   isInitData = false;
+  imageFile: File;
+  blobImage: Blob;
   constructor(
     public dialModalRef: MatDialogRef<PunchCardComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -29,10 +31,12 @@ export class PunchCardComponent implements OnInit {
     private messageService: MessageService
   ) {
     if (data.model) this.employeeModel = data.model;
+    if (data.blobImage) this.blobImage = data.blobImage;
   }
 
   ngOnInit(): void {
     this.initData();
+    this.imageFile = new File([this.blobImage], `report-${new Date().valueOf()}.png`, { type: 'image/jpg' });
   }
 
   async initData() {
@@ -59,7 +63,7 @@ export class PunchCardComponent implements OnInit {
   }
 
   onCancel() {
-    this.dialModalRef.close();
+    this.dialModalRef.close(false);
   }
 
   async onSubmit() {
@@ -77,7 +81,7 @@ export class PunchCardComponent implements OnInit {
       model.punchoutOffset = clickedTime.getTimezoneOffset();
       model.punchoutNote = "";
     }
-    this.attendanceService.punchInOut(this.isPunchIn, this.employeeModel.userId, model).subscribe(res => {
+    this.attendanceService.punchInOut(this.isPunchIn, this.employeeModel.userId, model, this.imageFile).subscribe(res => {
       if (res.result) {
         this.messageService.add({
           key: 'toast1', severity: 'success', summary: 'Success',
@@ -86,7 +90,7 @@ export class PunchCardComponent implements OnInit {
         this.initData();
       }
       this.isAddingRecord = false;
-      this.dialModalRef.close();
+      this.dialModalRef.close(true);
     });
   }
 }

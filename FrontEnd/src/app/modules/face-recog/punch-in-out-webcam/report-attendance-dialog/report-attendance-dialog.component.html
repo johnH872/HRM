@@ -12,7 +12,9 @@
         </div>
         <div fxLayout="column" fxLayoutAlign="start start" class="pt-4">
             <form [formGroup]="frmReport" fxLayout="row wrap" class="w-100">
-                <span class="mb-1 w-100"><b>Email</b></span>
+                <span class="mb-1 w-100"><b>Type</b></span>
+                <p-dropdown class="flex w-100" formControlName="type" [options]="punchTypes" optionLabel="name" optionValue="code"></p-dropdown>
+                <span class="mb-1 mt-3 w-100"><b>Email</b></span>
                 <span class="p-input-icon-left w-100">
                     <i class="pi pi-at"></i>
                     <input class="p-inputtext-sm w-100" id="email" type="text" pInputText formControlName="email"
@@ -25,7 +27,7 @@
                     {{ frmReport.controls.email["errorMessage"] }}</mat-error>
 
                 <span class="mb-1 mt-3 w-100"><b>Note</b></span>
-                <textarea class="w-100" rows="5" cols="30" pInputTextarea></textarea>
+                <textarea class="w-100" rows="5" cols="30" pInputTextarea formControlName="note"></textarea>
                 <mat-error class="mt-1 t-13px" *ngIf="
                         frmReport.controls?.note?.errors &&
                         (frmReport.controls?.note?.dirty ||
@@ -36,7 +38,7 @@
         <div fxLayout="row" fxLayoutAlign="end center" style="padding: unset !important; margin-top: 1.5rem;"
             class="flex flex-wrap gap-3">
             <p-button (onClick)="closeDialog()" styleClass="p-button-sm p-button-secondary" label="Cancel"></p-button>
-            <p-button icon="pi pi-send" styleClass="p-button-sm p-button-info" label="Submit"></p-button>
+            <p-button [loading]="isLoading" [disabled]="!frmReport.valid" (onClick)="onSendReport()" icon="pi pi-send" styleClass="p-button-sm p-button-info" label="Submit"></p-button>
         </div>
     </p-card>
 </mat-dialog-content>
