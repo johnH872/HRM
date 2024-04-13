@@ -46,8 +46,8 @@ export class AddEditLeaveRequestComponent implements OnInit, OnDestroy, AfterVie
   hasEditPermission: boolean = false;
 
   minDate: Date = new Date();
-  defaultStartTime: Number[] = [9, 0, 0];
-  defaultEndTime: Number[] = [18, 30, 0];
+  defaultStartTime: Date = new Date();
+  defaultEndTime: Date = new Date();
 
   constructor(
     public dialModalRef: MatDialogRef<AddEditLeaveRequestComponent>,
@@ -100,23 +100,9 @@ export class AddEditLeaveRequestComponent implements OnInit, OnDestroy, AfterVie
         });
       }
     }
-    // this.timeStartDefault.setHours(9, 0, 0);
-    // this.timeEndDefault.setHours(18, 30, 0);
-    // this.frmLeaveRequest.get('session').valueChanges.subscribe((valueChanges) => {
-    //   if (valueChanges === "Entire day") {
-    //     this.timeStartDefault.setHours(9, 0, 0);
-    //     this.timeEndDefault.setHours(18, 30, 0);
-    //   }
-    //   if (valueChanges === "Morning") {
-    //     this.timeStartDefault.setHours(9, 0, 0);
-    //     this.timeEndDefault.setHours(14, 30, 0);
-    //   }
-    //   if (valueChanges === "Afternoon") {
-    //     this.timeStartDefault.setHours(14, 30, 0);
-    //     this.timeEndDefault.setHours(18, 30, 0);
-    //   }
-    // });
     if (this.action === TblActionType.Add) {
+      this.defaultStartTime.setHours(8, 30, 0);
+      this.defaultEndTime.setHours(17, 30, 0);
       this.statusDefault = LeaveRequestStatus.WAITING;
       this.employeeService.getEmployeeById(this.currentUser?.nameid).pipe(takeUntil(this.destroy$)).subscribe(res => {
         if (res.result) {
@@ -126,6 +112,8 @@ export class AddEditLeaveRequestComponent implements OnInit, OnDestroy, AfterVie
     }
     if (this.action === TblActionType.Edit) {
       this.statusDefault = this.leaveRequestModel?.status;
+      this.defaultStartTime = new Date(this.leaveRequestModel?.leaveDateFrom);
+      this.defaultEndTime = new Date(this.leaveRequestModel?.leaveDateTo);
       if (this.leaveRequestModel?.User) {
         this.getAssignee(this.leaveRequestModel?.User);
       }
@@ -208,6 +196,27 @@ export class AddEditLeaveRequestComponent implements OnInit, OnDestroy, AfterVie
   selectionLeaveEntitlement(e) {
     if (e && this.employeeListLeaveEntitlement) {
       this.leaveEntitlementChoosen = this.employeeListLeaveEntitlement.find(x => x.leaveEntitlementId === e.value);
+    }
+  }
+
+  selectionSession(e) {
+    if (e) {
+      this.defaultStartTime = new Date();
+      this.defaultEndTime = new Date();
+      switch (e.value) {
+        case 'Entire day':
+          this.defaultStartTime.setHours(8, 30, 0);
+          this.defaultEndTime.setHours(17, 30, 0);
+          break;
+        case 'Morning':
+          this.defaultStartTime.setHours(8, 30, 0);
+          this.defaultEndTime.setHours(13, 30, 0);
+          break;
+        case 'Afternoon':
+          this.defaultStartTime.setHours(13, 30, 0);
+          this.defaultEndTime.setHours(17, 30, 0);
+          break;
+      }
     }
   }
 

@@ -100,9 +100,9 @@ class ReportScheduleController {
                 if (dataFilterReport.listStatusLeave.includes('noPaid') && dataFilterReport.listStatusLeave.includes('paid')) {
                     queryLeave = queryLeave;
                 } else if (dataFilterReport.listStatusLeave.includes('paid')) {
-                    queryLeave['$LeaveType.isPaidSalary$'] = true;
+                    queryLeave['$LeaveEntitlement.LeaveType.isPaidSalary$'] = true;
                 } else if (dataFilterReport.listStatusLeave.includes('noPaid')) {
-                    queryLeave['$LeaveType.isPaidSalary$'] = false;
+                    queryLeave['$LeaveEntitlement.LeaveType.isPaidSalary$'] = false;
                 }
             } else {
                 queryLeave['$LeaveType.isPaidSalary$'] = {

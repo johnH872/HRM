@@ -15,9 +15,9 @@ export class HandleDisplayColorPipe implements PipeTransform {
         case "Month":
           if (value) {
             value = value.replace(/,/g, "");
-            if (Number(value) < 9.50) return '#ff0009';
-            else if (Number(value) >= 10.50) return '#008080';
-            else if (9.50 <= Number(value) && Number(value) < 10.50) return '#8dc63f';
+            if (Number(value) < 9.00) return '#ff0009';
+            else if (Number(value) >= 10.00) return '#008080';
+            else if (9.00 <= Number(value) && Number(value) < 10.00) return '#8dc63f';
           }
           break;
         default:
@@ -55,8 +55,8 @@ export class HandleDisplayColorPipe implements PipeTransform {
                   else if ((leave.includes('09:00 - ') && leaveTimeTo.hours >= checkStartTime.hours) || 
                             leave.includes('13:30 - ')) duration += 1.50;
                 }
-                if (duration < 9.50) return '#ff0009';
-                else if (duration >= 10.50) return '#008080';
+                if (duration < 9.00) return '#ff0009';
+                else if (duration >= 10.00) return '#008080';
                 else return '#8dc63f';
               }
             }

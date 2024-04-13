@@ -46,162 +46,100 @@
   </div>
 </div>
 <mat-divider></mat-divider>
-<mat-dialog-content class="mat-typography">
-  <form [formGroup]="frmLeaveRequest" class="container"
-    style="padding-top: 25px; padding-right: 50px; padding-left: 50px">
-    <div class="row">
-      <!-- <div class="col-12">
-        <div class="alert alert-warning" role="alert" *ngIf="canEdit && checkMyLeaveRequest">
-          This Leave Request is starting. You can't edit this Leave Request
-        </div>
-        <div class="alert alert-warning" role="alert" *ngIf="!canEdit && !checkMyLeaveRequest">
-          This Leave Request belongs to {{leaveRequestModel?.profile?.displayName}}, you cannot edit information.
-        </div>
-        <div class="alert alert-warning" role="alert" *ngIf="canEdit && !checkMyLeaveRequest">
-          This Leave Request belongs to {{leaveRequestModel?.profile?.displayName}}, you cannot edit information.
-        </div>
-      </div> -->
-      <div class="col-12">
+<mat-dialog-content class="mat-typography" style="height: 100%; overflow: auto;">
+  <form [formGroup]="frmLeaveRequest" class="container">
+    <div class="p-fluid p-grid p-formgrid">
+      <div class="p-field p-col-12">
         <app-employee-searching required [banks]="listEmployees" (userSelect)="getAssignee($event)" [currentUser]="employeeChosen"
           [readonly]="true">
         </app-employee-searching>
       </div>
-      <div class="col-12">
-        <mat-form-field appearance="fill">
-          <mat-label>Reason</mat-label>
-          <input matInput formControlName="reason" autocomplete="off" required trim="blur"/>
-          <mat-error *ngIf="
-              frmLeaveRequest?.controls?.reason?.errors &&
-              (frmLeaveRequest?.controls?.reason?.dirty ||
-                frmLeaveRequest?.controls?.reason?.touched)
-            ">
-            {{ frmLeaveRequest?.controls?.reason["errorMessage"] }}</mat-error>
-        </mat-form-field>
+      <div class="p-field p-col-12 p-md-2">
+        <label for="reason">Reason</label>
+        <input formControlName="reason" id="reason" type="reason" aria-describedby="reason-help" pInputText/>
+        <small id="reason-help" *ngIf="
+          frmLeaveRequest?.controls?.reason?.errors &&
+          (frmLeaveRequest?.controls?.reason?.dirty ||
+            frmLeaveRequest?.controls?.reason?.touched)
+          ">{{ frmLeaveRequest?.controls?.reason["errorMessage"] }}</small>
       </div>
-      <div class="col-12">
-        <mat-form-field appearance="fill">
-          <mat-label>Session</mat-label>
-          <mat-select formControlName="session" [(ngModel)]="sessionDefault">
-            <mat-option *ngFor="let session of listSessions" [value]="session">
-              {{session}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+      <div class="p-field p-col-12 p-md-2">
+        <label for="session">Session</label>
+        <p-dropdown formControlName="session" id="session" [options]="listSessions" [(ngModel)]="sessionDefault" 
+          (onChange)="selectionSession($event)" placeholder="Session"></p-dropdown>
       </div>
-      <div class="col-12" [ngSwitch]="frmLeaveRequest?.value?.session">
-        <mat-form-field appearance="fill"  class="form-field" *ngSwitchDefault>
-          <mat-label>Leave Date From</mat-label>
-          <input matInput [ngxMatDatetimePicker]="pickerStartDate" placeholder="Choose a date" formControlName="leaveDateFrom" 
-                required [min]="minDate" (click)="pickerStartDate.open()" readonly>
-          <ngx-mat-datepicker-toggle matSuffix [for]="pickerStartDate"></ngx-mat-datepicker-toggle>
-          <ngx-mat-datetime-picker #pickerStartDate [showSpinners]="true" [stepHour]="1"
-            [stepMinute]="15" [showSeconds]="false" [touchUi]="false" [enableMeridian]="false" [defaultTime]="defaultStartTime">
-            <ngx-mat-datepicker-actions>
-              <button mat-button ngxMatDatepickerCancel>Hủy</button>
-              <button mat-raised-button color="primary" ngxMatDatepickerApply>Đồng ý</button>
-            </ngx-mat-datepicker-actions>
-          </ngx-mat-datetime-picker>
-        </mat-form-field>
-        <mat-form-field *ngSwitchCase="'Afternoon'">
-          <mat-label>Leave Date From</mat-label>
-          <input matInput [ngxMatDatetimePicker]="pickerStartDate" placeholder="Choose a date" formControlName="leaveDateFrom" 
-                required [min]="minDate" (click)="pickerStartDate.open()" readonly>
-          <ngx-mat-datepicker-toggle matSuffix [for]="pickerStartDate"></ngx-mat-datepicker-toggle>
-          <ngx-mat-datetime-picker #pickerStartDate [showSpinners]="true" [stepHour]="1"
-            [stepMinute]="15" [showSeconds]="false" [touchUi]="false" [enableMeridian]="false" [defaultTime]="defaultStartTime">
-            <ngx-mat-datepicker-actions>
-              <button mat-button ngxMatDatepickerCancel>Hủy</button>
-              <button mat-raised-button color="primary" ngxMatDatepickerApply>Đồng ý</button>
-            </ngx-mat-datepicker-actions>
-          </ngx-mat-datetime-picker>
-        </mat-form-field>
+      <div class="p-field p-col-12 p-md-2">
+        <label for="leaveFrom">Leave Date From</label>
+        <p-calendar formControlName="leaveDateFrom" [(ngModel)]="defaultStartTime" inputId="leaveFrom" aria-describedby="leaveFrom-help"
+          [showIcon]="true" [showClear]="true"
+          [minDate]="minDate" [defaultDate]="defaultStartTime" [readonlyInput]="true" 
+          [showTime]="true" [hourFormat]="24" [stepHour]="1" [stepMinute]="15"></p-calendar>
+        <small id="leaveFrom-help" *ngIf="
+          frmLeaveRequest?.controls?.leaveDateFrom?.errors &&
+          (frmLeaveRequest?.controls?.leaveDateFrom?.dirty ||
+            frmLeaveRequest?.controls?.leaveDateFrom?.touched)
+          ">{{ frmLeaveRequest?.controls?.leaveDateFrom["errorMessage"] }}</small>
       </div>
-      <div class="col-12" [ngSwitch]="frmLeaveRequest?.value?.session">
-        <mat-form-field *ngSwitchDefault>
-          <mat-label>Leave Date To</mat-label>
-          <input matInput [ngxMatDatetimePicker]="pickerEndDate" placeholder="Choose a date" formControlName="leaveDateTo" 
-                required [min]="minDate" (click)="pickerEndDate.open()" readonly>
-          <ngx-mat-datepicker-toggle matSuffix [for]="pickerEndDate"></ngx-mat-datepicker-toggle>
-          <ngx-mat-datetime-picker #pickerEndDate [showSpinners]="true" [stepHour]="1"
-            [stepMinute]="15" [showSeconds]="false" [touchUi]="false" [enableMeridian]="false" [defaultTime]="defaultEndTime">
-            <ngx-mat-datepicker-actions>
-              <button mat-button ngxMatDatepickerCancel>Hủy</button>
-              <button mat-raised-button color="primary" ngxMatDatepickerApply>Đồng ý</button>
-            </ngx-mat-datepicker-actions>
-          </ngx-mat-datetime-picker>
-        </mat-form-field>
-        <mat-form-field *ngSwitchCase="'Morning'">
-          <mat-label>Leave Date To</mat-label>
-          <input matInput [ngxMatDatetimePicker]="pickerEndDate" placeholder="Choose a date" formControlName="leaveDateTo" 
-                required [min]="minDate" (click)="pickerEndDate.open()" readonly>
-          <ngx-mat-datepicker-toggle matSuffix [for]="pickerEndDate"></ngx-mat-datepicker-toggle>
-          <ngx-mat-datetime-picker #pickerEndDate [showSpinners]="true" [stepHour]="1"
-            [stepMinute]="15" [showSeconds]="false" [touchUi]="false" [enableMeridian]="false" [defaultTime]="defaultEndTime">
-            <ngx-mat-datepicker-actions>
-              <button mat-button ngxMatDatepickerCancel>Hủy</button>
-              <button mat-raised-button color="primary" ngxMatDatepickerApply>Đồng ý</button>
-            </ngx-mat-datepicker-actions>
-          </ngx-mat-datetime-picker>
-        </mat-form-field>
+      <div class="p-field p-col-12 p-md-2">
+        <label for="leaveTo">Leave Date To</label>
+        <p-calendar formControlName="leaveDateTo" [(ngModel)]="defaultEndTime" inputId="leaveTo" aria-describedby="leaveTo-help"
+          [showIcon]="true" [showClear]="true"
+          [minDate]="minDate" [defaultDate]="defaultEndTime" [readonlyInput]="true" 
+          [showTime]="true" [hourFormat]="24" [stepHour]="1" [stepMinute]="15"></p-calendar>
+        <small id="leaveTo-help" *ngIf="
+          frmLeaveRequest?.controls?.leaveDateTo?.errors &&
+          (frmLeaveRequest?.controls?.leaveDateTo?.dirty ||
+            frmLeaveRequest?.controls?.leaveDateTo?.touched)
+          ">{{ frmLeaveRequest?.controls?.leaveDateTo["errorMessage"] }}</small>
       </div>
-      <div class="col-12">
-        <mat-form-field appearance="fill" [ngClass]="{disabledNoOfCasesDiv: true}">
-          <mat-label>Status</mat-label>
-          <mat-select required formControlName="status" [(ngModel)]="statusDefault" [disabled]="true">
-            <mat-option *ngFor="let status of listStatus" [value]="status?.dataStateId">
-              {{status?.dataStateName}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+      <div class="p-field p-col-12 p-md-2">
+        <label for="status">Status</label>
+        <p-dropdown formControlName="status" id="status" [options]="listStatus" [(ngModel)]="statusDefault"
+          optionLabel="dataStateName" optionValue="dataStateId" placeholder="Status"></p-dropdown>
       </div>
-      <div class="col-12" *ngIf="action !== 0">
-        <mat-form-field appearance="fill">
-          <mat-label>Hours</mat-label>
-          <input required matInput formControlName="numberOfHour" autocomplete="off" [readonly]="!hasEditPermission" />
-          <mat-error *ngIf="
-              frmLeaveRequest?.controls?.numberOfHour?.errors &&
-              (frmLeaveRequest?.controls?.numberOfHour?.dirty ||
-                frmLeaveRequest?.controls?.numberOfHour?.touched)
-            ">
-            {{ frmLeaveRequest?.controls?.numberOfHour["errorMessage"] }}</mat-error>
-        </mat-form-field>
+      <div class="p-field p-col-12 p-md-2" *ngIf="action !== 0">
+        <label for="numberOfHour">Number Of Hours</label>
+        <input formControlName="numberOfHour" id="numberOfHour" type="numberOfHour" aria-describedby="numberOfHour-help" pInputText/>
+        <small id="numberOfHour-help" *ngIf="
+          frmLeaveRequest?.controls?.numberOfHour?.errors &&
+          (frmLeaveRequest?.controls?.numberOfHour?.dirty ||
+            frmLeaveRequest?.controls?.numberOfHour?.touched)
+        ">{{ frmLeaveRequest?.controls?.numberOfHour["errorMessage"] }}</small>
       </div>
-      <div class="col-12">
-        <mat-form-field appearance="fill">
-          <mat-label>Choose Leave Entitlement</mat-label>
-          <mat-select formControlName="leaveEntitlementId" required (selectionChange)="selectionLeaveEntitlement($event)"
-            [(ngModel)]="leaveEntitlementChoosen ? leaveEntitlementChoosen?.leaveEntitlementId : leaveEntitlementDefault">
-            <mat-select-trigger>
+      <div class="p-field p-col-12 p-md-2">
+        <label for="leaveEntitlement">Leave Entitlement</label>
+        <p-dropdown formControlName="leaveEntitlementId" id="leaveEntitlement" [options]="employeeListLeaveEntitlement" [(ngModel)]="leaveEntitlementChoosen ? leaveEntitlementChoosen?.leaveEntitlementId : leaveEntitlementDefault"
+          placeholder="Choose Leave Entitlement" aria-describedby="leaveEntitlementId-help"
+          optionValue="leaveEntitlementId" (onChange)="selectionLeaveEntitlement($event)">
+          <ng-template pTemplate="selectedItem">
+            <div *ngIf="leaveEntitlementChoosen">
               {{leaveEntitlementChoosen?.LeaveType?.leaveTypeName}} ({{leaveEntitlementChoosen?.usableLeave - leaveEntitlementChoosen?.usedLeave}})
-            </mat-select-trigger>
-            <mat-option *ngFor="let leaveEntitlement of employeeListLeaveEntitlement"
-              [value]="leaveEntitlement.leaveEntitlementId">
-              <div fxLayout="row" fxLayoutAlign="space-between center">
-                <div>
-                  {{leaveEntitlement?.LeaveType?.leaveTypeName}} ({{leaveEntitlement?.usableLeave -
-                  leaveEntitlement?.usedLeave}})
-                </div>
-                <div *ngIf="leaveEntitlement?.LeaveType?.isPaidSalary">
-                  <span class="badge badge-pill badge-primary" style="font-size: 12px"
-                    [style.background-color]="'#00a339'">
-                    Paid Leave
-                  </span>
-                </div>
+            </div>
+          </ng-template>
+          <ng-template let-leaveEntitlement pTemplate="item">
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+              <div>
+                {{leaveEntitlement?.LeaveType?.leaveTypeName}} ({{leaveEntitlement?.usableLeave -
+                leaveEntitlement?.usedLeave}})
               </div>
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="
-                frmLeaveRequest?.controls?.leaveEntitlementId?.errors &&
-                (frmLeaveRequest?.controls?.leaveEntitlementId?.dirty ||
-                  frmLeaveRequest?.controls?.leaveEntitlementId?.touched)">
-            {{ frmLeaveRequest?.controls?.leaveEntitlementId["errorMessage"] }}</mat-error>
-        </mat-form-field>
+              <div *ngIf="leaveEntitlement?.LeaveType?.isPaidSalary">
+                <span class="badge badge-pill badge-primary" style="font-size: 12px"
+                  [style.background-color]="'#00a339'">
+                  Paid Leave
+                </span>
+              </div>
+            </div>
+          </ng-template>
+        </p-dropdown>
+        <small id="leaveEntitlementId-help" *ngIf="
+          frmLeaveRequest?.controls?.leaveEntitlementId?.errors &&
+          (frmLeaveRequest?.controls?.leaveEntitlementId?.dirty ||
+            frmLeaveRequest?.controls?.leaveEntitlementId?.touched)
+        ">{{ frmLeaveRequest?.controls?.leaveEntitlementId["errorMessage"] }}</small>
       </div>
-      <div>
-        <div class="col-12" style="height: fit-content">
-          <mat-label style="color: #666666">Note</mat-label>
-          <textarea matInput placeholder="Write note here..." formControlName="note" trim="blur"></textarea>
-        </div>
+      <div class="p-field p-col-12 p-md-2">
+        <label for="note">Note</label>
+        <input formControlName="note" id="note" type="note" pInputText/>
       </div>
     </div>
   </form>
