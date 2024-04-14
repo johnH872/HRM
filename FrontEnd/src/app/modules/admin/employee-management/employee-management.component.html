@@ -44,22 +44,27 @@
         <th pSortableColumn="email" style="width:11%">
           Email
           <p-columnFilter type="text" field="email" display="menu"></p-columnFilter>
-          <p-sortIcon field="email"></p-sortIcon>
+          <!-- <p-sortIcon field="email"></p-sortIcon> -->
         </th>
         <th pSortableColumn="role" style="width:8%">
           Role
-          <p-columnFilter type="text" field="role" display="menu"></p-columnFilter>
-          <p-sortIcon field="role"></p-sortIcon>
+          <p-columnFilter field="role" matchMode="equals" display="menu">
+            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                <p-dropdown [ngModel]="value" [options]="lstRoles" (onChange)="filter($event?.value)" optionLabel="displayName" optionValue="displayName" placeholder="Any">
+                </p-dropdown>
+            </ng-template>
+          </p-columnFilter>
+          <!-- <p-sortIcon field="role"></p-sortIcon> -->
         </th>
         <th pSortableColumn="phoneNumber" style="width:14%">
           Phone Number
-          <p-columnFilter type="text" field="phoneNumber" display="menu"></p-columnFilter>
+          <!-- <p-columnFilter type="text" field="phoneNumber" display="menu"></p-columnFilter> -->
           <p-sortIcon field="phoneNumber"></p-sortIcon>
         </th>
         <th style="width:10%">
           Job Title
           <p-columnFilter type="text" field="jobTitle" display="menu"></p-columnFilter>
-          <p-sortIcon field="jobTitle"></p-sortIcon>
+          <!-- <p-sortIcon field="jobTitle"></p-sortIcon> -->
         </th>
         <th style="width:8%">
           Manage By
@@ -71,14 +76,13 @@
               </div>
             </ng-template>
             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-              <p-multiSelect [ngModel]="value" [options]="representatives" placeholder="Any"
-                (onChange)="filter($event.value)" optionLabel="name">
+              <p-multiSelect [ngModel]="value" [options]="dataTable" placeholder="Any"
+                (onChange)="filter($event.value)">
                 <ng-template let-option pTemplate="item">
                   <div class="inline-block vertical-align-middle">
-                    <img [alt]="option.label"
-                      src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{ option.image }}" width="24"
-                      class="vertical-align-middle" />
-                    <span class="ml-1 mt-1">{{ option.name }}</span>
+                    <img [alt]=""
+                      src="{{ option?.avatarUrl }}" width="24" class="vertical-align-middle" />
+                    <span class="ml-1 mt-1">{{ option?.displayName }}</span>
                   </div>
                 </ng-template>
               </p-multiSelect>
@@ -93,7 +97,7 @@
         <th pSortableColumn="nationality" style="width:12%">
           Nationality
           <p-columnFilter type="text" field="nationality" display="menu"></p-columnFilter>
-          <p-sortIcon field="nationality"></p-sortIcon>
+          <!-- <p-sortIcon field="nationality"></p-sortIcon> -->
         </th>
         <th pSortableColumn="nationality" style="width:12%">
           Controlling
@@ -117,7 +121,10 @@
         <td>{{ employee?.jobTitle }}</td>
         <td>{{ employee?.ownerId }}</td>
         <td>{{ employee?.gender }}</td>
-        <td>{{ employee?.nationality }}</td>
+        <td>
+          <img src="{{getNationalityImg(employee?.nationality)}}" class="custom-display-img">
+          {{ employee?.nationality }}
+        </td>
         <td>
           <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
             (click)="addEditEmployee(employee)"></button>

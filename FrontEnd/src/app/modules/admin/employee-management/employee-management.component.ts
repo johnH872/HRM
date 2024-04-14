@@ -1,12 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { EmployeeManagementService } from './employee-management.service';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Table } from 'primeng/table';
 import { MatDialog } from '@angular/material/dialog';
 import { EmployeeModel } from '../../shared/models/employee.model';
 import { AddEditEmployeeComponent } from './add-edit-employee/add-edit-employee.component';
 import { TblActionType } from '../../shared/enum/tbl-action-type.enum';
 import { TrainEmployeeComponent } from './train-employee/train-employee.component';
+import { RoleModel } from '../../shared/models/role-model';
+import { RoleManagementService } from '../../shared/services/role-management.service';
+import { DatastateService } from '../datastate-management/datastate.service';
 
 @Component({
   selector: 'app-employee-management',
@@ -17,6 +20,9 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
   dataTable: EmployeeModel[];
   employeeModel: EmployeeModel;
+  lstRoles: RoleModel[] = [];
+  lstEmployees: EmployeeModel[] = [];
+  lstNationalities: any[];
 
   first = 0;
   rows = 10;
@@ -25,9 +31,20 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
 
   constructor(
     private employeeService: EmployeeManagementService,
+    private roleService: RoleManagementService,
+    private dataStateService: DatastateService,
     private dialog: MatDialog,
   ) {
-
+    this.roleService.getRoles().subscribe(res => {
+      if (res.result != null && res.result.length > 0) {
+        this.lstRoles = [...res.result];
+      }
+    });
+    this.dataStateService.getListCountries().subscribe(resp => {
+      if (resp) {
+        this.lstNationalities = resp.map(item => Object.assign({ text: `${item?.name?.common}`, value: item?.name?.common, img: item?.flags?.png }));
+      } else this.lstNationalities = [];
+    });
   }
 
   async ngOnInit() {
@@ -124,5 +141,11 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
         await this.refreshData();
       }
     });
+  }
+
+  getNationalityImg(value) {
+    console.log(value);
+    console.log(this.lstNationalities)
+    return this.lstNationalities.find(item => item.value === value)?.img;
   }
 }
