@@ -59,6 +59,10 @@ const routes: Routes = [{
       component: ReportScheduleManagementComponent,
     },
     {
+      path: 'attendance',
+      component: AttendanceManagmentComponent,
+    },
+    {
       path: '',
       redirectTo: 'dashboard',
       pathMatch: 'full',

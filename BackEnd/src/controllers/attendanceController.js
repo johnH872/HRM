@@ -4,11 +4,70 @@ const dbContext = await db;
 import path from 'path';
 import * as canvas from 'canvas';
 import * as faceapi from '@vladmandic/face-api'
-import { Op, where } from "sequelize";
+import { Op, where, literal } from "sequelize";
 import { uploadImage } from "../utils/cloundinary.js";
 const { Canvas, Image, ImageData } = canvas
 faceapi.env.monkeyPatch({ Canvas, Image, ImageData })
 class attendanceController {
+    async getAllAttendance(req, res, next) {
+        var returnResult = new ReturnResult();
+        try {
+            const attendancePaging = await dbContext.Attendance.findAll({
+                attributes: [
+                    'attendanceId', 
+                    'userId', 
+                    'punchinDate', 
+                    'punchinTime', 
+                    'punchinNote', 
+                    'punchinOffset', 
+                    'punchoutDate', 
+                    'punchoutTime', 
+                    'punchoutNote', 
+                    'punchoutOffset', 
+                    // 'punchInImageUrl', 
+                    // 'punchOutImageUrl',
+                    [
+                        literal(
+                          `CASE 
+                              WHEN ${'Attendance.punchoutTime'} > ${'Attendance.punchinTime'} 
+                                  THEN (${'Attendance.punchoutTime'} - ${'Attendance.punchinTime'}) / 3600000
+                              ELSE 0
+                          END`
+                        ),
+                        'duration',
+                    ],
+                ],
+                include: {
+                    model: dbContext.User,
+                    attributes: [
+                        'userId',
+                        'firstName',
+                        'middleName',
+                        'lastName',
+                        'email',
+                        'birth',
+                        'gender',
+                        'nationality',
+                        'avatarUrl',
+                        'phoneNumber',
+                        'jobTitle',
+                        'dateStartContract',
+                        'ownerId',
+                        'isAppliedFace',
+                    ],
+                },
+                order: [
+                    ['punchinDate', 'DESC']
+                ]
+            });
+            returnResult.result = attendancePaging;
+            res.status(200).json(returnResult);
+        } catch(error) {
+            res.status(400).json(error);
+            console.log(error)
+        }
+    }
+
     async getAttendanceByEmployeeId(req, res, next) {
         var returnResult = new ReturnResult();
         try {
