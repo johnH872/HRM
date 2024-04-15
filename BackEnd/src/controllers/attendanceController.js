@@ -6,6 +6,7 @@ import * as canvas from 'canvas';
 import * as faceapi from '@vladmandic/face-api'
 import { Op, where } from "sequelize";
 import { uploadImage } from "../utils/cloundinary.js";
+import { leaveRequestStatus } from "../models/enums/leaveRequestStatus.js";
 const { Canvas, Image, ImageData } = canvas
 faceapi.env.monkeyPatch({ Canvas, Image, ImageData })
 class attendanceController {
@@ -47,7 +48,7 @@ class attendanceController {
             returnResult.result = false;
             const isPunchIn = req.params.isPunchIn === 'true';
             const employeeId = req.params.id;
-            const {model} =  req.body;
+            const { model } = req.body;
             const attendanceModel = JSON.parse(model);
             var imagePath = req.file.path;
             // Save image
@@ -112,6 +113,7 @@ class attendanceController {
         try {
             returnResult.result = false;
             const model = req.body;
+            model.statusId = leaveRequestStatus.WAITING;
             var imagePath = req.file.path;
             // Save image
             const __dirname = path.resolve(path.dirname(''));
@@ -122,6 +124,7 @@ class attendanceController {
                 email: model.email,
                 note: model.note,
                 type: model.type,
+                statusId: model.statusId,
                 imageUrl
             });
             if (attendanceReport) returnResult.result = true;
@@ -131,6 +134,71 @@ class attendanceController {
             console.log(error)
         }
     }
-}
 
+    async getAllAttendanceReport(req, res, next) {
+        var returnResult = new ReturnResult();
+        try {
+            const { email } = req.params;
+            const attendanceReports = await dbContext.AttendanceReport.findAll({
+                // where: {
+                //     email
+                // }
+                include:
+                {
+                    model: dbContext.DataState,
+                    as:'status'
+                },
+            });
+            returnResult.result = attendanceReports;
+            res.status(200).json(returnResult);
+        } catch (error) {
+            res.status(400).json(error);
+            console.log(error)
+        }
+    }
+
+    async saveAttendanceReport(req, res, next) {
+        var returnResult = new ReturnResult();
+        try {
+            returnResult.result = false;
+            const { statusId, attendanceReportId } = req.body;
+            const updatedRes = await dbContext.AttendanceReport.update({
+                statusId
+            }, {
+                where: {
+                    attendanceReportId
+                }
+            });
+            if (updatedRes) {
+                returnResult.result = true;
+            }
+            res.status(200).json(returnResult);
+        } catch (error) {
+            res.status(400).json(error);
+            console.log(error)
+        }
+    }
+
+    async deleteAttendanceReport(req, res, next) {
+        var returnResult = new ReturnResult();
+        try {
+            returnResult.result = false;
+            const removeIds = req.body;
+            if(removeIds?.length > 0) {
+                const updatedRes = await dbContext.AttendanceReport.destroy({
+                    where: {
+                        attendanceReportId: removeIds
+                    }   
+                });
+                if (updatedRes) {
+                    returnResult.result = true;
+                }
+            }
+            res.status(200).json(returnResult);
+        } catch (error) {
+            res.status(400).json(error);
+            console.log(error)
+        }
+    }
+}
 export default new attendanceController;

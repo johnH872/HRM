@@ -5,3 +5,55 @@
 ::ng-deep .p-inputtext {
     line-height: 13px !important;
 }
+
+::ng-deep .p-datatable .p-datatable-thead>tr>th,
+::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+    font-size: 14px;
+}
+
+::ng-deep .p-paginator {
+    .p-paginator-pages .p-paginator-page {
+        min-width: 2.5rem;
+        height: 2.5rem;
+    }
+
+    .p-paginator-current {
+        font-size: 14px;
+        height: 2.5rem;
+    }
+
+    .p-paginator-first,
+    .p-paginator-prev,
+    .p-paginator-next,
+    .p-paginator-last {
+        min-width: 2.5rem;
+        height: 2.5rem;
+    }
+
+    .p-dropdown {
+        height: 2.5rem;
+        font-size: 14px;
+    }
+}
+
+::ng-deep p-tableheadercheckbox,
+::ng-deep p-tablecheckbox {
+    .p-checkbox .p-checkbox-box {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+::ng-deep p-columnfilter {
+    filtericon {
+        width: 14px;
+        height: 14px;
+    }
+}
+
+::ng-deep p-sorticon {
+    sortalticon {
+        width: 21px;
+        height: 14px;
+    }
+}

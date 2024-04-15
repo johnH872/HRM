@@ -39,8 +39,19 @@ export const MENU_ITEMS: NbMenuItem[] = [
       },
       {
         title: 'Attendance',
-        icon: 'person-outline',
-        link: '/admin/attendance',
+        icon: 'person-done-outline',
+        children: [
+          {
+            title: 'Attendances',
+            icon: 'checkmark-square-outline',
+            link: '/admin/attendances',
+          },
+          {
+            title: 'Reports',
+            icon: 'alert-triangle-outline',
+            link: '/admin/attendance-report',
+          },
+        ],
       },
       {
         title: 'Work Calendar',

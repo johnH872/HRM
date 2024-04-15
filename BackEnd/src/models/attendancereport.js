@@ -8,7 +8,10 @@ export default (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      AttendanceReport.belongsTo(models.DataState, {
+        foreignKey: 'statusId',
+        as: 'status'
+      });
     }
   }
   AttendanceReport.init({
@@ -30,6 +33,9 @@ export default (sequelize, DataTypes) => {
     type: {
       allowNull: false,
       type: DataTypes.STRING
+    },
+    statusId: {
+      type: DataTypes.INTEGER
     },
     createdAt: {
       allowNull: false,

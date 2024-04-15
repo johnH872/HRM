@@ -1,0 +1,94 @@
+<div class="card">
+  <p-toolbar styleClass="mb-4 gap-2">
+    <ng-template pTemplate="left">
+      <!-- <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2 p-button-sm"
+        style="margin-right: 0.5rem;" (click)="addEditLeaveType()"></button> -->
+      <button pButton pRipple [label]="Delete" icon="pi pi-trash" class="p-button-danger p-button-sm"
+        (click)="deleteSelectedAttendanceReport()" [disabled]="!selectedReports || !selectedReports?.length"></button>
+    </ng-template>
+
+    <ng-template pTemplate="right">
+      <button pButton label="Clear" class="p-button-outlined p-button-sm" icon="pi pi-filter-slash"
+        (click)="clear(table)"></button>
+      <button pButton label="Refresh" class="p-button-outlined p-button-sm" icon="pi pi-refresh"
+        style="margin-left: 10px;" (click)="reset()"></button>
+    </ng-template>
+  </p-toolbar>
+  <p-table styleClass="p-datatable-sm" #table [value]="dataTable" [paginator]="true" [rows]="10"
+    [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '100%' }" (onPage)="pageChange($event)"
+    [rowsPerPageOptions]="[10, 25, dataTable?.length]" [loading]="loading" [globalFilterFields]="['email']"
+    editMode="row" [(selection)]="selectedReports" [rowHover]="true" [scrollable]="true" scrollHeight="480px"
+    dataKey="userId">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 4rem">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th pSortableColumn="email">
+          Email
+          <p-columnFilter type="text" field="email" display="menu"></p-columnFilter>
+          <p-sortIcon field="email"></p-sortIcon>
+        </th>
+        <th pSortableColumn="note">
+          Note
+          <p-columnFilter type="text" field="note" display="menu"></p-columnFilter>
+          <p-sortIcon field="note"></p-sortIcon>
+        </th>
+        <th pSortableColumn="createdAt">
+          Created At
+          <p-columnFilter type="text" field="createdAt" display="menu"></p-columnFilter>
+          <p-sortIcon field="createdAt"></p-sortIcon>
+        </th>
+        <th pSortableColumn="statusId">
+          StatusId
+          <p-columnFilter type="text" display="menu"></p-columnFilter>
+          <p-sortIcon field="statusId"></p-sortIcon>
+        </th>
+        <th pSortableColumn="type">
+          type
+          <p-columnFilter type="text" field="type" display="menu"></p-columnFilter>
+          <p-sortIcon field="type"></p-sortIcon>
+        </th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-attendanceReport let-editing="editing" let-ri="rowIndex">
+      <tr [pEditableRow]="attendanceReport">
+        <td>
+          <p-tableCheckbox [value]="attendanceReport"></p-tableCheckbox>
+        </td>
+        <td>{{ attendanceReport?.email }}</td>
+        <td>{{ attendanceReport?.note }}</td>
+        <td>{{ attendanceReport?.createdAt | dateTimeFormat }}</td>
+        <td><ng-container *ngTemplateOutlet="status; context: { row: attendanceReport.status }"></ng-container></td>
+        <td>{{ attendanceReport?.type === "PUNCHIN" ? "Punch in" : "Punch out" }}</td>
+        <td>
+          <button *ngIf="attendanceReport.status.dataStateId === 1"
+            (click)="saveAttendanceReport(true, attendanceReport)" matTooltip="Approve" style="margin-right: 0.5rem;"
+            pButton pRipple icon="pi pi-check-circle" class="p-button-sm p-button-success"></button>
+          <button *ngIf="attendanceReport.status.dataStateId === 1"
+            (click)="saveAttendanceReport(false, attendanceReport)" matTooltip="Reject" style="margin-right: 0.5rem;"
+            pButton pRipple icon="pi pi-times-circle" class="p-button-sm p-button-warning"></button>
+          <button (click)="openDetail(attendanceReport)" matTooltip="Open detail" pButton pRipple icon="pi pi-eye"
+            class="p-button-sm p-button-primary"></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="paginatorleft">
+      <!-- <p-button type="button" icon="pi pi-plus" styleClass="p-button-sm p-button-text"></p-button> -->
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="20">No record found.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<ng-template #status let-row="row">
+  <div class="badge badge-pill" [style.background-color]="row?.colorCode || '#ffffff'">
+    <div style="color: white; ">
+      {{row?.dataStateName}}
+    </div>
+  </div>
+</ng-template>

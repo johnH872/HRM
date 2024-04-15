@@ -36,6 +36,7 @@ import { TrainEmployeeComponent } from './employee-management/train-employee/tra
 import { ReportScheduleManagementComponent } from './report-schedule-management/report-schedule-management.component';
 import { HandleDisplayColorPipe } from './report-schedule-management/handle-display-color.pipe';
 import { CheckColorTodayPipe } from './report-schedule-management/check-color-today.pipe';
+import { AttendanceReportManagementComponent } from './attendance-managment/attendance-report-management/attendance-report-management.component';
 
 
 @NgModule({
@@ -71,7 +72,8 @@ import { CheckColorTodayPipe } from './report-schedule-management/check-color-to
     TrainEmployeeComponent,
     ReportScheduleManagementComponent,
     HandleDisplayColorPipe,
-    CheckColorTodayPipe
+    CheckColorTodayPipe,
+    AttendanceReportManagementComponent
   ],
   imports: [
     ThemeModule,

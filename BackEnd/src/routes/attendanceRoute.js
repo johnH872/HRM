@@ -9,4 +9,7 @@ router.route('/GetAttendanceByEmployeeId/:id').post(attendanceController.getAtte
 router.route('/PunchInOut/:isPunchIn/:id').post(attendanceUpload.single('image'), attendanceController.punchInOut);
 // router.route('/PunchInOutMobile/:isPunchIn/:id').post(basicUpload.single('image') , attendanceController.punchInOutMobile);
 router.route('/SendAttendanceReport').post(attendanceUpload.single('image') , attendanceController.sendAttendanceReport);
+router.route('/GetAllAttendanceReport/:email').get(attendanceController.getAllAttendanceReport);
+router.route('/SaveAttendanceReport').post(attendanceController.saveAttendanceReport);
+router.route('/DeleteAttendanceReport').post(attendanceController.deleteAttendanceReport);
 export default router;

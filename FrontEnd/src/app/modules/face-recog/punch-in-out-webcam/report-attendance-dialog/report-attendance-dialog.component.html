@@ -13,7 +13,8 @@
         <div fxLayout="column" fxLayoutAlign="start start" class="pt-4">
             <form [formGroup]="frmReport" fxLayout="row wrap" class="w-100">
                 <span class="mb-1 w-100"><b>Type</b></span>
-                <p-dropdown class="flex w-100" formControlName="type" [options]="punchTypes" optionLabel="name" optionValue="code"></p-dropdown>
+                <p-dropdown class="flex w-100" formControlName="type" [options]="punchTypes" optionLabel="name"
+                    optionValue="code"></p-dropdown>
                 <span class="mb-1 mt-3 w-100"><b>Email</b></span>
                 <span class="p-input-icon-left w-100">
                     <i class="pi pi-at"></i>
@@ -38,7 +39,14 @@
         <div fxLayout="row" fxLayoutAlign="end center" style="padding: unset !important; margin-top: 1.5rem;"
             class="flex flex-wrap gap-3">
             <p-button (onClick)="closeDialog()" styleClass="p-button-sm p-button-secondary" label="Cancel"></p-button>
-            <p-button [loading]="isLoading" [disabled]="!frmReport.valid" (onClick)="onSendReport()" icon="pi pi-send" styleClass="p-button-sm p-button-info" label="Submit"></p-button>
+            <p-button *ngIf="action === actionTypes.Add" [loading]="isLoading" (onClick)="onSendReport()"
+                icon="pi pi-send" styleClass="p-button-sm p-button-info" label="Submit"></p-button>
+            <p-button *ngIf="action === actionTypes.Edit && reportAttendanceModel.status.dataStateId === 1"
+                [loading]="isLoading" (onClick)="onSaveAttendanceReport(false)" icon="pi pi-times-circle"
+                styleClass="p-button-sm p-button-warning p-button-info" label="Reject"></p-button>
+            <p-button *ngIf="action === actionTypes.Edit && reportAttendanceModel.status.dataStateId === 1"
+                [loading]="isLoading" (onClick)="onSaveAttendanceReport(true)" icon="pi pi-check-circle"
+                styleClass="p-button-sm p-button-success p-button-info" label="Approve"></p-button>
         </div>
     </p-card>
 </mat-dialog-content>

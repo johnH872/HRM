@@ -8,6 +8,7 @@ import { PunchCardComponent } from './punch-card/punch-card.component';
 import { environment } from 'src/enviroments/enviroment';
 import { AlertCardComponent } from './alert-card/alert-card.component';
 import { ReportAttendanceDialogComponent } from './report-attendance-dialog/report-attendance-dialog.component';
+import { TblActionType } from '../../shared/enum/tbl-action-type.enum';
 
 @Component({
   selector: 'app-punch-in-out-webcam',
@@ -104,6 +105,7 @@ export class PunchInOutWebcamComponent implements OnInit, OnDestroy {
             ++existedCount;
             this.detectedMaps.set(bestMatch.label, existedCount);
             if (existedCount == 5 && this.cancelClickCouting != 3) this.employeeManagementService.getEmployeeById(bestMatch?.label).subscribe(res => {
+              this.canvas.style.display = 'none';
               this.canvas
                 .getContext("2d")
                 .drawImage(this.videoInput, 0, 0, window.innerWidth, window.innerHeight);
@@ -155,6 +157,7 @@ export class PunchInOutWebcamComponent implements OnInit, OnDestroy {
                     hasBackdrop: true,
                     data: {
                       blobImage: blob,
+                      action: TblActionType.Add,
                       captureImg: captureImg,
                     }
                   }).afterClosed().subscribe(res => {

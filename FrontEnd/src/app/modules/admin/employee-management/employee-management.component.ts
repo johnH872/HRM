@@ -144,8 +144,8 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
   }
 
   getNationalityImg(value) {
-    console.log(value);
-    console.log(this.lstNationalities)
-    return this.lstNationalities.find(item => item.value === value)?.img;
+    // console.log(value);
+    // console.log(this.lstNationalities)
+    // return this.lstNationalities.find(item => item.value === value)?.img;
   }
 }

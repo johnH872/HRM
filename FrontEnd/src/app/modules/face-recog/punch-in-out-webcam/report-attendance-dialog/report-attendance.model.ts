@@ -1,8 +1,9 @@
 import { NumericValueType, email, numeric, prop, required } from "@rxweb/reactive-form-validators";
+import { DataStateModel } from "src/app/modules/admin/datastate-management/data-state.model";
 
 export class ReportAttendanceModel {
     @prop()
-    reportAttendanceId: number | null;
+    attendanceReportId: number | null;
     @prop()
     createdAt: Date | null;
     @email()
@@ -12,4 +13,7 @@ export class ReportAttendanceModel {
     note: String;
     @prop()
     type: Object; 
+    statusId: number;
+    status: DataStateModel;
+    imageUrl: String;
 }   

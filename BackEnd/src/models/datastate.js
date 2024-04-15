@@ -12,6 +12,10 @@ export default (sequelize, DataTypes) => {
       DataState.hasMany(models.LeaveRequest, {
         foreignKey: 'status'
       });
+
+      DataState.hasMany(models.AttendanceReport, {
+        foreignKey: 'statusId'
+      });
     }
   }
   DataState.init({

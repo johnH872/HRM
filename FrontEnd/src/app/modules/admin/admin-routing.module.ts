@@ -13,6 +13,7 @@ import { AttendanceManagmentComponent } from './attendance-managment/attendance-
 import { PunchInOutComponent } from './attendance-managment/punch-in-out/punch-in-out.component';
 import { LeaveRequestManagementComponent } from './leave-request-management/leave-request-management.component';
 import { ReportScheduleManagementComponent } from './report-schedule-management/report-schedule-management.component';
+import { AttendanceReportManagementComponent } from './attendance-managment/attendance-report-management/attendance-report-management.component';
 
 const routes: Routes = [{
   path: '',
@@ -57,6 +58,14 @@ const routes: Routes = [{
     {
       path: 'report-schedule',
       component: ReportScheduleManagementComponent,
+    },
+    {
+      path: 'attendances',
+      component: AttendanceManagmentComponent,
+    },
+    {
+      path: 'attendance-report',
+      component: AttendanceReportManagementComponent,
     },
     {
       path: '',

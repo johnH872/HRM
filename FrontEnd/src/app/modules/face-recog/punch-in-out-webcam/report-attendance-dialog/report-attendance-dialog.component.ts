@@ -5,6 +5,8 @@ import { RxFormBuilder } from '@rxweb/reactive-form-validators';
 import { MessageService } from 'primeng/api';
 import { AttendanceManagementService } from 'src/app/modules/admin/attendance-managment/attendance-management.service';
 import { ReportAttendanceModel } from './report-attendance.model';
+import { TblActionType } from 'src/app/modules/shared/enum/tbl-action-type.enum';
+import { LeaveRequestStatus } from 'src/app/modules/shared/enum/leave-request-status.enum';
 
 @Component({
   selector: 'app-report-attendance-dialog',
@@ -21,7 +23,8 @@ export class ReportAttendanceDialogComponent implements OnInit {
   isLoading: boolean = false;
   imageFile: File;
   punchTypes: any[];
-
+  action: TblActionType;
+  actionTypes = TblActionType;
   constructor(
     public dialModalRef: MatDialogRef<ReportAttendanceDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -31,6 +34,7 @@ export class ReportAttendanceDialogComponent implements OnInit {
   ) {
     if (data.blobImage) this.blobImage = data.blobImage;
     if (data.captureImg) this.captureImg = data.captureImg;
+    this.action = data.action || TblActionType.Add;
     this.windowWith = 40 * window.innerWidth / 100;
     this.windowHeight = 40 * window.innerHeight / 100;
 
@@ -42,9 +46,14 @@ export class ReportAttendanceDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.reportAttendanceModel.type = this.punchTypes[0].code;
+    if(this.action === TblActionType.Add) {
+      this.reportAttendanceModel.type = this.punchTypes[0].code;
+      this.imageFile = new File([this.blobImage], `report-${new Date().valueOf()}.png`, { type: 'image/jpg' });
+    } else {
+      this.reportAttendanceModel = this.data.model;
+    }
     this.frmReport = this.frmBuilder.formGroup(ReportAttendanceModel, this.reportAttendanceModel);
-    this.imageFile = new File([this.blobImage], `report-${new Date().valueOf()}.png`, { type: 'image/jpg' });
+    if(this.action === TblActionType.Edit) this.frmReport.disable();
   }
 
   closeDialog() {
@@ -65,5 +74,17 @@ export class ReportAttendanceDialogComponent implements OnInit {
         this.isLoading = false;
       })
     }
+  }
+
+  onSaveAttendanceReport(isApprove: boolean) {
+    this.reportAttendanceModel.statusId = isApprove ? LeaveRequestStatus.APPROVED : LeaveRequestStatus.REJECTED;
+    this.attendanceService.saveAttendanceReport(this.reportAttendanceModel).subscribe(res => {
+      if (res.result) {
+        this.dialModalRef.close({isApprove});
+      } else {
+        this.dialModalRef.close(false);
+      }
+     
+    });
   }
 }
