@@ -37,6 +37,7 @@ import { ReportScheduleManagementComponent } from './report-schedule-management/
 import { HandleDisplayColorPipe } from './report-schedule-management/handle-display-color.pipe';
 import { CheckColorTodayPipe } from './report-schedule-management/check-color-today.pipe';
 import { AttendanceReportManagementComponent } from './attendance-managment/attendance-report-management/attendance-report-management.component';
+import { AddEditAttendanceComponent } from './attendance-managment/add-edit-attendance/add-edit-attendance.component';
 
 
 @NgModule({
@@ -73,7 +74,8 @@ import { AttendanceReportManagementComponent } from './attendance-managment/atte
     ReportScheduleManagementComponent,
     HandleDisplayColorPipe,
     CheckColorTodayPipe,
-    AttendanceReportManagementComponent
+    AttendanceReportManagementComponent,
+    AddEditAttendanceComponent
   ],
   imports: [
     ThemeModule,
