@@ -17,7 +17,7 @@
   <p-table styleClass="p-datatable-sm" #table [value]="dataTable" [paginator]="true" [rows]="10"
     [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '100%' }" (onPage)="pageChange($event)"
     [rowsPerPageOptions]="[10, 25, dataTable?.length]" [loading]="loading" [globalFilterFields]="['email']"
-    editMode="row" [(selection)]="selectedReports" [rowHover]="true" [scrollable]="true" scrollHeight="480px"
+    editMode="row" [(selection)]="selectedReports" [rowHover]="true" [scrollable]="true" scrollHeight="700px"
     dataKey="userId">
     <ng-template pTemplate="header">
       <tr>

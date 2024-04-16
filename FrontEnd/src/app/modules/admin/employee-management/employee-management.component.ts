@@ -10,6 +10,7 @@ import { TrainEmployeeComponent } from './train-employee/train-employee.componen
 import { RoleModel } from '../../shared/models/role-model';
 import { RoleManagementService } from '../../shared/services/role-management.service';
 import { DatastateService } from '../datastate-management/datastate.service';
+import { EmployeeDetailDialogComponent } from './employee-detail-dialog/employee-detail-dialog.component';
 
 @Component({
   selector: 'app-employee-management',
@@ -69,7 +70,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
           data?.roleId?.push(role.roleId)
         })
       });
-      this.dataTable.map(item => item.displayName = item.firstName + ' ' + item.middleName + ' ' + item.lastName)
+      this.dataTable.map(item => item.displayName =  `${item.firstName || ''}  ${item.middleName || ''}  ${item.lastName || ''}`)
     }
     this.loading = !this.loading;
   }
@@ -147,5 +148,22 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
     // console.log(value);
     // console.log(this.lstNationalities)
     // return this.lstNationalities.find(item => item.value === value)?.img;
+  }
+
+  openEmployeeDetail(employee: EmployeeModel = null) {
+    this.dialog.open(EmployeeDetailDialogComponent, {
+      width: '90vw',
+      height: '90vh',
+      backdropClass: 'custom-backdrop',
+      hasBackdrop: true,
+      data: {
+        model: employee,
+        action: TblActionType.Edit
+      },
+    }).afterClosed().subscribe(closeRes => {
+      if(closeRes) {
+
+      }
+    });
   }
 }

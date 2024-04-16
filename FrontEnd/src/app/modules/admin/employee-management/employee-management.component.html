@@ -12,22 +12,23 @@
       <!-- <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import"
         class="mr-2 inline-block"></p-fileUpload>
       <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button> -->
-      <button pButton label="Clear" class="p-button-outlined p-button-sm" icon="pi pi-filter-slash" (click)="clear(table)"></button>
-      <button pButton label="Refresh" class="p-button-outlined p-button-sm" icon="pi pi-refresh" style="margin-left: 10px;"
-        (click)="reset()"></button>
+      <button pButton label="Clear" class="p-button-outlined p-button-sm" icon="pi pi-filter-slash"
+        (click)="clear(table)"></button>
+      <button pButton label="Refresh" class="p-button-outlined p-button-sm" icon="pi pi-refresh"
+        style="margin-left: 10px;" (click)="reset()"></button>
     </ng-template>
   </p-toolbar>
-  <p-table #table styleClass="p-datatable-sm" [value]="dataTable" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
-    [tableStyle]="{ 'min-width': '50rem' ,'height': '100%'}" (onPage)="pageChange($event)"
-    [rowsPerPageOptions]="[10, 25, dataTable?.length]" [loading]="loading" [globalFilterFields]="['displayName']"
-    editMode="row" [(selection)]="selectedEmployees" [rowHover]="true" [scrollable]="true" scrollHeight="480px"
-    dataKey="userId">
+  <p-table #table styleClass="p-datatable-sm" [value]="dataTable" [paginator]="true" [rows]="10"
+    [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' ,'height': '100%'}"
+    (onPage)="pageChange($event)" [rowsPerPageOptions]="[10, 25, dataTable?.length]" [loading]="loading"
+    [globalFilterFields]="['displayName']" editMode="row" [(selection)]="selectedEmployees" [rowHover]="true"
+    [scrollable]="true" scrollHeight="700px" dataKey="userId">
     <ng-template pTemplate="caption">
       <div class="flex">
         <span class="p-input-icon-left ml-auto">
           <i class="pi pi-search"></i>
-          <input pInputText class="p-inputtext-sm" type="text" (input)="table.filterGlobal($event.target.value, 'contains')"
-            placeholder="Search by name" />
+          <input pInputText class="p-inputtext-sm" type="text"
+            (input)="table.filterGlobal($event.target.value, 'contains')" placeholder="Search by name" />
         </span>
       </div>
     </ng-template>
@@ -50,8 +51,9 @@
           Role
           <p-columnFilter field="role" matchMode="equals" display="menu">
             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                <p-dropdown [ngModel]="value" [options]="lstRoles" (onChange)="filter($event?.value)" optionLabel="displayName" optionValue="displayName" placeholder="Any">
-                </p-dropdown>
+              <p-dropdown [ngModel]="value" [options]="lstRoles" (onChange)="filter($event?.value)"
+                optionLabel="displayName" optionValue="displayName" placeholder="Any">
+              </p-dropdown>
             </ng-template>
           </p-columnFilter>
           <!-- <p-sortIcon field="role"></p-sortIcon> -->
@@ -80,8 +82,7 @@
                 (onChange)="filter($event.value)">
                 <ng-template let-option pTemplate="item">
                   <div class="inline-block vertical-align-middle">
-                    <img [alt]=""
-                      src="{{ option?.avatarUrl }}" width="24" class="vertical-align-middle" />
+                    <img [alt]="" src="{{ option?.avatarUrl }}" width="24" class="vertical-align-middle" />
                     <span class="ml-1 mt-1">{{ option?.displayName }}</span>
                   </div>
                 </ng-template>
@@ -99,7 +100,7 @@
           <p-columnFilter type="text" field="nationality" display="menu"></p-columnFilter>
           <!-- <p-sortIcon field="nationality"></p-sortIcon> -->
         </th>
-        <th pSortableColumn="nationality"  style="min-width:200px">
+        <th pSortableColumn="nationality" style="min-width:200px">
           Controlling
         </th>
       </tr>
@@ -109,9 +110,9 @@
         <td>
           <p-tableCheckbox [value]="employee"></p-tableCheckbox>
         </td>
-        <td>
+        <td >
           <img [alt]="" src="{{ employee?.avatarUrl }}" width="32" style="vertical-align: middle" />
-          {{ employee?.displayName }}
+          <ng-container *ngTemplateOutlet="employeeName; context: { row: employee }"></ng-container>
         </td>
         <td>{{ employee?.email }}</td>
         <td *ngFor="let role of employee?.Roles">
@@ -126,7 +127,7 @@
           {{ employee?.nationality }}
         </td>
         <td>
-          <button  pButton pRipple icon="pi pi-pencil" class="p-button-success p-button-sm mr-2"
+          <button pButton pRipple icon="pi pi-pencil" class="p-button-success p-button-sm mr-2"
             (click)="addEditEmployee(employee)"></button>
           <button pButton pRipple icon="pi pi-trash" class="p-button-warning p-button-sm mr-2"
             (click)="deleteEmployee(employee)"></button>
@@ -139,3 +140,12 @@
     </ng-template>
   </p-table>
 </div>
+
+<ng-template #employeeName let-row="row">
+  <b (click)="openEmployeeDetail(employee)" style="cursor: pointer;" >{{ row?.displayName }}</b>
+  <!-- <div class="badge badge-pill" [style.background-color]="row?.colorCode || '#ffffff'">
+    <div  style="color: white; ">
+      {{row?.dataStateName}}
+    </div>
+  </div> -->
+</ng-template>

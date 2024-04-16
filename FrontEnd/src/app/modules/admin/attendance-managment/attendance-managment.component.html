@@ -21,7 +21,7 @@
   <p-table #table styleClass="p-datatable-sm" [value]="dataTable" [paginator]="true" [rows]="10"
     [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)"
     [rowsPerPageOptions]="[10, 25, dataTable?.length]" [loading]="loading" [globalFilterFields]="['displayName']"
-    editMode="row" [(selection)]="selectedAttendances" [rowHover]="true" [scrollable]="true" scrollHeight="480px"
+    editMode="row" [(selection)]="selectedAttendances" [rowHover]="true" [scrollable]="true" scrollHeight="700px"
     dataKey="userId">
     <ng-template pTemplate="caption">
       <div class="flex">
@@ -92,7 +92,7 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="paginatorleft">
-      <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+      <!-- <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button> -->
     </ng-template>
   </p-table>
 </div>
