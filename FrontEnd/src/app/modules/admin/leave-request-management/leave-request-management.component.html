@@ -2,9 +2,9 @@
   <!-- <p-toast></p-toast> -->
   <p-toolbar styleClass="mb-4 gap-2">
     <ng-template pTemplate="left">
-      <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2"
+      <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-button-sm mr-2"
         (click)="addEditLeaveRequest()"></button>
-      <button pButton pRipple [label]="Delete" icon="pi pi-trash" class="p-button-danger"
+      <button pButton pRipple [label]="Delete" icon="pi pi-trash" class=" p-button-sm p-button-danger"
         (click)="deleteSelectedRequest()"
         [disabled]="!selectedLeaveRequests || !selectedLeaveRequests?.length"></button>
     </ng-template>
@@ -13,13 +13,13 @@
       <!-- <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import"
               class="mr-2 inline-block"></p-fileUpload>
             <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button> -->
-      <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(table)"></button>
-      <button pButton label="Refresh" class="p-button-outlined" icon="pi pi-refresh" style="margin-left: 10px;"
+      <button pButton label="Clear" class="p-button-outlined p-button-sm" icon="pi pi-filter-slash" (click)="clear(table)"></button>
+      <button pButton label="Refresh" class="p-button-outlined p-button-sm" icon="pi pi-refresh" style="margin-left: 10px;"
         (click)="reset()"></button>
     </ng-template>
   </p-toolbar>
-  <p-table #table [value]="dataTable" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
-    [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)"
+  <p-table #table styleClass="p-datatable-sm" [value]="dataTable" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+    [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)" scrollHeight="flex"
     [rowsPerPageOptions]="[10, 25, dataTable?.length]" [loading]="loading" [globalFilterFields]="['leaveTypeName']"
     editMode="row" [(selection)]="selectedLeaveRequests" [rowHover]="true" [scrollable]="true" scrollHeight="480px"
     dataKey="userId">
@@ -28,53 +28,53 @@
         <th style="width: 4rem">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
-        <th pSortableColumn="reason" style="width:10%">
+        <th pSortableColumn="reason" style="min-width:150px">
           Reason
           <p-columnFilter type="text" field="reason" display="menu"></p-columnFilter>
           <p-sortIcon field="reason"></p-sortIcon>
         </th>
-        <th pSortableColumn="employee.displayName" style="width:11%">
+        <th pSortableColumn="employee.displayName"  style="min-width:150px">
           Employee
           <p-columnFilter type="text" field="employee.displayName" display="menu"></p-columnFilter>
           <p-sortIcon field="employee.displayName"></p-sortIcon>
         </th>
-        <th pSortableColumn="status" style="width:11%">
+        <th pSortableColumn="status"  style="min-width:150px">
           Status
           <p-columnFilter type="text" field="status" display="menu"></p-columnFilter>
           <p-sortIcon field="status"></p-sortIcon>
         </th>
-        <th pSortableColumn="leaveEntitlement" style="width:11%">
+        <th pSortableColumn="leaveEntitlement"  style="min-width:150px">
           Leave Entitlement
           <p-columnFilter type="text" field="leaveEntitlement" display="menu"></p-columnFilter>
           <p-sortIcon field="leaveEntitlement"></p-sortIcon>
         </th>
-        <th pSortableColumn="leaveDateFrom" style="width:11%">
+        <th pSortableColumn="leaveDateFrom"  style="min-width:150px">
           Leave Date From
           <p-columnFilter type="text" field="leaveDateFrom" display="menu"></p-columnFilter>
           <p-sortIcon field="leaveDateFrom"></p-sortIcon>
         </th>
-        <th pSortableColumn="leaveDateTo" style="width:8%">
+        <th pSortableColumn="leaveDateTo"  style="min-width:150px">
           Leave Date To
           <p-columnFilter type="text" field="leaveDateTo" display="menu"></p-columnFilter>
           <p-sortIcon field="leaveDateTo"></p-sortIcon>
         </th>
-        <th pSortableColumn="session" style="width:14%">
+        <th pSortableColumn="session" style="min-width:150px">
           Session
           <p-columnFilter type="text" field="session" display="menu"></p-columnFilter>
           <p-sortIcon field="session"></p-sortIcon>
         </th>
-        <th pSortableColumn="numberOfHour" style="width:10%">
+        <th pSortableColumn="numberOfHour"  style="min-width:150px">
           Number Of Hour
           <p-columnFilter type="text" field="numberOfHour" display="menu"></p-columnFilter>
           <p-sortIcon field="numberOfHour"></p-sortIcon>
         </th>
-        <th pSortableColumn="note" style="width:10%">
+        <th pSortableColumn="note"  style="min-width:150px">
           Note
           <p-columnFilter type="text" field="note" display="menu"></p-columnFilter>
           <p-sortIcon field="note"></p-sortIcon>
         </th>
-        <th pSortableColumn="nationality" style="width:12%">
-          Controlling
+        <th pSortableColumn="nationality"  style="min-width:150px">
+          <!-- Controlling -->
         </th>
       </tr>
     </ng-template>
@@ -97,15 +97,14 @@
         <td>{{ leaveRequest?.numberOfHour }}</td>
         <td>{{ leaveRequest?.note }}</td>
         <td>
-          <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
+          <button pButton pRipple icon="pi pi-pencil" class="p-button-sm p-button-success mr-2"
             (click)="addEditLeaveRequest(leaveRequest)"></button>
-          <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+          <button pButton pRipple icon="pi pi-trash" class="p-button-sm p-button-warning"
             (click)="deleteLeaveRequest(leaveRequest)"></button>
         </td>
       </tr>
     </ng-template>
     <ng-template pTemplate="paginatorleft">
-      <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
     </ng-template>
   </p-table>
 </div>

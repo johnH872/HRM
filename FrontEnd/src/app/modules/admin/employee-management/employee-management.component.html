@@ -2,9 +2,9 @@
   <!-- <p-toast></p-toast> -->
   <p-toolbar styleClass="mb-4 gap-2">
     <ng-template pTemplate="left">
-      <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success"
+      <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-button-sm mr-2"
         (click)="addEditEmployee()"></button>
-      <button pButton pRipple [label]="Delete" icon="pi pi-trash" class="p-button-danger" style="margin-left: 10px;"
+      <button pButton pRipple [label]="Delete" icon="pi pi-trash" class="p-button-danger p-button-sm"
         (click)="deleteSelectedEmployee()" [disabled]="!selectedEmployees || !selectedEmployees?.length"></button>
     </ng-template>
 
@@ -12,13 +12,13 @@
       <!-- <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import"
         class="mr-2 inline-block"></p-fileUpload>
       <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button> -->
-      <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(table)"></button>
-      <button pButton label="Refresh" class="p-button-outlined" icon="pi pi-refresh" style="margin-left: 10px;"
+      <button pButton label="Clear" class="p-button-outlined p-button-sm" icon="pi pi-filter-slash" (click)="clear(table)"></button>
+      <button pButton label="Refresh" class="p-button-outlined p-button-sm" icon="pi pi-refresh" style="margin-left: 10px;"
         (click)="reset()"></button>
     </ng-template>
   </p-toolbar>
-  <p-table #table [value]="dataTable" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
-    [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)"
+  <p-table #table styleClass="p-datatable-sm" [value]="dataTable" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+    [tableStyle]="{ 'min-width': '50rem' ,'height': '100%'}" (onPage)="pageChange($event)"
     [rowsPerPageOptions]="[10, 25, dataTable?.length]" [loading]="loading" [globalFilterFields]="['displayName']"
     editMode="row" [(selection)]="selectedEmployees" [rowHover]="true" [scrollable]="true" scrollHeight="480px"
     dataKey="userId">
@@ -26,7 +26,7 @@
       <div class="flex">
         <span class="p-input-icon-left ml-auto">
           <i class="pi pi-search"></i>
-          <input pInputText type="text" (input)="table.filterGlobal($event.target.value, 'contains')"
+          <input pInputText class="p-inputtext-sm" type="text" (input)="table.filterGlobal($event.target.value, 'contains')"
             placeholder="Search by name" />
         </span>
       </div>
@@ -36,17 +36,17 @@
         <th style="width: 4rem">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
-        <th pSortableColumn="displayName" style="width:11%">
+        <th pSortableColumn="displayName" style="min-width:150px">
           Employee
           <p-columnFilter type="text" field="displayName" display="menu"></p-columnFilter>
           <p-sortIcon field="displayName"></p-sortIcon>
         </th>
-        <th pSortableColumn="email" style="width:11%">
+        <th pSortableColumn="email" style="min-width:150px">
           Email
           <p-columnFilter type="text" field="email" display="menu"></p-columnFilter>
           <!-- <p-sortIcon field="email"></p-sortIcon> -->
         </th>
-        <th pSortableColumn="role" style="width:8%">
+        <th pSortableColumn="role" style="min-width:150px">
           Role
           <p-columnFilter field="role" matchMode="equals" display="menu">
             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
@@ -56,17 +56,17 @@
           </p-columnFilter>
           <!-- <p-sortIcon field="role"></p-sortIcon> -->
         </th>
-        <th pSortableColumn="phoneNumber" style="width:14%">
+        <th pSortableColumn="phoneNumber" style="min-width:150px">
           Phone Number
           <!-- <p-columnFilter type="text" field="phoneNumber" display="menu"></p-columnFilter> -->
           <p-sortIcon field="phoneNumber"></p-sortIcon>
         </th>
-        <th style="width:10%">
+        <th style="min-width:150px">
           Job Title
           <p-columnFilter type="text" field="jobTitle" display="menu"></p-columnFilter>
           <!-- <p-sortIcon field="jobTitle"></p-sortIcon> -->
         </th>
-        <th style="width:8%">
+        <th style="min-width:150px">
           Manage By
           <p-columnFilter field="representative" matchMode="in" display="menu" [showMatchModes]="false"
             [showOperator]="false" [showAddButton]="false">
@@ -89,17 +89,17 @@
             </ng-template>
           </p-columnFilter>
         </th>
-        <th pSortableColumn="gender" style="width:10%">
+        <th pSortableColumn="gender" style="min-width:150px">
           Gender
           <p-columnFilter type="text" field="gender" display="menu"></p-columnFilter>
           <p-sortIcon field="gender"></p-sortIcon>
         </th>
-        <th pSortableColumn="nationality" style="width:12%">
+        <th pSortableColumn="nationality" style="min-width:150px">
           Nationality
           <p-columnFilter type="text" field="nationality" display="menu"></p-columnFilter>
           <!-- <p-sortIcon field="nationality"></p-sortIcon> -->
         </th>
-        <th pSortableColumn="nationality" style="width:12%">
+        <th pSortableColumn="nationality"  style="min-width:200px">
           Controlling
         </th>
       </tr>
@@ -126,17 +126,16 @@
           {{ employee?.nationality }}
         </td>
         <td>
-          <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
+          <button  pButton pRipple icon="pi pi-pencil" class="p-button-success p-button-sm mr-2"
             (click)="addEditEmployee(employee)"></button>
-          <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+          <button pButton pRipple icon="pi pi-trash" class="p-button-warning p-button-sm mr-2"
             (click)="deleteEmployee(employee)"></button>
-          <button pButton pRipple icon="pi pi-camera" class="p-button-rounded p-button-warning"
+          <button pButton pRipple icon="pi pi-camera" class="p-button-info p-button-sm mr-2"
             (click)="addEmployeeFaceRecog(employee)"></button>
         </td>
       </tr>
     </ng-template>
     <ng-template pTemplate="paginatorleft">
-      <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
     </ng-template>
   </p-table>
 </div>

@@ -2,9 +2,9 @@
   <!-- <p-toast></p-toast> -->
   <p-toolbar styleClass="mb-4 gap-2">
     <ng-template pTemplate="left">
-      <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2"
+      <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-sm p-button-success mr-2"
         (click)="addEditLeaveType()"></button>
-      <button pButton pRipple [label]="Delete" icon="pi pi-trash" class="p-button-danger"
+      <button pButton pRipple [label]="Delete" icon="pi pi-trash" class="p-button-sm p-button-danger"
         (click)="deleteSelectedLeaveType()" [disabled]="!selectedLeaveTypes || !selectedLeaveTypes?.length"></button>
     </ng-template>
 
@@ -12,12 +12,12 @@
       <!-- <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import"
           class="mr-2 inline-block"></p-fileUpload>
         <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button> -->
-      <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(table)"></button>
-      <button pButton label="Refresh" class="p-button-outlined" icon="pi pi-refresh" style="margin-left: 10px;"
+      <button pButton label="Clear" class="p-button-outlined p-button-sm" icon="pi pi-filter-slash" (click)="clear(table)"></button>
+      <button pButton label="Refresh" class="p-button-outlined p-button-sm" icon="pi pi-refresh" style="margin-left: 10px;"
         (click)="reset()"></button>
     </ng-template>
   </p-toolbar>
-  <p-table #table [value]="dataTable" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+  <p-table #table styleClass="p-datatable-sm" [value]="dataTable" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
     [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)"
     [rowsPerPageOptions]="[10, 25, dataTable?.length]" [loading]="loading" [globalFilterFields]="['leaveTypeName']"
     editMode="row" [(selection)]="selectedLeaveTypes" [rowHover]="true" [scrollable]="true" scrollHeight="480px"
@@ -33,46 +33,46 @@
     </ng-template> -->
     <ng-template pTemplate="header">
       <tr>
-        <th style="width: 4rem">
+        <th>
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
-        <th pSortableColumn="leaveTypeName" style="width:11%">
+        <th pSortableColumn="leaveTypeName" stylestyle="min-width:150px">
           Leave Type Name
           <p-columnFilter type="text" field="leaveTypeName" display="menu"></p-columnFilter>
           <p-sortIcon field="leaveTypeName"></p-sortIcon>
         </th>
-        <th pSortableColumn="isPaidSalary" style="width:10%">
+        <th pSortableColumn="isPaidSalary" stylestyle="min-width:150px">
           Is Paid Salary
           <p-columnFilter type="text" field="isPaidSalary" display="menu"></p-columnFilter>
           <p-sortIcon field="isPaidSalary"></p-sortIcon>
         </th>
-        <th pSortableColumn="defaultStartDay" style="width:11%">
+        <th pSortableColumn="defaultStartDay" stylestyle="min-width:150px">
           Default Start Day
           <p-columnFilter type="text" field="defaultStartDay" display="menu"></p-columnFilter>
           <p-sortIcon field="defaultStartDay"></p-sortIcon>
         </th>
-        <th pSortableColumn="defaultStartMonth" style="width:8%">
+        <th pSortableColumn="defaultStartMonth" stylestyle="min-width:150px">
           Default Start Month
           <p-columnFilter type="text" field="defaultStartMonth" display="menu"></p-columnFilter>
           <p-sortIcon field="defaultStartMonth"></p-sortIcon>
         </th>
-        <th pSortableColumn="defaultEndDay" style="width:14%">
+        <th pSortableColumn="defaultEndDay" stylestyle="min-width:150px">
           Default End Day
           <p-columnFilter type="text" field="defaultEndDay" display="menu"></p-columnFilter>
           <p-sortIcon field="defaultEndDay"></p-sortIcon>
         </th>
-        <th pSortableColumn="defaultEndMonth" style="width:10%">
+        <th pSortableColumn="defaultEndMonth" stylestyle="min-width:150px">
           Default End Month
           <p-columnFilter type="text" field="defaultEndMonth" display="menu"></p-columnFilter>
           <p-sortIcon field="defaultEndMonth"></p-sortIcon>
         </th>
-        <th pSortableColumn="defaultBudget" style="width:10%">
+        <th pSortableColumn="defaultBudget" stylestyle="min-width:150px">
           Default Budget
           <p-columnFilter type="text" field="defaultBudget" display="menu"></p-columnFilter>
           <p-sortIcon field="defaultBudget"></p-sortIcon>
         </th>
-        <th pSortableColumn="nationality" style="width:12%">
-          Controlling
+        <th pSortableColumn="nationality" stylestyle="min-width:150px">
+          <!-- Controlling -->
         </th>
       </tr>
     </ng-template>
@@ -89,15 +89,15 @@
         <td>{{ leaveType?.defaultEndMonth }}</td>
         <td>{{ leaveType?.defaultBudget }}</td>
         <td>
-          <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
+          <button pButton pRipple icon="pi pi-pencil" class="p-button-sm p-button-success mr-2"
             (click)="addEditLeaveType(leaveType)"></button>
-          <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+          <button pButton pRipple icon="pi pi-trash" class="p-button-sm p-button-warning"
             (click)="deleteLeaveType(leaveType)"></button>
         </td>
       </tr>
     </ng-template>
     <ng-template pTemplate="paginatorleft">
-      <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+      <!-- <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button> -->
     </ng-template>
   </p-table>
 </div>

@@ -2,10 +2,11 @@
   <!-- <p-toast></p-toast> -->
   <p-toolbar styleClass="mb-4 gap-2">
     <ng-template pTemplate="left">
-      <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success"
+      <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-button-sm"
         (click)="addEditAttendance()"></button>
-      <button pButton pRipple [label]="Delete" icon="pi pi-trash" class="p-button-danger" style="margin-left: 10px;"
-        (click)="deleteSelectedAttendance()" [disabled]="!selectedAttendances || !selectedAttendances?.length"></button>
+      <button pButton pRipple [label]="Delete" icon="pi pi-trash" class="p-button-danger p-button-sm"
+        style="margin-left: 10px;" (click)="deleteSelectedAttendance()"
+        [disabled]="!selectedAttendances || !selectedAttendances?.length"></button>
     </ng-template>
 
     <ng-template pTemplate="right">
@@ -17,8 +18,8 @@
         (click)="reset()"></button>
     </ng-template>
   </p-toolbar>
-  <p-table #table [value]="dataTable" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
-    [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)"
+  <p-table #table styleClass="p-datatable-sm" [value]="dataTable" [paginator]="true" [rows]="10"
+    [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)"
     [rowsPerPageOptions]="[10, 25, dataTable?.length]" [loading]="loading" [globalFilterFields]="['displayName']"
     editMode="row" [(selection)]="selectedAttendances" [rowHover]="true" [scrollable]="true" scrollHeight="480px"
     dataKey="userId">
@@ -26,7 +27,7 @@
       <div class="flex">
         <span class="p-input-icon-left ml-auto">
           <i class="pi pi-search"></i>
-          <input pInputText type="text" (input)="table.filterGlobal($event.target.value, 'contains')"
+          <input pInputText class="p-inputtext-sm" type="text" (input)="table.filterGlobal($event.target.value, 'contains')"
             placeholder="Search by name" />
         </span>
       </div>
@@ -83,9 +84,9 @@
         <td>{{ attendance?.punchoutNote }}</td>
         <td>{{ attendance?.duration | numberFormat }}</td>
         <td>
-          <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
+          <button pButton pRipple icon="pi pi-pencil" class="p-button-sm p-button-success mr-2"
             (click)="addEditAttendance(attendance)"></button>
-          <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+          <button pButton pRipple icon="pi pi-trash" class="p-button-sm p-button-warning"
             (click)="deleteAttendance(attendance)"></button>
         </td>
       </tr>
