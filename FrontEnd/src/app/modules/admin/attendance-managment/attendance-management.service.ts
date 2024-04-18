@@ -20,6 +20,10 @@ export class AttendanceManagementService {
     return this.http.get<ReturnResult<AttendanceModel[]>>(`${this.baseUrl}/GetAllAttendance`);
   }
 
+  saveAttendance(model: AttendanceModel): Observable<ReturnResult<AttendanceModel>> {
+    return this.http.post<ReturnResult<AttendanceModel>>(`${this.baseUrl}/SaveAttendance`, model);
+  }
+
   getAttendanceByEmployeeId(id: string, dateRange: DateRangeModel): Observable<ReturnResult<AttendanceModel[]>> {
     return this.http.post<ReturnResult<AttendanceModel[]>>(`${this.baseUrl}/GetAttendanceByEmployeeId/${id}`, dateRange)
   }

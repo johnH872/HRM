@@ -1,4 +1,5 @@
 import { prop, required } from '@rxweb/reactive-form-validators';
+import { EmployeeModel } from '../../shared/models/employee.model';
 export class AttendanceModel {
     @prop()
     attendanceId: number;
@@ -23,6 +24,7 @@ export class AttendanceModel {
     @prop()
     punchoutOffset: number;
 
+    User: EmployeeModel | null;
     duration: number | null;
 
     createdAt: Date;

@@ -7,6 +7,8 @@ import { AttendanceManagementService } from './attendance-management.service';
 import { TblActionType } from '../../shared/enum/tbl-action-type.enum';
 import { Table } from 'primeng/table';
 import { AddEditAttendanceComponent } from './add-edit-attendance/add-edit-attendance.component';
+import { EmployeeModel } from '../../shared/models/employee.model';
+import { EmployeeManagementService } from '../employee-management/employee-management.service';
 
 @Component({
   selector: 'app-attendance-managment',
@@ -17,6 +19,7 @@ export class AttendanceManagmentComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
   dataTable: AttendanceModel[];
   attendanceModel: AttendanceModel;
+  listEmployees: EmployeeModel[] = [];
 
   first = 0;
   rows = 10;
@@ -25,10 +28,19 @@ export class AttendanceManagmentComponent implements OnInit, OnDestroy {
 
   constructor(
     private attendanceService: AttendanceManagementService,
+    private employeeService: EmployeeManagementService,
     private dataStateService: DatastateService,
     private dialog: MatDialog,
   ) {
-    
+    this.employeeService.getAllEmployee().pipe(takeUntil(this.destroy$)).subscribe(res => {
+      if (res.result) {
+        this.listEmployees = res.result;
+        this.listEmployees.map((employee) => {
+          let fullName = `${employee.firstName} ${employee.middleName} ${employee.lastName}`;
+          employee.displayName = fullName.trim() ? fullName : "Unknown";
+        });
+      }
+    });
   }
 
   async ngOnInit() {
@@ -60,6 +72,7 @@ export class AttendanceManagmentComponent implements OnInit, OnDestroy {
       autoFocus: false,
       data: {
         model: model,
+        listEmployees: this.listEmployees,
         action: model === null ? TblActionType.Add : TblActionType.Edit,
       }
     });

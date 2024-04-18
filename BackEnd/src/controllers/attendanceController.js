@@ -69,6 +69,76 @@ class attendanceController {
         }
     }
 
+    async saveAttendance(req, res, next) {
+        var result = new ReturnResult();
+        try {
+            const model = req.body;
+            if (model.attendanceId === null || model.attendanceId === 0) { // Add new
+                const saveAttendance = await dbContext.Attendance.create({
+                    userId: model.userId,
+                    punchinDate: model.punchinDate,
+                    punchinTime: new Date(model.punchinDate).getTime(),
+                    punchinNote: model.punchinNote,
+                    punchinOffset: new Date(model.punchinDate).getTimezoneOffset(),
+                    punchInImageUrl: null,
+                    punchoutDate: model.punchoutDate,
+                    punchoutTime: new Date(model.punchoutDate).getTime(),
+                    punchoutNote: model.punchoutNote,
+                    punchoutOffset: new Date(model.punchoutDate).getTimezoneOffset(),
+                    punchOutImageUrl: null,
+                });
+                if (saveAttendance) {
+                    result.result = saveAttendance;
+                } else {
+                    result.message = "Cannot save attendance";
+                }
+            } else { // Edit
+                // Find existing attendance
+                const existAttendance = await dbContext.Attendance.findOne({
+                    where: {
+                        attendanceId: model.attendanceId
+                    }
+                });
+                if (existAttendance) {
+                    const saveAttendance = await dbContext.Attendance.update({
+                        userId: model.userId ?? existAttendance.userId,
+                        punchinDate: model.punchinDate ?? existAttendance.punchinDate,
+                        punchinTime: new Date(model.punchinDate).getTime() ?? existAttendance.punchinTime,
+                        punchinNote: model.punchinNote ?? existAttendance.punchinNote,
+                        punchinOffset: new Date(model.punchinDate).getTimezoneOffset() ?? existAttendance.punchinOffset,
+                        punchInImageUrl: model.punchinImageUrl ?? existAttendance.punchInImageUrl,
+                        punchoutDate: model.punchoutDate ?? existAttendance.punchoutDate,
+                        punchoutTime: new Date(model.punchoutDate).getTime() ?? existAttendance.punchoutTime,
+                        punchoutNote: model.punchoutNote ?? existAttendance.punchoutNote,
+                        punchoutOffset: new Date(model.punchoutDate).getTimezoneOffset() ?? existAttendance.punchoutOffset,
+                        punchOutImageUrl: model.punchOutImageUrl ?? existAttendance.punchoutImageUrl,
+                    }, {
+                        where: {
+                            attendanceId: model.attendanceId
+                        },
+                        returning: true,
+                        plain: true
+                    });
+                    if (saveAttendance) {
+                        result.result = await dbContext.Attendance.findOne({
+                            where: {
+                                attendanceId: model.attendanceId
+                            }
+                        });
+                    } else {
+                        result.message = 'Can not save Attendance';
+                    }
+                } else {
+                    result.message = 'Attendance not found';
+                }
+            }
+            return res.status(200).json(result);
+        } catch(error) {
+            res.status(400).json(error);
+            console.log(error);
+        }
+    }
+
     async getAttendanceByEmployeeId(req, res, next) {
         var returnResult = new ReturnResult();
         try {

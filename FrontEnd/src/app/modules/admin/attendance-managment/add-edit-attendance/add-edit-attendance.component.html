@@ -1,1 +1,53 @@
-<p>add-edit-attendance works!</p>
+<div class="d-flex flex-wrap" mat-dialog-title style="margin: unset; padding: 1px 10px 1px 28px"
+  [nbSpinner]="isLoading">
+  <button mat-button color="primary" (click)="saveData()" [disabled]="!frmAttendance.valid">
+    <mat-icon fontSet=" material-icons-outlined">save</mat-icon>Save
+  </button>
+  <div fxLayout="row" fxLayoutAlign="end center" class="ml-auto">
+    <button mat-icon-button aria-label="Close the dialog" (click)="closeDialog()" class="ml-auto">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</div>
+<mat-divider></mat-divider>
+<mat-dialog-content class="mat-typography" style="height: 100%; overflow: auto;">
+  <form [formGroup]="frmAttendance" class="container">
+    <div class="p-fluid p-grid p-formgrid">
+      <div class="p-field p-col-12">
+        <app-employee-searching required [banks]="listEmployees" (userSelect)="getAssignee($event)"
+          [currentUser]="employeeChosen" [readonly]="true">
+        </app-employee-searching>
+      </div>
+      <div class="p-field p-col-12 p-md-2">
+        <label for="punchin">Punchin Date</label>
+        <p-calendar formControlName="punchinDate" inputId="punchin" [(ngModel)]="defaultPunchinDate"
+          aria-describedby="punchin-help" [showIcon]="true" [showClear]="true"
+          [readonlyInput]="true" [showTime]="true" [hourFormat]="24"></p-calendar>
+        <small id="punchin-help" *ngIf="
+          frmAttendance?.controls?.punchinDate?.errors &&
+          (frmAttendance?.controls?.punchinDate?.dirty ||
+            frmAttendance?.controls?.punchinDate?.touched)
+          ">{{ frmAttendance?.controls?.punchinDate["errorMessage"] }}</small>
+      </div>
+      <div class="p-field p-col-12 p-md-2">
+        <label for="punchinNote">Punchin Note</label>
+        <input formControlName="punchinNote" id="punchinNote" type="punchinNote" pInputText />
+      </div>
+      <div class="p-field p-col-12 p-md-2">
+        <label for="punchout">Punchout Date</label>
+        <p-calendar formControlName="punchoutDate" inputId="punchout" [(ngModel)]="defaultPunchoutDate"
+          aria-describedby="punchout-help" [showIcon]="true" [showClear]="true"
+          [readonlyInput]="true" [showTime]="true" [hourFormat]="24"></p-calendar>
+        <small id="punchout-help" *ngIf="
+          frmAttendance?.controls?.punchoutDate?.errors &&
+          (frmAttendance?.controls?.punchoutDate?.dirty ||
+            frmAttendance?.controls?.punchoutDate?.touched)
+          ">{{ frmAttendance?.controls?.punchoutDate["errorMessage"] }}</small>
+      </div>
+      <div class="p-field p-col-12 p-md-2">
+        <label for="punchoutNote">Punchout Note</label>
+        <input formControlName="punchoutNote" id="punchoutNote" type="punchoutNote" pInputText />
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>

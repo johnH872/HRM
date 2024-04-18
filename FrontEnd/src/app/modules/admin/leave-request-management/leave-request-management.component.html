@@ -30,8 +30,8 @@
         </th>
         <th pSortableColumn="reason" style="min-width:150px">
           Reason
-          <p-columnFilter type="text" field="reason" display="menu"></p-columnFilter>
-          <p-sortIcon field="reason"></p-sortIcon>
+          <!-- <p-columnFilter type="text" field="reason" display="menu"></p-columnFilter> -->
+          <!-- <p-sortIcon field="reason"></p-sortIcon> -->
         </th>
         <th pSortableColumn="employee.displayName"  style="min-width:150px">
           Employee
@@ -40,41 +40,46 @@
         </th>
         <th pSortableColumn="status"  style="min-width:150px">
           Status
-          <p-columnFilter type="text" field="status" display="menu"></p-columnFilter>
-          <p-sortIcon field="status"></p-sortIcon>
+          <p-columnFilter field="status" matchMode="equals" display="menu">
+            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                <p-dropdown [ngModel]="value" [options]="lstLeaveRequestState" (onChange)="filter($event?.value)" optionLabel="dataStateName" optionValue="dataStateId" placeholder="Any">
+                </p-dropdown>
+            </ng-template>
+          </p-columnFilter>
+          <!-- <p-sortIcon field="status"></p-sortIcon> -->
         </th>
         <th pSortableColumn="leaveEntitlement"  style="min-width:150px">
           Leave Entitlement
           <p-columnFilter type="text" field="leaveEntitlement" display="menu"></p-columnFilter>
-          <p-sortIcon field="leaveEntitlement"></p-sortIcon>
+          <!-- <p-sortIcon field="leaveEntitlement"></p-sortIcon> -->
         </th>
         <th pSortableColumn="leaveDateFrom"  style="min-width:150px">
           Leave Date From
-          <p-columnFilter type="text" field="leaveDateFrom" display="menu"></p-columnFilter>
-          <p-sortIcon field="leaveDateFrom"></p-sortIcon>
+          <p-columnFilter type="date" field="leaveDateFrom" display="menu"></p-columnFilter>
+          <!-- <p-sortIcon field="leaveDateFrom"></p-sortIcon> -->
         </th>
         <th pSortableColumn="leaveDateTo"  style="min-width:150px">
           Leave Date To
-          <p-columnFilter type="text" field="leaveDateTo" display="menu"></p-columnFilter>
-          <p-sortIcon field="leaveDateTo"></p-sortIcon>
+          <p-columnFilter type="date" field="leaveDateTo" display="menu"></p-columnFilter>
+          <!-- <p-sortIcon field="leaveDateTo"></p-sortIcon> -->
         </th>
         <th pSortableColumn="session" style="min-width:150px">
           Session
-          <p-columnFilter type="text" field="session" display="menu"></p-columnFilter>
-          <p-sortIcon field="session"></p-sortIcon>
+          <!-- <p-columnFilter type="text" field="session" display="menu"></p-columnFilter> -->
+          <!-- <p-sortIcon field="session"></p-sortIcon> -->
         </th>
         <th pSortableColumn="numberOfHour"  style="min-width:150px">
           Number Of Hour
-          <p-columnFilter type="text" field="numberOfHour" display="menu"></p-columnFilter>
-          <p-sortIcon field="numberOfHour"></p-sortIcon>
+          <p-columnFilter type="numeric" field="numberOfHour" display="menu"></p-columnFilter>
+          <!-- <p-sortIcon field="numberOfHour"></p-sortIcon> -->
         </th>
         <th pSortableColumn="note"  style="min-width:150px">
           Note
-          <p-columnFilter type="text" field="note" display="menu"></p-columnFilter>
-          <p-sortIcon field="note"></p-sortIcon>
+          <!-- <p-columnFilter type="text" field="note" display="menu"></p-columnFilter> -->
+          <!-- <p-sortIcon field="note"></p-sortIcon> -->
         </th>
-        <th pSortableColumn="nationality"  style="min-width:150px">
-          <!-- Controlling -->
+        <th style="min-width:150px">
+          Controlling
         </th>
       </tr>
     </ng-template>

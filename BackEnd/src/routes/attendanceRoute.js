@@ -5,6 +5,7 @@ import attendanceController from "../controllers/attendanceController.js";
 import { attendanceUpload, basicUpload } from "../middlewares/multer.js";
 
 router.route('/GetAllAttendance').get(attendanceController.getAllAttendance);
+router.route('/SaveAttendance').post(attendanceController.saveAttendance);
 // router.route('/register').post(authController.register);
 router.route('/GetAttendanceByEmployeeId/:id').post(attendanceController.getAttendanceByEmployeeId);
 router.route('/PunchInOut/:isPunchIn/:id').post(attendanceUpload.single('image'), attendanceController.punchInOut);
