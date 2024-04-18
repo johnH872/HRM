@@ -112,7 +112,7 @@
         </td>
         <td >
           <img [alt]="" src="{{ employee?.avatarUrl }}" width="32" style="vertical-align: middle" />
-          <ng-container *ngTemplateOutlet="employeeName; context: { row: employee }"></ng-container>
+          <b (click)="openEmployeeDetail(employee)" style="cursor: pointer;" >{{ employee?.displayName }}</b>
         </td>
         <td>{{ employee?.email }}</td>
         <td *ngFor="let role of employee?.Roles">
@@ -140,12 +140,3 @@
     </ng-template>
   </p-table>
 </div>
-
-<ng-template #employeeName let-row="row">
-  <b (click)="openEmployeeDetail(employee)" style="cursor: pointer;" >{{ row?.displayName }}</b>
-  <!-- <div class="badge badge-pill" [style.background-color]="row?.colorCode || '#ffffff'">
-    <div  style="color: white; ">
-      {{row?.dataStateName}}
-    </div>
-  </div> -->
-</ng-template>

@@ -4,31 +4,113 @@
 </div>
 <mat-divider></mat-divider>
 <mat-dialog-content class="mat-typography mat-dialog-container">
-    <div fxLayout="column" fxLayoutAlign="space-between center" class="col-container">
-        <div fxLayout="row" fxLayoutAlign="space-between center">
-            <div class="custom-card" fxLayout="row" fxLayoutAlign="space-between center" fxFlex="20" style="background-color: #F3F5F9;">
-                <img style="cursor: pointer;" [src]="'https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg'"
-                class="rounded-circle avatar-xl img-thumbnail" alt="profile-image" >
+    <div fxLayout="column" fxLayoutAlign="start center" class="col-container" fxLayoutGap="10px">
+        <div class="header-card-container" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+            <div class="custom-card user-card" fxLayout="row" fxLayoutAlign="start center"
+                style="background-color: #F3F5F9;">
+                <img style="cursor: pointer; margin-right: 1rem;"
+                    [src]="'https://mdbcdn.b-cdn.net/img/new/avatars/2.webp'"
+                    class="rounded-circle avatar-xl img-thumbnail" alt="profile-image">
+                <div fxLayout="column" fxLayoutAlign="center start">
+                    <span class="fs-14 header-text">{{employeeModel?.firstName || ''}} {{employeeModel?.middleName ||
+                        ''}} {{employeeModel?.lastName || ''}}</span>
+                    <span class="fs-13">{{employeeModel.jobTitle || 'No position'}}</span>
+                </div>
             </div>
-            <div class="custom-card" fxFlex="20" >
-                <p class="m-0">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque
-                    quas!
-                </p>
+            <div fxLayout="column" fxLayoutAlign="center center">
+                <circle-progress class="margin-circle" [percent]="usedAnnualLeavePercentage" [space]="-8" [radius]="43"
+                    [outerStrokeWidth]="8" [innerStrokeWidth]="8"
+                    [outerStrokeColor]="usedAnnualLeavePercentage >=67 && usedAnnualLeavePercentage <= 100 ? '#4CC790' : usedAnnualLeavePercentage >=33 && usedAnnualLeavePercentage <67 ? '#3c9ee5' : '#ff9f00'"
+                    [animation]="true" [animationDuration]="300"
+                    [title]="annualLeaveEntitlement ? ((annualLeaveEntitlement?.usableLeave - annualLeaveEntitlement?.usedLeave) + '/' + annualLeaveEntitlement?.usableLeave)  || 0 : '0/0'"
+                    [maxPercent]="100"></circle-progress>
+                <span class="fs-14 header-text">Annual Leaves</span>
+            </div>
+
+            <div fxLayout="column" fxLayoutAlign="center center">
+                <circle-progress class="margin-circle" [percent]="usedSeniorityLeavePercentage" [space]="-8"
+                    [radius]="43" [outerStrokeWidth]="8" [innerStrokeWidth]="8"
+                    [outerStrokeColor]="usedSeniorityLeavePercentage >=67 && usedSeniorityLeavePercentage <= 100 ? '#4CC790' : usedSeniorityLeavePercentage >=33 && usedSeniorityLeavePercentage <67 ? '#3c9ee5' : '#ff9f00'"
+                    [animation]="true" [animationDuration]="300"
+                    [title]="seniorityLeaveEntitlement ? ((seniorityLeaveEntitlement?.usableLeave - seniorityLeaveEntitlement?.usedLeave) + '/' + seniorityLeaveEntitlement?.usableLeave)  || 0 : '0/0'"
+                    [maxPercent]="100"></circle-progress>
+                <span class="fs-14 header-text">Seniority Leaves</span>
+            </div>
+
+            <div fxLayout="column" fxLayoutAlign="center center">
+                <circle-progress class="margin-circle" [percent]="usedTransferLeavePercentage" [space]="-8" [radius]="43" [outerStrokeWidth]="8"
+                    [innerStrokeWidth]="8"
+                    [outerStrokeColor]="usedTransferLeavePercentage >=67 && usedTransferLeavePercentage <= 100 ? '#4CC790' : usedTransferLeavePercentage >=33 && usedTransferLeavePercentage <67 ? '#3c9ee5' : '#ff9f00'"
+                    [animation]="true"
+                    [title]="transferLeaveEntitlement ? ((transferLeaveEntitlement?.usableLeave - transferLeaveEntitlement?.usedLeave) + '/' + transferLeaveEntitlement?.usableLeave)  || 0 : '0/0'"
+                    [animationDuration]="300" [maxPercent]="100"></circle-progress>
+                <span class="fs-14 header-text">Transfer Leaves</span>
+            </div>
+
+            <div fxLayout="column" fxLayoutAlign="center center">
+                <circle-progress class="margin-circle" [percent]="usedUnpaidLeavePercentage" [space]="-8" [radius]="43" [outerStrokeWidth]="8"
+                    [innerStrokeWidth]="8"
+                    [outerStrokeColor]="usedUnpaidLeavePercentage >=67 && usedUnpaidLeavePercentage <= 100 ? '#4CC790' : usedUnpaidLeavePercentage >=33 && usedUnpaidLeavePercentage <67 ? '#3c9ee5' : '#ff9f00'"
+                    [animation]="true" [animationDuration]="300"
+                    [title]="unpaidLeaveEntitlement ? ((unpaidLeaveEntitlement?.usableLeave - unpaidLeaveEntitlement?.usedLeave) + '/' + unpaidLeaveEntitlement?.usableLeave)  || 0 : '0/0'"
+                    [maxPercent]="100"></circle-progress>
+                <span class="fs-14 header-text">Unpaid Leaves</span>
             </div>
         </div>
-        <div fxLayout="row" fxLayoutAlign="space-between center">
-            <div class="custom-card" fxFlex="20" >
-                <p class="m-0">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque
-                    quas!
-                </p>
+        <div fxLayout="row" fxLayoutAlign="start center" class="h-100 w-100" style="padding-bottom: 10px;"
+            fxLayoutGap="10px">
+            <div class="custom-card user-infor-card h-100" fxLayout="column" fxLayoutAlign="start start"
+                fxLayoutGap="5px">
+                <span class="fs-16 c-black w-100">Employee Information</span>
+                <div fxLayout="column" fxLayoutAlign="start start" class="w-100">
+                    <span class="header-info-text fs-14">First Name</span>
+                    <span class="fs-13">{{employeeModel?.firstName || 'none'}}</span>
+                </div>
+                <div fxLayout="column" fxLayoutAlign="start start" class="w-100">
+                    <span class="header-info-text fs-14">Middle Name</span>
+                    <span class="fs-13">{{employeeModel?.middleName || 'none'}}</span>
+                </div>
+                <div fxLayout="column" fxLayoutAlign="start start" class="w-100">
+                    <span class="header-info-text fs-14">Last Name</span>
+                    <span class="fs-13">{{employeeModel?.lastName || 'none'}}</span>
+                </div>
+                <div fxLayout="column" fxLayoutAlign="start start" class="w-100">
+                    <span class="header-info-text fs-14">Job title</span>
+                    <span class="fs-13">{{employeeModel?.jobTitle || 'none'}}</span>
+                </div>
+                <div fxLayout="column" fxLayoutAlign="start start" class="w-100">
+                    <span class="header-info-text fs-14">Gender</span>
+                    <span class="fs-13">{{employeeModel?.gender || 'none'}}</span>
+                </div>
+                <div fxLayout="column" fxLayoutAlign="start start" class="w-100">
+                    <span class="header-info-text fs-14">Birth</span>
+                    <span class="fs-13">{{employeeModel?.birth | dateFormat}}</span>
+                </div>
+                <div fxLayout="column" fxLayoutAlign="start start" class="w-100">
+                    <span class="header-info-text fs-14">Email</span>
+                    <span class="fs-13">{{employeeModel?.email || 'none'}}</span>
+                </div>
+                <div fxLayout="column" fxLayoutAlign="start start" class="w-100">
+                    <span class="header-info-text fs-14">Phone</span>
+                    <span class="fs-13">{{employeeModel?.phoneNumber || 'none'}}</span>
+                </div>
+                <div fxLayout="column" fxLayoutAlign="start start" class="w-100">
+                    <span class="header-info-text fs-14">Nationality</span>
+                    <span class="fs-13">{{employeeModel?.nationality || 'none'}}</span>
+                </div>
+                <div fxLayout="column" fxLayoutAlign="start start" class="w-100">
+                    <span class="header-info-text fs-14">Date Start Contract</span>
+                    <span class="fs-13">{{employeeModel?.dateStartContract | dateFormat}}</span>
+                </div>
             </div>
-            <div class="custom-card" fxFlex="20" >
-                <p class="m-0">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque
-                    quas!
-                </p>
+            <div class="custom-card h-100 w-100" fxLayout="column" fxLayoutAlign="start start">
+                <div fxLayout="row" fxLayoutAlign="start start" fxFlex="40">
+                    <h1>Chart zone</h1>
+                </div>
+                <div class="attendance-management w-100" fxLayout="row" fxLayoutAlign="start start" fxFlex="60">
+                    <app-attendance-managment class="w-100" [isOnlyCurrentUser]="true"
+                        [currentUser]="employeeModel"></app-attendance-managment>
+                </div>
             </div>
         </div>
     </div>

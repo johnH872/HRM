@@ -189,9 +189,9 @@ export class DashboardComponent {
   }
 
   refreshData(reset: boolean = false): void {
-    this.paymentService.getAllPayment().subscribe(e => {
-      this.ngxTable.setData(e);
-    })
+    // this.paymentService.getAllPayment().subscribe(e => {
+    //   this.ngxTable.setData(e);
+    // })
   }
 
   openUserDetail(row) {

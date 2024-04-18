@@ -15,6 +15,7 @@ import { QuillModule } from 'ngx-quill'
 import { DatePipe } from '@angular/common';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { SocketService } from './socket.service';
+import { NgCircleProgressModule } from 'ng-circle-progress';
 @NgModule({
   declarations: [
     AppComponent,
@@ -42,7 +43,23 @@ import { SocketService } from './socket.service';
     NbCardModule,
     FontAwesomeModule,
     NgxEchartsModule.forRoot({ echarts: () => import('echarts') }),
-    
+    // NgCircleProgressModule.forRoot({
+    //   "radius": 60,
+    //   "space": -10,
+    //   "outerStrokeGradient": true,
+    //   "outerStrokeWidth": 10,
+    //   "outerStrokeColor": "#4882c2",
+    //   "outerStrokeGradientStopColor": "#53a9ff",
+    //   "innerStrokeColor": "#e7e8ea",
+    //   "innerStrokeWidth": 10,
+    //   "title": "",
+    //   "animateTitle": false,
+    //   "animationDuration": 1000,
+    //   "showUnits": false,
+    //   "showBackground": false,
+    //   "clockwise": false,
+    //   "startFromZero": false,
+    //   "lazy": true})
   ],
   providers: [
     {

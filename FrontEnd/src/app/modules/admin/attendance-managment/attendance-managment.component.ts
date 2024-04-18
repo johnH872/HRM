@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { AttendanceModel } from './attendance.model';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,6 +16,8 @@ import { EmployeeManagementService } from '../employee-management/employee-manag
   styleUrls: ['./attendance-managment.component.scss']
 })
 export class AttendanceManagmentComponent implements OnInit, OnDestroy {
+  @Input() isOnlyCurrentUser: boolean = false;
+  @Input() currentUser: EmployeeModel = null;
   private destroy$: Subject<void> = new Subject<void>();
   dataTable: AttendanceModel[];
   attendanceModel: AttendanceModel;
@@ -58,6 +60,9 @@ export class AttendanceManagmentComponent implements OnInit, OnDestroy {
     this.loading = !this.loading;
     var attendancePagingResults = await this.attendanceService.getAllAttendance().pipe(takeUntil(this.destroy$)).toPromise();
     if (attendancePagingResults.result) {
+      if(this.isOnlyCurrentUser) {
+        attendancePagingResults.result = attendancePagingResults.result.filter(x => x.userId === this.currentUser.userId);
+      }
       this.dataTable = attendancePagingResults.result;
     }
     this.loading = !this.loading;

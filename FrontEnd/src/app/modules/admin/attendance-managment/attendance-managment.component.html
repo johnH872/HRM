@@ -1,6 +1,6 @@
-<div class="card">
+<div class="card w-100">
   <!-- <p-toast></p-toast> -->
-  <p-toolbar styleClass="mb-4 gap-2">
+  <p-toolbar *ngIf="!isOnlyCurrentUser" styleClass="mb-4 gap-2">
     <ng-template pTemplate="left">
       <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-button-sm"
         (click)="addEditAttendance()"></button>
@@ -23,7 +23,7 @@
     [rowsPerPageOptions]="[10, 25, dataTable?.length]" [loading]="loading" [globalFilterFields]="['displayName']"
     editMode="row" [(selection)]="selectedAttendances" [rowHover]="true" [scrollable]="true" scrollHeight="700px"
     dataKey="userId">
-    <ng-template pTemplate="caption">
+    <ng-template *ngIf="!isOnlyCurrentUser" pTemplate="caption">
       <div class="flex">
         <span class="p-input-icon-left ml-auto">
           <i class="pi pi-search"></i>
@@ -34,7 +34,7 @@
     </ng-template>
     <ng-template pTemplate="header">
       <tr>
-        <th style="width: 4rem">
+        <th *ngIf="!isOnlyCurrentUser" style="width: 4rem">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
         <th pSortableColumn="displayName" style="width:20%">
@@ -70,7 +70,7 @@
     </ng-template>
     <ng-template pTemplate="body" let-attendance let-editing="editing" let-ri="rowIndex">
       <tr [pEditableRow]="attendance">
-        <td>
+        <td *ngIf="!isOnlyCurrentUser">
           <p-tableCheckbox [value]="attendance"></p-tableCheckbox>
         </td>
         <td>
@@ -93,6 +93,11 @@
     </ng-template>
     <ng-template pTemplate="paginatorleft">
       <!-- <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button> -->
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="20">No record found.</td>
+      </tr>
     </ng-template>
   </p-table>
 </div>

@@ -39,6 +39,7 @@ import { CheckColorTodayPipe } from './report-schedule-management/check-color-to
 import { AttendanceReportManagementComponent } from './attendance-managment/attendance-report-management/attendance-report-management.component';
 import { AddEditAttendanceComponent } from './attendance-managment/add-edit-attendance/add-edit-attendance.component';
 import { EmployeeDetailDialogComponent } from './employee-management/employee-detail-dialog/employee-detail-dialog.component';
+import { NgCircleProgressModule } from 'ng-circle-progress';
 
 
 @NgModule({
@@ -83,7 +84,25 @@ import { EmployeeDetailDialogComponent } from './employee-management/employee-de
     ThemeModule,
     SharedModule,
     CommonModule,
-    AdminRoutingModule
+    AdminRoutingModule,
+    NgCircleProgressModule.forRoot({
+      "radius": 60,
+      "space": -9,
+      "outerStrokeGradient": false,
+      "outerStrokeWidth": 7,
+      "outerStrokeColor": "#4882c2",
+      "innerStrokeWidth": 7,
+      "innerStrokeColor": "#e7e8ea",
+      "title": "",
+      "subtitle": "Remains",
+      "animateTitle": false,
+      "animationDuration": 1000,
+      "showUnits": false,
+      "showBackground": false,
+      "clockwise": false,
+      "startFromZero": false,
+      "lazy": true
+    })
   ]
 })
 export class AdminModule { }
