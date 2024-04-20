@@ -57,6 +57,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private authService: NbAuthService,
     private dialog: MatDialog,
     private messageService: MessageService,
+    private tokenService: NbTokenService,
+    private router: Router,
   ) {
     this.authService.onTokenChange().pipe(takeUntil(this.destroy$))
       .subscribe(async (token: NbAuthJWTToken) => {
@@ -93,6 +95,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
         //     if(response.result)this.userDetail = response.result;
         //   }
         // })
+      }
+      if (event.item['id'] === 'logout') {
+        this.tokenService.clear();
+        localStorage.clear();
+        this.router.navigateByUrl("/auth");
       }
     })
 

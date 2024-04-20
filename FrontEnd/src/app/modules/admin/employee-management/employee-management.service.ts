@@ -18,6 +18,10 @@ export class EmployeeManagementService {
     return this.http.get<ReturnResult<EmployeeModel[]>>(`${this.baseUrl}/GetAllEmployee`);
   }
 
+  getEmployeeCurrentUserRole(roles: String[]): Observable<ReturnResult<EmployeeModel[]>> {
+    return this.http.post<ReturnResult<EmployeeModel[]>>(`${this.baseUrl}/GetEmployeeCurrentUserRole`, roles);
+  }
+
   saveEmployee(model: EmployeeModel): Observable<ReturnResult<EmployeeModel>> {
     return this.http.post<ReturnResult<EmployeeModel>>(`${this.baseUrl}/SaveEmployee`, model);
   }

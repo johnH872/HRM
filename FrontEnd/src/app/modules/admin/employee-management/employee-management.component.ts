@@ -11,6 +11,7 @@ import { RoleModel } from '../../shared/models/role-model';
 import { RoleManagementService } from '../../shared/services/role-management.service';
 import { DatastateService } from '../datastate-management/datastate.service';
 import { EmployeeDetailDialogComponent } from './employee-detail-dialog/employee-detail-dialog.component';
+import { NbAuthJWTToken, NbAuthService } from '@nebular/auth';
 
 @Component({
   selector: 'app-employee-management',
@@ -24,6 +25,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
   lstRoles: RoleModel[] = [];
   lstEmployees: EmployeeModel[] = [];
   lstNationalities: any[];
+  currentUser: any;
 
   first = 0;
   rows = 10;
@@ -35,7 +37,14 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
     private roleService: RoleManagementService,
     private dataStateService: DatastateService,
     private dialog: MatDialog,
+    private authService: NbAuthService
   ) {
+    this.authService.onTokenChange().pipe(takeUntil(this.destroy$))
+      .subscribe(async (token: NbAuthJWTToken) => {
+        if (token.isValid()) {
+          this.currentUser = token.getPayload().user;
+        }
+      });
     this.roleService.getRoles().subscribe(res => {
       if (res.result != null && res.result.length > 0) {
         this.lstRoles = [...res.result];
@@ -61,7 +70,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
 
   async refreshData() {
     this.loading = !this.loading;
-    var employeePagingResults = await this.employeeService.getAllEmployee().pipe(takeUntil(this.destroy$)).toPromise();
+    var employeePagingResults = await this.employeeService.getEmployeeCurrentUserRole(this.currentUser.roles).pipe(takeUntil(this.destroy$)).toPromise();
     if (employeePagingResults.result) {
       this.dataTable = employeePagingResults.result;
       this.dataTable.map(data => {
@@ -147,7 +156,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
   }
 
   getNationalityImg(value) {
-    return this.lstNationalities?.find(item => item.value === value)?.img;
+    return this.lstNationalities?.find(item => item.value.toLowerCase() === value.toLowerCase())?.img;
   }
 
   openEmployeeDetail(employee: EmployeeModel = null) {

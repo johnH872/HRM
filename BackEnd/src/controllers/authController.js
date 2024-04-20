@@ -18,11 +18,11 @@ class authController {
         }
 
         const user = await dbContext.User.findOne({
-            where: {email: email},
+            where: { email: email },
             include: dbContext.Role
         });
 
-        var roles = user.Roles.map(x => x.displayName);
+        var roles = user.Roles.map(x => x.roleId);
 
         //compare password with hashed password
         if (user && (await compare(password, user.password))) {
@@ -34,11 +34,11 @@ class authController {
                     middleName: user.middleName,
                     lastName: user.lastName,
                     email: user.email,
-                    jobTitle: user.jobTitle,    
+                    jobTitle: user.jobTitle,
                     ownerId: user.ownerId,
                     avatarUrl: user.avatarUrl,
                     roles: roles
-                }, 10*60*60);
+                }, 10 * 60 * 60);
             res.status(200).json({ accessToken });
         } else {
             res.status(401).json("Inavlid email or password!");
@@ -53,9 +53,9 @@ class authController {
             var { email } = req.body;
             var responseToken = "";
             if (email) {
-                const user = await dbContext.User.findOne({ where: {email: email} });
-                if(user) {
-                    let existedToken = await dbContext.Token.findOne({ where: {userId: user.userId, type: TokenType.RESET_PASSWORD}});
+                const user = await dbContext.User.findOne({ where: { email: email } });
+                if (user) {
+                    let existedToken = await dbContext.Token.findOne({ where: { userId: user.userId, type: TokenType.RESET_PASSWORD } });
                     if (!existedToken) {
                         // 30 minutes reset password token
                         const newToken = createToken(
@@ -74,7 +74,7 @@ class authController {
                     await sendEmail(user.email, "Reset password", link, EmailType.RESET_PASSWORD);
                 }
                 result.result = "The password change request has been sent to your email.";
-            }   
+            }
         }
         catch (error) {
             console.log(error);
@@ -83,22 +83,22 @@ class authController {
     }
 
     // [POST]
-    async changePassword(req, res, next){
+    async changePassword(req, res, next) {
         var result = new ReturnResult();
         try {
             var userId = jwt.decode(req.params.token).user.id;
             var user = await dbContext.User.findByPk(userId);
-            if(user) {
-                let token = await dbContext.Token.findOne({ where: {userId: user.userId, type: TokenType.RESET_PASSWORD}});
-                if(token) {
-                    await dbContext.Token.destroy({where: {tokenId: token.tokenId}});
-                    user.password = await hash(req.body.password, 10); 
+            if (user) {
+                let token = await dbContext.Token.findOne({ where: { userId: user.userId, type: TokenType.RESET_PASSWORD } });
+                if (token) {
+                    await dbContext.Token.destroy({ where: { tokenId: token.tokenId } });
+                    user.password = await hash(req.body.password, 10);
                     await user.save();
                     result.result = "Change password successfully.";
                 }
             }
         }
-        catch(error) {
+        catch (error) {
             console.log(error);
         }
         res.status(200).json(result);
@@ -109,10 +109,10 @@ class authController {
         try {
             var { email } = req.body;
             if (email) {
-                const user = await dbContext.User.findOne({ where: {email: email} });
-                if(user) {
-                    let existedToken = await dbContext.Token.findOne({ where: {userId: user.userId,type: TokenType.MOBILE_OTP}});
-                    if (existedToken) await dbContext.Token.destroy({where: {tokenId: existedToken.tokenId}});
+                const user = await dbContext.User.findOne({ where: { email: email } });
+                if (user) {
+                    let existedToken = await dbContext.Token.findOne({ where: { userId: user.userId, type: TokenType.MOBILE_OTP } });
+                    if (existedToken) await dbContext.Token.destroy({ where: { tokenId: existedToken.tokenId } });
                     // 5 minutes OTP
                     const otp = createOTP();
                     const savedToken = await dbContext.Token.create({
@@ -121,11 +121,11 @@ class authController {
                         expiredAt: moment(new Date()).add(5, "m").toDate(),
                         type: TokenType.MOBILE_OTP,
                     });
-                    if(savedToken) await sendEmail(user.email, "Your OTP", otp, EmailType.SEND_OTP);
+                    if (savedToken) await sendEmail(user.email, "Your OTP", otp, EmailType.SEND_OTP);
                 }
                 result.result = "An OTP has been sent to your email.";
-            }   
-        } catch(error) {
+            }
+        } catch (error) {
             console.log(error);
         }
         res.status(200).json(result);
@@ -134,33 +134,33 @@ class authController {
     async validateOTP(req, res, next) {
         var result = new ReturnResult();
         try {
-            var {otp, email} = req.body;
-            const user = await dbContext.User.findOne({ where: {email: email} });
-            const otpObject = await dbContext.Token.findOne({where: {userId: user.userId, type: TokenType.MOBILE_OTP, token: otp}});
-            if(otpObject && otpObject?.expiredAt?.getTime() > new Date().getTime()) result.result = true;
+            var { otp, email } = req.body;
+            const user = await dbContext.User.findOne({ where: { email: email } });
+            const otpObject = await dbContext.Token.findOne({ where: { userId: user.userId, type: TokenType.MOBILE_OTP, token: otp } });
+            if (otpObject && otpObject?.expiredAt?.getTime() > new Date().getTime()) result.result = true;
             else result.result = false;
-        } catch(error) {
+        } catch (error) {
             console.log(error);
         }
         res.status(200).json(result);
     }
 
-    async changePasswordOTP(req, res, next){
+    async changePasswordOTP(req, res, next) {
         var result = new ReturnResult();
         try {
-            var {email, password} = req.body;
-            const user = await dbContext.User.findOne({ where: {email: email} });
-            if(user) {
-                let token = await dbContext.Token.findOne({ where: {userId: user.userId, type: TokenType.MOBILE_OTP}});
-                if(token) {
-                    await dbContext.Token.destroy({where: {tokenId: token.tokenId}});
-                    user.password = await hash(password, 10); 
+            var { email, password } = req.body;
+            const user = await dbContext.User.findOne({ where: { email: email } });
+            if (user) {
+                let token = await dbContext.Token.findOne({ where: { userId: user.userId, type: TokenType.MOBILE_OTP } });
+                if (token) {
+                    await dbContext.Token.destroy({ where: { tokenId: token.tokenId } });
+                    user.password = await hash(password, 10);
                     await user.save();
                     result.result = "Change password successfully.";
                 }
             }
         }
-        catch(error) {
+        catch (error) {
             console.log(error);
         }
         res.status(200).json(result);

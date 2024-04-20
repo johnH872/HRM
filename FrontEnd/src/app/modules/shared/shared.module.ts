@@ -79,6 +79,7 @@ import { DateArrFormatPipe } from './pipes/date-arr-format.pipe';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { CardModule } from 'primeng/card';
 import { StepsModule } from 'primeng/steps';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 const materialModules = [
   MatFormFieldModule,
@@ -158,7 +159,8 @@ const primengModules = [
   ToolbarModule,
   DialogModule,
   CardModule,
-  StepsModule
+  StepsModule,
+  RadioButtonModule
 ]
 
 @NgModule({

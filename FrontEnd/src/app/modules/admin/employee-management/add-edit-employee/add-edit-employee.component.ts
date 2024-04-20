@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NbAuthJWTToken, NbAuthService } from '@nebular/auth';
 import { NbToastrService } from '@nebular/theme';
 import { RxFormBuilder } from '@rxweb/reactive-form-validators';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, lastValueFrom, map, takeUntil } from 'rxjs';
 import { QuillConfiguration } from 'src/app/modules/shared/components/rich-inline-edit/rich-inline-edit.component';
 import { TblActionType } from 'src/app/modules/shared/enum/tbl-action-type.enum';
 import { EmployeeModel } from 'src/app/modules/shared/models/employee.model';
@@ -16,6 +16,7 @@ import { RoleManagementService } from 'src/app/modules/shared/services/role-mana
 import { DatastateService } from '../../datastate-management/datastate.service';
 import { FilterConfig } from 'src/app/modules/shared/components/dropdown-filter/filter-config';
 import { FilterType } from 'src/app/modules/shared/enum/filter-type.enum';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-add-edit-employee',
@@ -34,6 +35,15 @@ export class AddEditEmployeeComponent implements OnInit, OnDestroy {
   listRoles: RoleModel[] = [];
   listCountries: any;
   configFilterContries: FilterConfig;
+  countriesData: any[] = [];
+  isGettingCountries: boolean = false;
+  selectedCountry: any;
+
+  genders: any[] = [
+    { name: 'Male', key: 'Male' },
+    { name: 'Female', key: 'Female' },
+    { name: 'Other', key: 'Other' },
+  ];
 
   constructor(
     public dialModalRef: MatDialogRef<AddEditEmployeeComponent>,
@@ -46,6 +56,7 @@ export class AddEditEmployeeComponent implements OnInit, OnDestroy {
     private employeeService: EmployeeManagementService,
     private roleService: RoleManagementService,
     private dataStateService: DatastateService,
+    private messageService: MessageService,
   ) {
     this.action = data?.action;
     this.employeeModel = data?.model ?? new EmployeeModel();
@@ -69,7 +80,10 @@ export class AddEditEmployeeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.loadCountriesData();
     this.frmEmployee = this.frmBuilder.formGroup(EmployeeModel, this.employeeModel);
+    this.frmEmployee?.get('birth')?.setValue(this.employeeModel?.birth ? new Date(this.employeeModel?.birth) : null);
+    this.frmEmployee?.get('dateStartContract')?.setValue(this.employeeModel.dateStartContract ? new Date(this.employeeModel?.dateStartContract) : null);
     this.dialModalRef.updatePosition({ right: '0', });
     this.roleService.getRoles().subscribe(res => {
       if (res.result != null && res.result.length > 0) {
@@ -77,6 +91,26 @@ export class AddEditEmployeeComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  async loadCountriesData() {
+    this.isGettingCountries = true;
+    this.countriesData = await lastValueFrom(this.dataStateService.getListCountries().pipe(map(resp => {
+      if (resp) {
+        return resp.map(item => {
+          const countryName = this.frmEmployee?.get('nationality')?.value;
+          var returnObj = Object.assign({ name: `${item?.name?.common}`, img: item?.flags?.png });
+          if (countryName.toLowerCase() == item?.name?.common.toLowerCase()) {
+            this.frmEmployee?.get('nationality')?.setValue(item?.name?.common);
+            this.selectedCountry = returnObj;
+          }
+          return returnObj;
+        });
+      } else return {};
+    })));
+
+    this.isGettingCountries = false;
+  }
+
 
   ngAfterContentChecked() {
     this.cdref.detectChanges();
@@ -105,7 +139,10 @@ export class AddEditEmployeeComponent implements OnInit, OnDestroy {
 
       this.employeeService.saveEmployee(model).subscribe(resp => {
         if (resp.result) {
-          this.toast.success(`Save employee successfully`, 'Success');
+          this.messageService.add({
+            key: 'toast1', severity: 'success', summary: 'Success',
+            detail: `Save employee successfully`, life: 2000
+          });
 
           if (this.action == 0 && isEmptyPassword) {
             // this.userService.sendEmailResetPassword(resp.result.id).subscribe(emailResp => {
@@ -129,7 +166,10 @@ export class AddEditEmployeeComponent implements OnInit, OnDestroy {
 
   onChooseNationality(e) {
     if (e) {
-      this.frmEmployee?.get('nationality')?.setValue(e);
+      this.frmEmployee?.get('nationality')?.setValue(e.value);
+      // this.selectedCountry = e.value;
+      let selectedIndex = this.countriesData.findIndex(x => x.name.toLowerCase() === e.value.toLowerCase());
+      if (selectedIndex != -1) this.selectedCountry = this.countriesData[selectedIndex];
     }
   }
 }

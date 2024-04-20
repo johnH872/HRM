@@ -113,7 +113,10 @@ function generateRandomString(length) {
     return result;
 }
 
+const employeeValidReturnVariable = ['userId', 'firstName', 'middleName', 'lastName', 'email', 'birth', 'gender', 'nationality', 'avatarUrl', 'phoneNumber', 'jobTitle', 'dateStartContract', 'ownerId'];
+
 export {
     addFaceToModel,
-    generateRandomString
+    generateRandomString,
+    employeeValidReturnVariable
 }

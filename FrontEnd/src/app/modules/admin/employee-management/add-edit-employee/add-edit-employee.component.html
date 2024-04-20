@@ -1,138 +1,199 @@
-<div class="d-flex flex-wrap" mat-dialog-title style="margin: unset; padding: 1px 10px 1px 28px"
-  [nbSpinner]="isLoading">
-  <button mat-button color="primary" (click)="saveData()" [disabled]="!frmEmployee.valid">
-    <mat-icon>save</mat-icon>Save
-  </button>
-  <button mat-button color="primary" (click)="closeDialog()">
-    <mat-icon>clear</mat-icon>Cancel
-  </button>
-  <button mat-icon-button aria-label="Close the dialog" (click)="closeDialog()" class="ml-auto">
-    <mat-icon>close</mat-icon>
-  </button>
+<div class="dialog-header" fxLayout="row" fxLayoutAlign="start center" mat-dialog-title
+  style="margin: unset; padding: 1px 10px 1px 28px" [nbSpinner]="isLoading">
+  <p-button label="Save" [disabled]="!frmEmployee.valid" [loading]="isLoading" icon="pi pi-save" (click)="saveData()"
+    styleClass="p-button-sm"></p-button>
+  <div fxLayout="row" fxLayoutAlign="end center" class="ml-auto">
+    <button mat-icon-button aria-label="Close the dialog" (click)="closeDialog()" class="ml-auto">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
 </div>
 <mat-divider></mat-divider>
 <mat-dialog-content class="mat-typography">
   <form [formGroup]="frmEmployee" class="container">
-    <!-- <div class="row">
-      <div class="col-12 d-flex justify-content-center">
-        <app-headshot [userModel]="userModel" #headshot></app-headshot>
-      </div>
-    </div> -->
     <div class="row">
-      <div *ngIf="action == 0" class="col-12">
-        <div class="alert alert-primary" role="alert">
-          If password and confirm password are empty, the system will generate new password.
+      <div *ngIf="action == 0" class="col-12 fs-14 p-md-2">
+        <div class="alert alert-primary" role="alert" style="margin: unset;">
+          If password and confirm password are empty, the system will auto generate a new password.
         </div>
       </div>
-
-      <!-- <div class="col-12 col-lg-6" *ngIf="action == 1">
-        <nb-toggle formControlName="isActive" status="success">Active</nb-toggle>
-      </div> -->
-
-      <div class="col-12">
-        <mat-form-field appearance="fill">
-          <mat-label>Email</mat-label>
-          <input matInput id="email" type="email" formControlName="email" autocomplete="off" required trim="blur" />
+      <div class="p-fluid p-grid p-formgrid p-md-2">
+        <div class="p-field p-col-12">
+          <label class="fs-14 fw-500" for="roles">Roles</label>
+          <p-multiSelect id="roles" class="p-inputtext-sm" [options]="listRoles" formControlName="roleId"
+            [filter]="false" optionLabel="displayName" optionValue="roleId"></p-multiSelect>
+          <mat-error *ngIf="
+              frmEmployee?.controls?.roleId?.errors &&
+              (frmEmployee?.controls?.roleId?.dirty || 
+              frmEmployee?.controls?.roleId?.touched)">
+            {{ frmEmployee?.controls?.roleId["errorMessage"] }}</mat-error>
+        </div>
+      </div>
+      <div class="p-fluid p-grid p-formgrid p-md-2">
+        <div class="p-field p-col-12">
+          <label class="fs-14 fw-500" for="email">Email</label>
+          <input class="p-inputtext-sm" formControlName="email" id="email" type="email" pInputText />
           <mat-error *ngIf="
               frmEmployee?.controls?.email?.errors &&
               (frmEmployee?.controls?.email?.dirty || 
               frmEmployee?.controls?.email?.touched)">
             {{ frmEmployee?.controls?.email["errorMessage"] }}</mat-error>
-        </mat-form-field>
+        </div>
       </div>
 
-      <div class="col-12">
-        <mat-form-field appearance="fill">
-          <mat-label *ngIf="action == 1">New Password</mat-label>
-          <mat-label *ngIf="action == 0">Password</mat-label>
-          <input *ngIf="action == 1" matInput type="password" formControlName="password"
-            autocomplete="off" trim="blur" />
-          <input *ngIf="action == 0" matInput type="password" formControlName="password" autocomplete="off" trim="blur" />
+      <div class="p-fluid p-grid p-formgrid p-md-2">
+        <div class="p-field p-col-12">
+          <label class="fs-14 fw-500" for="password">{{action == 1 ? 'New Password' : 'Password'}}</label>
+          <p-password class="p-inputtext-sm" formControlName="password" id="password" [toggleMask]="true"
+            autocomplete="off" trim="blur"></p-password>
           <mat-error *ngIf="
               frmEmployee?.controls?.password?.errors &&
-              (frmEmployee?.controls?.password?.dirty ||
-                frmEmployee?.controls?.password?.touched)">
+              (frmEmployee?.controls?.password?.dirty || 
+              frmEmployee?.controls?.password?.touched)">
             {{ frmEmployee?.controls?.password["errorMessage"] }}</mat-error>
-        </mat-form-field>
+        </div>
       </div>
-      <div class="col-12">
-        <mat-form-field appearance="fill">
-          <mat-label *ngIf="action == 1">Confirm New Password</mat-label>
-          <mat-label *ngIf="action == 0">Confirm Password</mat-label>
-          <input *ngIf="action == 1" matInput type="password" formControlName="confirmPassword"
-            autocomplete="off" trim="blur" />
-          <input *ngIf="action == 0" matInput type="password" formControlName="confirmPassword" autocomplete="off"
-            trim="blur" />
+
+      <div class="p-fluid p-grid p-formgrid p-md-2">
+        <div class="p-field p-col-12">
+          <label class="fs-14 fw-500" for="confirmPassword">{{action == 1 ? 'Confirm New Password' : 'Confirm Password'}}</label>
+          <p-password class="p-inputtext-sm" formControlName="confirmPassword" id="confirmPassword" [toggleMask]="true"
+            autocomplete="off" trim="blur"></p-password>
           <mat-error *ngIf="
               frmEmployee?.controls?.confirmPassword?.errors &&
-              (frmEmployee?.controls?.confirmPassword?.dirty ||
-                frmEmployee?.controls?.confirmPassword?.touched)">
+              (frmEmployee?.controls?.confirmPassword?.dirty || 
+              frmEmployee?.controls?.confirmPassword?.touched)">
             {{ frmEmployee?.controls?.confirmPassword["errorMessage"] }}</mat-error>
-        </mat-form-field>
+        </div>
       </div>
 
-      <div class="col-12">
-        <mat-form-field appearance="fill">
-          <mat-label>First Name</mat-label>
-          <input matInput type="text" formControlName="firstName" autocomplete="off" required trim="blur" />
+      <div class="p-fluid p-grid p-formgrid p-md-2">
+        <div class="p-field p-col-12">
+          <label class="fs-14 fw-500" for="firstName">First Name</label>
+          <input class="p-inputtext-sm" formControlName="firstName" id="firstName" type="firstName" pInputText />
           <mat-error *ngIf="
               frmEmployee?.controls?.firstName?.errors &&
-              (frmEmployee?.controls?.firstName?.dirty ||
-                frmEmployee?.controls?.firstName?.touched)">
+              (frmEmployee?.controls?.firstName?.dirty || 
+              frmEmployee?.controls?.firstName?.touched)">
             {{ frmEmployee?.controls?.firstName["errorMessage"] }}</mat-error>
-        </mat-form-field>
+        </div>
       </div>
-      <div class="col-12">
-        <mat-form-field appearance="fill">
-          <mat-label>Middle Name</mat-label>
-          <input matInput type="text" formControlName="middleName" autocomplete="off" required trim="blur" />
+
+      <div class="p-fluid p-grid p-formgrid p-md-2">
+        <div class="p-field p-col-12">
+          <label class="fs-14 fw-500" for="middleName">Middle Name</label>
+          <input required class="p-inputtext-sm" formControlName="middleName" id="middleName" type="middleName"
+            pInputText />
           <mat-error *ngIf="
               frmEmployee?.controls?.middleName?.errors &&
-              (frmEmployee?.controls?.middleName?.dirty ||
-                frmEmployee?.controls?.middleName?.touched)">
+              (frmEmployee?.controls?.middleName?.dirty || 
+              frmEmployee?.controls?.middleName?.touched)">
             {{ frmEmployee?.controls?.middleName["errorMessage"] }}</mat-error>
-        </mat-form-field>
+        </div>
       </div>
-      <div class="col-12">
-        <mat-form-field appearance="fill">
-          <mat-label>Last Name</mat-label>
-          <input matInput type="text" formControlName="lastName" autocomplete="off" required trim="blur" />
+
+      <div class="p-fluid p-grid p-formgrid p-md-2">
+        <div class="p-field p-col-12">
+          <label class="fs-14 fw-500" for="lastName">Last Name</label>
+          <input required class="p-inputtext-sm" formControlName="lastName" id="lastName" type="lastName" pInputText />
           <mat-error *ngIf="
               frmEmployee?.controls?.lastName?.errors &&
-              (frmEmployee?.controls?.lastName?.dirty ||
-                frmEmployee?.controls?.lastName?.touched)">
+              (frmEmployee?.controls?.lastName?.dirty || 
+              frmEmployee?.controls?.lastName?.touched)">
             {{ frmEmployee?.controls?.lastName["errorMessage"] }}</mat-error>
-        </mat-form-field>
+        </div>
       </div>
 
-      <div class="col-12">
-        <label>Gender: </label>
-        <mat-radio-group aria-label="Select gender" formControlName="gender">
-          <mat-radio-button value="Male">Male</mat-radio-button>
-          <mat-radio-button value="Female">Female</mat-radio-button>
-          <mat-radio-button value="Other">Other</mat-radio-button>
-        </mat-radio-group>
+      <div class="p-fluid p-grid p-formgrid p-md-2">
+        <div class="p-field p-col-12">
+          <label class="fs-14 fw-500" for="gender">Gender</label>
+          <div class="custom-radio-group">
+            <div *ngFor="let gender of genders" class="field-checkbox">
+              <p-radioButton [inputId]="gender.key" [value]="gender.key" formControlName="gender"
+                id="gender"></p-radioButton>
+              <label [for]="gender.key" class="ml-2">{{ gender.name }}</label>
+            </div>
+          </div>
+          <mat-error *ngIf="
+              frmEmployee?.controls?.gender?.errors &&
+              (frmEmployee?.controls?.gender?.dirty || 
+              frmEmployee?.controls?.gender?.touched)">
+            {{ frmEmployee?.controls?.gender["errorMessage"] }}</mat-error>
+        </div>
       </div>
 
-      <div class="col-12">
-        <mat-form-field appearance="fill">
-          <mat-label>Phone Number</mat-label>
-          <input matInput type="tel" formControlName="phoneNumber" autocomplete="off" trim="blur" />
+      <div class="p-fluid p-grid p-formgrid p-md-2">
+        <div class="p-field p-col-12">
+          <label class="fs-14 fw-500" for="phoneNumber">Phone Number</label>
+          <input required class="p-inputtext-sm" formControlName="phoneNumber" id="phoneNumber" type="phoneNumber"
+            pInputText />
           <mat-error *ngIf="
               frmEmployee?.controls?.phoneNumber?.errors &&
-              (frmEmployee?.controls?.phoneNumber?.dirty ||
-                frmEmployee?.controls?.phoneNumber?.touched)">
+              (frmEmployee?.controls?.phoneNumber?.dirty || 
+              frmEmployee?.controls?.phoneNumber?.touched)">
             {{ frmEmployee?.controls?.phoneNumber["errorMessage"] }}</mat-error>
-        </mat-form-field>
+        </div>
       </div>
 
-      <div class="col-12">
+      <div class="p-fluid p-grid p-formgrid p-md-2">
+        <div class="p-field p-col-12">
+          <label class="fs-14 fw-500" for="birth">Birth</label>
+          <p-calendar class="p-inputtext-sm" formControlName="birth" [showIcon]="true" id="birth" dateFormat="dd/mm/yy"></p-calendar>
+
+          <mat-error *ngIf="
+              frmEmployee?.controls?.birth?.errors &&
+              (frmEmployee?.controls?.birth?.dirty || 
+              frmEmployee?.controls?.birth?.touched)">
+            {{ frmEmployee?.controls?.birth["errorMessage"] }}</mat-error>
+        </div>
+      </div>
+
+      <div class="p-fluid p-grid p-formgrid p-md-2">
+        <div class="p-field p-col-12">
+          <label class="fs-14 fw-500" for="dateStartContract">Date Start Contract</label>
+          <p-calendar class="p-inputtext-sm" formControlName="dateStartContract" id="dateStartContract" [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
+          <mat-error *ngIf="
+              frmEmployee?.controls?.dateStartContract?.errors &&
+              (frmEmployee?.controls?.dateStartContract?.dirty || 
+              frmEmployee?.controls?.dateStartContract?.touched)">
+            {{ frmEmployee?.controls?.dateStartContract["errorMessage"] }}</mat-error>
+        </div>
+      </div>
+      
+      <div class="p-fluid p-grid p-formgrid p-md-2">
+        <div class="p-field p-col-12">
+          <label class="fs-14 fw-500" for="nationality">Nationality</label>
+          <p-dropdown (onChange)="onChooseNationality($event)" class="p-inputtext-sm" [disabled]="isGettingCountries" [options]="countriesData"
+            formControlName="nationality" optionLabel="name" optionValue="name" [filter]="true" filterBy="name"
+            [showClear]="true" placeholder="Select a Country">
+            <ng-template pTemplate="selectedItem">
+              <div class="flex align-items-center gap-2 dropdown-items-with-img" *ngIf="selectedCountry">
+                <img [src]="selectedCountry.img" style="width: 27px" />
+                <div>{{ selectedCountry.name }}</div>
+              </div>
+            </ng-template>
+            <ng-template let-country pTemplate="item">
+              <div class="flex align-items-center gap-2 dropdown-items-with-img">
+                <img [src]="country.img" style="width: 27px" />
+                <div>{{ country.name }}</div>
+              </div>
+            </ng-template>
+          </p-dropdown>
+          <mat-error *ngIf="
+              frmEmployee?.controls?.phoneNumber?.errors &&
+              (frmEmployee?.controls?.phoneNumber?.dirty || 
+              frmEmployee?.controls?.phoneNumber?.touched)">
+            {{ frmEmployee?.controls?.phoneNumber["errorMessage"] }}</mat-error>
+        </div>
+      </div>
+
+      <!-- <div class="col-12" [nbSpinner]="isGettingCountries">
         <app-dropdown-filter style="font-size: 14px; padding-bottom: 0;" [columnName]="'Nationality'" [filter]="configFilterContries"
             [value]="frmEmployee?.get('nationality')?.value ?? null" [multiple]="false" (onFilter)="onChooseNationality($event)">
         </app-dropdown-filter>
-      </div>
+      </div> -->
 
-      <div class="col-12 col-lg-6">
+      <!-- <div class="col-12 col-lg-6">
         <mat-form-field appearance="fill">
           <mat-label>Role</mat-label>
           <mat-select formControlName="roleId" required multiple>
@@ -147,18 +208,18 @@
             {{ frmEmployee?.controls?.roles["errorMessage"] }}
           </mat-error>
         </mat-form-field>
-      </div>
-      
-      <div class="col-12">
-        <mat-form-field appearance="fill">
-          <mat-label>Job Title</mat-label>
-          <input matInput type="text" formControlName="jobTitle" autocomplete="off" trim="blur" />
+      </div> -->
+
+      <div class="p-fluid p-grid p-formgrid p-md-2">
+        <div class="p-field p-col-12">
+          <label class="fs-14 fw-500" for="jobTitle">Job Title</label>
+          <input required class="p-inputtext-sm" formControlName="jobTitle" id="jobTitle" type="jobTitle" pInputText />
           <mat-error *ngIf="
               frmEmployee?.controls?.jobTitle?.errors &&
-              (frmEmployee?.controls?.jobTitle?.dirty ||
-                frmEmployee?.controls?.jobTitle?.touched)">
+              (frmEmployee?.controls?.jobTitle?.dirty || 
+              frmEmployee?.controls?.jobTitle?.touched)">
             {{ frmEmployee?.controls?.jobTitle["errorMessage"] }}</mat-error>
-        </mat-form-field>
+        </div>
       </div>
     </div>
   </form>

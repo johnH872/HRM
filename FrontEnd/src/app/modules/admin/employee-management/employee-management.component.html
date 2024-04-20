@@ -9,10 +9,7 @@
     </ng-template>
 
     <ng-template pTemplate="right">
-      <!-- <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import"
-        class="mr-2 inline-block"></p-fileUpload>
-      <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button> -->
-      <button pButton label="Clear" class="p-button-outlined p-button-sm" icon="pi pi-filter-slash mr-2"
+      <button pButton label="Clear" class="p-button-outlined p-button-sm mr-2" icon="pi pi-filter-slash"
         (click)="clear(table)"></button>
       <button pButton label="Refresh" class="p-button-outlined p-button-sm" icon="pi pi-refresh"
         (click)="reset()"></button>
@@ -45,7 +42,6 @@
         <th pSortableColumn="email" style="min-width:150px">
           Email
           <p-columnFilter type="text" field="email" display="menu"></p-columnFilter>
-          <!-- <p-sortIcon field="email"></p-sortIcon> -->
         </th>
         <th pSortableColumn="role" style="min-width:150px">
           Role
@@ -56,22 +52,19 @@
               </p-dropdown>
             </ng-template>
           </p-columnFilter>
-          <!-- <p-sortIcon field="role"></p-sortIcon> -->
         </th>
         <th pSortableColumn="phoneNumber" style="min-width:150px">
           Phone Number
-          <!-- <p-columnFilter type="text" field="phoneNumber" display="menu"></p-columnFilter> -->
           <p-sortIcon field="phoneNumber"></p-sortIcon>
         </th>
         <th style="min-width:150px">
           Job Title
           <p-columnFilter type="text" field="jobTitle" display="menu"></p-columnFilter>
-          <!-- <p-sortIcon field="jobTitle"></p-sortIcon> -->
         </th>
         <th style="min-width:150px">
           Manage By
-          <p-columnFilter field="ownerId" matchMode="in" display="menu" [showMatchModes]="false"
-            [showOperator]="false" [showAddButton]="false">
+          <p-columnFilter field="ownerId" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false"
+            [showAddButton]="false">
             <ng-template pTemplate="header">
               <div class="px-3 pt-3 pb-0">
                 <span class="font-bold">Agent Picker</span>
@@ -109,9 +102,11 @@
         <td>
           <p-tableCheckbox [value]="employee"></p-tableCheckbox>
         </td>
-        <td >
-          <img [alt]="" src="{{ employee?.avatarUrl }}" width="32" style="vertical-align: middle" />
-          <b (click)="openEmployeeDetail(employee)" style="cursor: pointer;" >{{ employee?.displayName }}</b>
+        <td>
+          <!-- <img [alt]="" [src]="employee?.avatarUrl" width="32" style="vertical-align: middle" />
+          <b (click)="openEmployeeDetail(employee)" style="cursor: pointer;">{{ employee?.displayName }}</b> -->
+          <nb-user (click)="openEmployeeDetail(employee.manager)" class="custom-nb-user-small" size="small" [name]=" employee?.displayName" title="Engineer" [showTitle]="false"
+            [picture]="employee?.avatarUrl"></nb-user>
         </td>
         <td>{{ employee?.email }}</td>
         <td *ngFor="let role of employee?.Roles">
@@ -119,10 +114,17 @@
         </td>
         <td>{{ employee?.phoneNumber }}</td>
         <td>{{ employee?.jobTitle }}</td>
-        <td>{{ employee?.ownerId }}</td>
+        <td>
+          <!-- <img [alt]="" [src]="employee?.manager?.avatarUrl" width="32" style="vertical-align: middle" />
+          <b (click)="openEmployeeDetail(employee.manager)" style="cursor: pointer;">{{ employee?.manager.firstName }}
+            {{ employee?.manager.middleName }} {{ employee?.manager.lastName }}</b> -->
+          <nb-user (click)="openEmployeeDetail(employee.manager)" class="custom-nb-user-small" size="small" [name]="(employee?.manager?.firstName || '') + ' '  + (employee?.manager?.middleName || '') + ' ' +
+          (employee?.manager?.lastName||'')" title="Engineer" [showTitle]="false"
+            [picture]="employee?.manager?.avatarUrl"></nb-user>
+        </td>
         <td>{{ employee?.gender }}</td>
         <td>
-          <img src="{{getNationalityImg(employee?.nationality)}}" class="custom-display-img">
+          <img [src]="getNationalityImg(employee?.nationality)" class="custom-display-img">
           {{ employee?.nationality }}
         </td>
         <td>

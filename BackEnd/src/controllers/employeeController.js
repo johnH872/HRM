@@ -5,17 +5,18 @@ import { Page } from "../models/DTO/page.js";
 import { PagedData } from "../models/DTO/pagedData.js";
 import { Op, Sequelize } from "sequelize";
 import { filterData, mappingPage, pagingData } from "../utils/pagingAndFiltering.js";
+import { employeeValidReturnVariable } from "../utils/helper.js";
 const dbContext = await db;
 class employeeController {
     async getAllEmployee(req, res, next) {
         var returnResult = new ReturnResult();
         try {
             const employeePaging = await dbContext.User.findAll({
-                attributes: ['userId', 'firstName', 'middleName', 'lastName', 'email', 'birth', 'gender', 'nationality', 'avatarUrl', 'phoneNumber', 'jobTitle', 'dateStartContract', 'ownerId'],
+                attributes: employeeValidReturnVariable,
                 include: {
                     model: dbContext.Role,
                     through: {
-                      attributes: ['roleId',],
+                        attributes: ['roleId',],
                     }
                 },
                 order: [
@@ -24,7 +25,49 @@ class employeeController {
             });
             returnResult.result = employeePaging;
             res.status(200).json(returnResult);
-        } catch(error) {
+        } catch (error) {
+            res.status(400).json(error);
+            console.log(error)
+        }
+    }
+
+    async getEmployeeCurrentUserRole(req, res, next) {
+        var returnResult = new ReturnResult();
+        try {
+            var roles = req.body;
+            var maxPriority = await dbContext.Role.min(
+                'priority',
+                {
+                    where: {
+                        roleId: roles
+                    }
+                });
+
+            const employeePaging = await dbContext.User.findAll({
+                attributes: employeeValidReturnVariable,
+                include: [
+                    {
+                        model: dbContext.Role,
+                        through: {
+                            attributes: [],
+                        }
+                    },
+                    {
+                        model: dbContext.User,
+                        as: 'manager',
+                        attributes: employeeValidReturnVariable
+                    }
+                ],
+                where: {
+                    '$Roles.priority$': { [Op.lte]: maxPriority }
+                },
+                order: [
+                    [dbContext.Role, 'priority', 'ASC']
+                ]
+            });
+            returnResult.result = employeePaging;
+            res.status(200).json(returnResult);
+        } catch (error) {
             res.status(400).json(error);
             console.log(error)
         }
@@ -37,16 +80,16 @@ class employeeController {
         try {
             page = mappingPage(page, req.body);
             let queries = {};
-            
+
             queries = pagingData(page, queries);
             queries = filterData(page, queries);
 
             // Custom filterName
             var displayNameIndex = page.filter.findIndex(x => x.prop === 'employeeName' && x.value);
-            if(displayNameIndex !== -1) {
-                queries.where['$and'] = Sequelize.where(Sequelize.fn('concat', Sequelize.col('firstName'),' ', Sequelize.col('middleName') ,' ', Sequelize.col('lastName')), {
+            if (displayNameIndex !== -1) {
+                queries.where['$and'] = Sequelize.where(Sequelize.fn('concat', Sequelize.col('firstName'), ' ', Sequelize.col('middleName'), ' ', Sequelize.col('lastName')), {
                     [Op.substring]: page.filter[displayNameIndex].value,
-                  });
+                });
             }
 
             const employeePaging = await dbContext.User.findAll(queries);
@@ -54,7 +97,7 @@ class employeeController {
             pagedData.Data = employeePaging;
             pagedData.Page = page;
             returnResult.result = pagedData;
-        } catch(error) {
+        } catch (error) {
             res.status(400).json(error);
             console.log(error)
         }
@@ -68,7 +111,7 @@ class employeeController {
             if (model.userId === null) { // Add new
                 // Check email is existing
                 const existEmployee = await dbContext.User.findOne({
-                    where: {email: model.email}
+                    where: { email: model.email }
                 });
                 if (existEmployee) {
                     result.message = "Email already exists";
@@ -92,6 +135,7 @@ class employeeController {
                         avatarUrl: model.avatarUrl,
                         phoneNumber: model.phoneNumber,
                         jobTitle: model.jobTitle,
+                        dateStartContract: model.dateStartContract,
                         ownerId: model.ownerId,
                     });
                     if (saveEmployee) {
@@ -111,7 +155,7 @@ class employeeController {
             } else { // Edit
                 // Find existing employee
                 const existEmployee = await dbContext.User.findOne({
-                    where: {userId: model.userId}
+                    where: { userId: model.userId }
                 });
                 if (existEmployee) {
                     if (model.password) {
@@ -129,6 +173,7 @@ class employeeController {
                         avatarUrl: model.avatarUrl ?? existEmployee.avatarUrl,
                         phoneNumber: model.phoneNumber ?? existEmployee.phoneNumber,
                         jobTitle: model.jobTitle ?? existEmployee.jobTitle,
+                        dateStartContract: model.dateStartContract ?? existEmployee.dateStartContract,
                         ownerId: model.ownerId ?? existEmployee.ownerId,
                     }, {
                         where: {
@@ -141,9 +186,9 @@ class employeeController {
                         if (model.roleId && model.roleId.length > 0) {
                             await dbContext.User_Role.destroy({
                                 where: {
-                                  userId: model.userId,
+                                    userId: model.userId,
                                 }
-                              });
+                            });
                             model.roleId.map(async item => {
                                 await dbContext.User_Role.create({
                                     userId: model.userId,
@@ -152,7 +197,7 @@ class employeeController {
                             });
                         }
                         result.result = await dbContext.User.findOne({
-                            where: {userId: model.userId}
+                            where: { userId: model.userId }
                         });
                     } else {
                         result.message = 'Can not save employee';
@@ -162,7 +207,7 @@ class employeeController {
                 }
             }
             return res.status(200).json(result);
-        } catch(error) {
+        } catch (error) {
             res.status(400).json(error);
             console.log(error);
         }
@@ -173,8 +218,8 @@ class employeeController {
         try {
             var employeeId = req.params.id;
             const employee = await dbContext.User.findByPk(employeeId);
-            if(employee) result.result = employee;
-        } catch(error) {
+            if (employee) result.result = employee;
+        } catch (error) {
             console.error(error);
         }
         return res.status(200).json(result);

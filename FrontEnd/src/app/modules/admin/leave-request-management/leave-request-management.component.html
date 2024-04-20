@@ -13,16 +13,17 @@
       <!-- <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import"
               class="mr-2 inline-block"></p-fileUpload>
             <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button> -->
-      <button pButton label="Clear" class="p-button-outlined p-button-sm" icon="pi pi-filter-slash" (click)="clear(table)"></button>
-      <button pButton label="Refresh" class="p-button-outlined p-button-sm" icon="pi pi-refresh" style="margin-left: 10px;"
-        (click)="reset()"></button>
+      <button pButton label="Clear" class="p-button-outlined p-button-sm" icon="pi pi-filter-slash"
+        (click)="clear(table)"></button>
+      <button pButton label="Refresh" class="p-button-outlined p-button-sm" icon="pi pi-refresh"
+        style="margin-left: 10px;" (click)="reset()"></button>
     </ng-template>
   </p-toolbar>
-  <p-table #table styleClass="p-datatable-sm" [value]="dataTable" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
-    [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)" scrollHeight="flex"
-    [rowsPerPageOptions]="[10, 25, dataTable?.length]" [loading]="loading" [globalFilterFields]="['leaveTypeName']"
-    editMode="row" [(selection)]="selectedLeaveRequests" [rowHover]="true" [scrollable]="true" scrollHeight="700px"
-    dataKey="leaveRequestId">
+  <p-table #table styleClass="p-datatable-sm" [value]="dataTable" [paginator]="true" [rows]="10"
+    [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)"
+    scrollHeight="flex" [rowsPerPageOptions]="[10, 25, dataTable?.length]" [loading]="loading"
+    [globalFilterFields]="['leaveTypeName']" editMode="row" [(selection)]="selectedLeaveRequests" [rowHover]="true"
+    [scrollable]="true" scrollHeight="700px" dataKey="leaveRequestId">
     <ng-template pTemplate="header">
       <tr>
         <th style="width: 4rem">
@@ -33,32 +34,33 @@
           <!-- <p-columnFilter type="text" field="reason" display="menu"></p-columnFilter> -->
           <!-- <p-sortIcon field="reason"></p-sortIcon> -->
         </th>
-        <th pSortableColumn="employee.displayName"  style="min-width:150px">
+        <th pSortableColumn="employee.displayName" style="min-width:150px">
           Employee
           <p-columnFilter type="text" field="employee.displayName" display="menu"></p-columnFilter>
           <p-sortIcon field="employee.displayName"></p-sortIcon>
         </th>
-        <th pSortableColumn="status"  style="min-width:150px">
+        <th pSortableColumn="status" style="min-width:150px">
           Status
           <p-columnFilter field="status" matchMode="equals" display="menu">
             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                <p-dropdown [ngModel]="value" [options]="lstLeaveRequestState" (onChange)="filter($event?.value)" optionLabel="dataStateName" optionValue="dataStateId" placeholder="Any">
-                </p-dropdown>
+              <p-dropdown [ngModel]="value" [options]="lstLeaveRequestState" (onChange)="filter($event?.value)"
+                optionLabel="dataStateName" optionValue="dataStateId" placeholder="Any">
+              </p-dropdown>
             </ng-template>
           </p-columnFilter>
           <!-- <p-sortIcon field="status"></p-sortIcon> -->
         </th>
-        <th pSortableColumn="leaveEntitlement"  style="min-width:150px">
+        <th pSortableColumn="leaveEntitlement" style="min-width:150px">
           Leave Entitlement
           <p-columnFilter type="text" field="leaveEntitlement" display="menu"></p-columnFilter>
           <!-- <p-sortIcon field="leaveEntitlement"></p-sortIcon> -->
         </th>
-        <th pSortableColumn="leaveDateFrom"  style="min-width:150px">
+        <th pSortableColumn="leaveDateFrom" style="min-width:150px">
           Leave Date From
           <p-columnFilter type="date" field="leaveDateFrom" display="menu"></p-columnFilter>
           <!-- <p-sortIcon field="leaveDateFrom"></p-sortIcon> -->
         </th>
-        <th pSortableColumn="leaveDateTo"  style="min-width:150px">
+        <th pSortableColumn="leaveDateTo" style="min-width:150px">
           Leave Date To
           <p-columnFilter type="date" field="leaveDateTo" display="menu"></p-columnFilter>
           <!-- <p-sortIcon field="leaveDateTo"></p-sortIcon> -->
@@ -68,12 +70,12 @@
           <!-- <p-columnFilter type="text" field="session" display="menu"></p-columnFilter> -->
           <!-- <p-sortIcon field="session"></p-sortIcon> -->
         </th>
-        <th pSortableColumn="numberOfHour"  style="min-width:150px">
+        <th pSortableColumn="numberOfHour" style="min-width:150px">
           Number Of Hour
           <p-columnFilter type="numeric" field="numberOfHour" display="menu"></p-columnFilter>
           <!-- <p-sortIcon field="numberOfHour"></p-sortIcon> -->
         </th>
-        <th pSortableColumn="note"  style="min-width:150px">
+        <th pSortableColumn="note" style="min-width:150px">
           Note
           <!-- <p-columnFilter type="text" field="note" display="menu"></p-columnFilter> -->
           <!-- <p-sortIcon field="note"></p-sortIcon> -->
@@ -89,9 +91,9 @@
         </td>
         <td>{{ leaveRequest?.reason }}</td>
         <td>
-          <img [alt]="" src="{{ leaveRequest?.User?.avatarUrl }}" width="32" style="vertical-align: middle" />
-          {{ leaveRequest?.User?.firstName + " " + leaveRequest?.User?.middleName + " " +
-          leaveRequest?.User?.lastName}}
+          <nb-user class="custom-nb-user-small" size="small" [name]="(leaveRequest?.User?.firstName || '') + ' '  + (leaveRequest?.User?.middleName || '') + ' ' +
+          (leaveRequest?.User?.lastName||'')" title="Engineer" [showTitle]="false"
+            [picture]=" leaveRequest?.User?.avatarUrl"></nb-user>
         </td>
         <td><ng-container *ngTemplateOutlet="status; context: { row: leaveRequest }"></ng-container></td>
         <td>{{ leaveRequest?.LeaveEntitlement?.LeaveType?.leaveTypeName }}</td>

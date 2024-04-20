@@ -38,8 +38,8 @@
             </div>
 
             <div fxLayout="column" fxLayoutAlign="center center">
-                <circle-progress class="margin-circle" [percent]="usedTransferLeavePercentage" [space]="-8" [radius]="43" [outerStrokeWidth]="8"
-                    [innerStrokeWidth]="8"
+                <circle-progress class="margin-circle" [percent]="usedTransferLeavePercentage" [space]="-8"
+                    [radius]="43" [outerStrokeWidth]="8" [innerStrokeWidth]="8"
                     [outerStrokeColor]="usedTransferLeavePercentage >=67 && usedTransferLeavePercentage <= 100 ? '#4CC790' : usedTransferLeavePercentage >=33 && usedTransferLeavePercentage <67 ? '#3c9ee5' : '#ff9f00'"
                     [animation]="true"
                     [title]="transferLeaveEntitlement ? ((transferLeaveEntitlement?.usableLeave - transferLeaveEntitlement?.usedLeave) + '/' + transferLeaveEntitlement?.usableLeave)  || 0 : '0/0'"
@@ -48,8 +48,8 @@
             </div>
 
             <div fxLayout="column" fxLayoutAlign="center center">
-                <circle-progress class="margin-circle" [percent]="usedUnpaidLeavePercentage" [space]="-8" [radius]="43" [outerStrokeWidth]="8"
-                    [innerStrokeWidth]="8"
+                <circle-progress class="margin-circle" [percent]="usedUnpaidLeavePercentage" [space]="-8" [radius]="43"
+                    [outerStrokeWidth]="8" [innerStrokeWidth]="8"
                     [outerStrokeColor]="usedUnpaidLeavePercentage >=67 && usedUnpaidLeavePercentage <= 100 ? '#4CC790' : usedUnpaidLeavePercentage >=33 && usedUnpaidLeavePercentage <67 ? '#3c9ee5' : '#ff9f00'"
                     [animation]="true" [animationDuration]="300"
                     [title]="unpaidLeaveEntitlement ? ((unpaidLeaveEntitlement?.usableLeave - unpaidLeaveEntitlement?.usedLeave) + '/' + unpaidLeaveEntitlement?.usableLeave)  || 0 : '0/0'"
@@ -105,19 +105,23 @@
             </div>
             <div class="custom-card h-100 w-100" fxLayout="column" fxLayoutAlign="start start">
                 <div fxLayout="row" fxLayoutAlign="start start" fxFlex="40">
-                    <h1 fxFlex="20" class="fw-bolder text-gradient">Chart zone</h1>
-                    <div fxFlex="80" fxLayout="row" fxLayoutAlign="center center" style="margin-top: 30px;">
-                        <div fxFlex="60" echarts [options]="chartOption" [loading]="isLoadingChart" style="width: 700px; height: 250px; margin-top: -20px;"></div>
+                    <!-- <h1 fxFlex="20" class="fw-bolder text-gradient">Chart zone</h1> -->
+                    <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start" style="margin-top: 30px;">
+                        <div fxFlex="60" echarts [options]="chartOption" [loading]="isLoadingChart"
+                            style="width: 700px; height: 250px; margin-top: -20px;"></div>
                         <div fxFlex="40" style="margin-bottom: 100px; text-align: center;">
                             <div style="color: black;">{{timeRangeDisplay}}</div>
                             <div>
-                                <button mat-raised-button style="background-color: #b45cea; color: white;" class="button-app-function" (click)="setupDataFilter('prev')">
+                                <button mat-raised-button style="background-color: #b45cea; color: white;"
+                                    class="button-app-function" (click)="setupDataFilter('prev')">
                                     <mat-icon>arrow_back_ios</mat-icon>
                                 </button>
-                                <button mat-raised-button style="background-color: #b45cea; color: white;" class="button-app-function background-gradient" (click)="setupDataFilter('this')">
+                                <button mat-raised-button style="background-color: #b45cea; color: white;"
+                                    class="button-app-function background-gradient" (click)="setupDataFilter('this')">
                                     This Week
                                 </button>
-                                <button mat-raised-button style="background-color: #b45cea; color: white;" class="button-app-function" (click)="setupDataFilter('next')">
+                                <button mat-raised-button style="background-color: #b45cea; color: white;"
+                                    class="button-app-function" (click)="setupDataFilter('next')">
                                     <mat-icon>arrow_forward_ios</mat-icon>
                                 </button>
                             </div>

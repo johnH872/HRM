@@ -13,9 +13,9 @@
       <!-- <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import"
           class="mr-2 inline-block"></p-fileUpload>
         <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button> -->
-      <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash mr-2" (click)="clear(table)"></button>
-      <button pButton label="Refresh" class="p-button-outlined" icon="pi pi-refresh"
-        (click)="reset()"></button>
+      <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash mr-2"
+        (click)="clear(table)"></button>
+      <button pButton label="Refresh" class="p-button-outlined" icon="pi pi-refresh" (click)="reset()"></button>
     </ng-template>
   </p-toolbar>
   <p-table #table styleClass="p-datatable-sm" [value]="dataTable" [paginator]="true" [rows]="10"
@@ -27,8 +27,8 @@
       <div class="flex">
         <span class="p-input-icon-left ml-auto">
           <i class="pi pi-search"></i>
-          <input pInputText class="p-inputtext-sm" type="text" (input)="table.filterGlobal($event.target.value, 'contains')"
-            placeholder="Search by name" />
+          <input pInputText class="p-inputtext-sm" type="text"
+            (input)="table.filterGlobal($event.target.value, 'contains')" placeholder="Search by name" />
         </span>
       </div>
     </ng-template>
@@ -73,9 +73,12 @@
           <p-tableCheckbox [value]="attendance"></p-tableCheckbox>
         </td>
         <td>
-          <img [alt]="" src="{{ attendance?.User?.avatarUrl }}" width="32" style="vertical-align: middle" />
+          <nb-user class="custom-nb-user-small" size="small" [name]=" (attendance?.User?.firstName || '') + ' '  + (attendance?.User?.middleName || '') + ' ' +
+          (attendance?.User?.lastName||'')" title="Engineer" [showTitle]="false"
+            [picture]=" attendance?.User?.avatarUrl"></nb-user>
+          <!-- <img [alt]="" src="{{ attendance?.User?.avatarUrl }}" width="32" style="vertical-align: middle" />
           {{ attendance?.User?.firstName + " " + attendance?.User?.middleName + " " +
-          attendance?.User?.lastName}}
+          attendance?.User?.lastName}} -->
         </td>
         <td>{{ attendance?.punchinDate | dateTimeFormat }}</td>
         <td>{{ attendance?.punchinNote }}</td>
