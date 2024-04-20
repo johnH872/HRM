@@ -105,7 +105,24 @@
             </div>
             <div class="custom-card h-100 w-100" fxLayout="column" fxLayoutAlign="start start">
                 <div fxLayout="row" fxLayoutAlign="start start" fxFlex="40">
-                    <h1>Chart zone</h1>
+                    <h1 fxFlex="20" class="fw-bolder text-gradient">Chart zone</h1>
+                    <div fxFlex="80" fxLayout="row" fxLayoutAlign="center center" style="margin-top: 30px;">
+                        <div fxFlex="60" echarts [options]="chartOption" [loading]="isLoadingChart" style="width: 700px; height: 250px; margin-top: -20px;"></div>
+                        <div fxFlex="40" style="margin-bottom: 100px; text-align: center;">
+                            <div style="color: black;">{{timeRangeDisplay}}</div>
+                            <div>
+                                <button mat-raised-button style="background-color: #b45cea; color: white;" class="button-app-function" (click)="setupDataFilter('prev')">
+                                    <mat-icon>arrow_back_ios</mat-icon>
+                                </button>
+                                <button mat-raised-button style="background-color: #b45cea; color: white;" class="button-app-function background-gradient" (click)="setupDataFilter('this')">
+                                    This Week
+                                </button>
+                                <button mat-raised-button style="background-color: #b45cea; color: white;" class="button-app-function" (click)="setupDataFilter('next')">
+                                    <mat-icon>arrow_forward_ios</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="attendance-management w-100" fxLayout="row" fxLayoutAlign="start start" fxFlex="60">
                     <app-attendance-managment class="w-100" [isOnlyCurrentUser]="true"

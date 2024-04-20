@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { ReturnResult } from '../../shared/models/return-result';
 import { AttendanceModel } from './attendance.model';
 import { ReportAttendanceModel } from '../../face-recog/punch-in-out-webcam/report-attendance-dialog/report-attendance.model';
+import { PagingRangeDateFilter } from '../../shared/models/page';
 
 @Injectable({
   providedIn: 'root'
@@ -54,5 +55,9 @@ export class AttendanceManagementService {
 
   deleteAttendanceReport(ids: number[]): Observable<ReturnResult<ReportAttendanceModel[]>> {
     return this.http.post<ReturnResult<ReportAttendanceModel[]>>(`${this.baseUrl}/DeleteAttendanceReport`, ids)
+  }
+
+  getAttendanceRange(userId: string, page: PagingRangeDateFilter): Observable<ReturnResult<AttendanceModel[]>> {
+    return this.http.post<ReturnResult<AttendanceModel[]>>(`${this.baseUrl}/GetAttendanceRange?userId=${userId}&timezone=${new Date().getTimezoneOffset()/60}`, page);
   }
 }

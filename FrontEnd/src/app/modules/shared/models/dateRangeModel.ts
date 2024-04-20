@@ -10,3 +10,11 @@ export class DateRangeModel {
     @prop()
     end: Date;
 }
+
+
+export class RangeDate {
+    @prop()
+    startDate: string;
+    @prop()
+    endDate: string;
+}

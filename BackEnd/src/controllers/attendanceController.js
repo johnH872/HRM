@@ -329,5 +329,52 @@ class attendanceController {
             console.log(error)
         }
     }
+
+    async getAttendanceRange(req, res, next) {
+        var returnResult = new ReturnResult();
+        try {
+            const userId = req.query.userId;
+            const timeZoneSetting = -req.query.timezone;
+            const dataFilter = req.body;
+            const result = await dbContext.Attendance.findAll({
+                where: {
+                    userId: userId,
+                    [Op.and]: [
+                        literal(`DATE_ADD('${dataFilter.rangeDateValue.startDate}', INTERVAL ${timeZoneSetting} HOUR) <= DATE_ADD(${'Attendance.punchinDate'}, INTERVAL ${timeZoneSetting} HOUR)`),
+                        literal(`DATE_ADD(${'Attendance.punchinDate'}, INTERVAL ${timeZoneSetting} HOUR) <= DATE_ADD('${dataFilter.rangeDateValue.endDate}', INTERVAL ${timeZoneSetting} HOUR)`),
+                    ],
+                },
+                attributes: [
+                    'attendanceId', 
+                    'userId', 
+                    'punchinDate', 
+                    'punchinTime', 
+                    'punchinNote', 
+                    'punchinOffset', 
+                    'punchoutDate', 
+                    'punchoutTime', 
+                    'punchoutNote', 
+                    'punchoutOffset', 
+                    // 'punchInImageUrl', 
+                    // 'punchOutImageUrl',
+                    [
+                        literal(
+                          `CASE 
+                              WHEN ${'Attendance.punchoutTime'} > ${'Attendance.punchinTime'} 
+                                  THEN (${'Attendance.punchoutTime'} - ${'Attendance.punchinTime'}) / 3600000
+                              ELSE 0
+                          END`
+                        ),
+                        'duration',
+                    ],
+                ],
+            });
+            returnResult.result = result;
+            res.status(200).json(returnResult);
+        } catch(error) {
+            res.status(400).json(error);
+            console.log(error)
+        }
+    }
 }
 export default new attendanceController;

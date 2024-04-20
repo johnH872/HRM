@@ -14,4 +14,5 @@ router.route('/SendAttendanceReport').post(attendanceUpload.single('image') , at
 router.route('/GetAllAttendanceReport/:email').get(attendanceController.getAllAttendanceReport);
 router.route('/SaveAttendanceReport').post(attendanceController.saveAttendanceReport);
 router.route('/DeleteAttendanceReport').post(attendanceController.deleteAttendanceReport);
+router.route('/GetAttendanceRange').post(attendanceController.getAttendanceRange);
 export default router;
