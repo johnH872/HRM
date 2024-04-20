@@ -22,7 +22,7 @@
     [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)"
     [rowsPerPageOptions]="[10, 25, dataTable?.length]" [loading]="loading" [globalFilterFields]="['displayName']"
     editMode="row" [(selection)]="selectedAttendances" [rowHover]="true" [scrollable]="true" scrollHeight="700px"
-    dataKey="userId">
+    dataKey="attendanceId">
     <ng-template *ngIf="!isOnlyCurrentUser" pTemplate="caption">
       <div class="flex">
         <span class="p-input-icon-left ml-auto">

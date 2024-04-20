@@ -22,7 +22,7 @@
     [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)" scrollHeight="flex"
     [rowsPerPageOptions]="[10, 25, dataTable?.length]" [loading]="loading" [globalFilterFields]="['leaveTypeName']"
     editMode="row" [(selection)]="selectedLeaveRequests" [rowHover]="true" [scrollable]="true" scrollHeight="700px"
-    dataKey="userId">
+    dataKey="leaveRequestId">
     <ng-template pTemplate="header">
       <tr>
         <th style="width: 4rem">

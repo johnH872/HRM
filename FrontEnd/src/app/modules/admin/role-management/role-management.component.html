@@ -19,7 +19,7 @@
         [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)"
         [rowsPerPageOptions]="[10, 25, dataTable?.length]" [loading]="loading" [globalFilterFields]="['roleName']"
         editMode="row" [(selection)]="selectedRoles" [rowHover]="true" [scrollable]="true" scrollHeight="700px"
-        dataKey="userId">
+        dataKey="roleId">
         <ng-template pTemplate="caption">
             <div class="flex">
                 <span class="p-input-icon-left ml-auto">
