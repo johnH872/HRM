@@ -8,9 +8,7 @@ import { lastValueFrom, Subject, Subscription } from 'rxjs';
 import { NbAuthJWTToken, NbAuthService, NbTokenService } from '@nebular/auth';
 import { Router } from '@angular/router';
 import { ProfileDetail } from 'src/app/modules/shared/models/user.model';
-import { UserManagementService } from 'src/app/modules/admin/user-management/user-management.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ProfileDialogComponent } from 'src/app/modules/admin/profile-dialog/profile-dialog.component';
 import { MessageService } from 'primeng/api';
 import { EmployeeManagementService } from 'src/app/modules/admin/employee-management/employee-management.service';
 import { PunchInOutComponent } from 'src/app/modules/admin/attendance-managment/punch-in-out/punch-in-out.component';
@@ -54,7 +52,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private sidebarService: NbSidebarService,
     private menuService: NbMenuService,
     private themeService: NbThemeService,
-    private userService: UserManagementService,
     private layoutService: LayoutService,
     private breakpointService: NbMediaBreakpointsService,
     private authService: NbAuthService,
@@ -67,39 +64,35 @@ export class HeaderComponent implements OnInit, OnDestroy {
           this.userLoggedIn = token.getPayload();
         }
       });
-
-    this.userService._currentUserDetail.pipe(takeUntil(this.destroy$)).subscribe(detail => {
-      if (detail) this.userDetail = detail;
-    })
   }
 
   async ngOnInit() {
 
     this.menuServiceObservable = this.menuService.onItemClick().subscribe((event) => {
       if (event.item['id'] === 'profile') {
-        const dialogRef = this.dialog.open(ProfileDialogComponent, {
-          width: '600px',
-          height: '100vh',
-          backdropClass: 'custom-backdrop',
-          hasBackdrop: true,
-          data: {
-            isOwnProfile: true,
-            action: 'Edit',
-            model: this.userDetail
-          },
-        });
+        // const dialogRef = this.dialog.open(ProfileDialogComponent, {
+        //   width: '600px',
+        //   height: '100vh',
+        //   backdropClass: 'custom-backdrop',
+        //   hasBackdrop: true,
+        //   data: {
+        //     isOwnProfile: true,
+        //     action: 'Edit',
+        //     model: this.userDetail
+        //   },
+        // });
 
-        dialogRef.afterClosed().subscribe(async res => {
-          if (res) {
-            this.messageService.clear();
-            this.messageService.add({
-              key: 'toast1', severity: 'success', summary: 'Thành công',
-              detail: `Thay đổi thông tin cá nhân thành công!`, life: 2000
-            });
-            var response = await lastValueFrom(this.userService.getUserDetailByUserId(this.userLoggedIn.user.id));
-            if(response.result)this.userDetail = response.result;
-          }
-        })
+        // dialogRef.afterClosed().subscribe(async res => {
+        //   if (res) {
+        //     this.messageService.clear();
+        //     this.messageService.add({
+        //       key: 'toast1', severity: 'success', summary: 'Thành công',
+        //       detail: `Thay đổi thông tin cá nhân thành công!`, life: 2000
+        //     });
+        //     var response = await lastValueFrom(this.userService.getUserDetailByUserId(this.userLoggedIn.user.id));
+        //     if(response.result)this.userDetail = response.result;
+        //   }
+        // })
       }
     })
 

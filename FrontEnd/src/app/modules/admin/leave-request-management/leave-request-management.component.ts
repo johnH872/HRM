@@ -77,6 +77,8 @@ export class LeaveRequestManagementComponent implements OnInit, OnDestroy {
       height: '100vh',
       width: '600px',
       autoFocus: false,
+      backdropClass: 'custom-backdrop',
+      hasBackdrop: true,
       data: {
         model: model,
         listEmployees: this.listEmployees,

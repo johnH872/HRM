@@ -48,7 +48,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { RichInlineEditComponent } from './components/rich-inline-edit/rich-inline-edit.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { MatSliderModule } from '@angular/material/slider';
-import { RatingStarComponent } from './components/rating-star/rating-star.component';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { TableModule } from 'primeng/table';
@@ -171,7 +170,6 @@ const primengModules = [
     ToolbarComponent,
     RichInlineEditComponent,
     ConfirmDialogComponent,
-    RatingStarComponent,
     DropdownFilterComponent,
     EmployeeSearchingComponent,
     NumberFormatPipe,
@@ -227,7 +225,6 @@ const primengModules = [
     ToolbarComponent,
     RichInlineEditComponent,
     ConfirmDialogComponent,
-    RatingStarComponent,
     NgxEchartsModule,
     DropdownFilterComponent,
     EmployeeSearchingComponent,

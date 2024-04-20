@@ -3,7 +3,6 @@ import { Subject, take, takeUntil } from 'rxjs';
 import { TblActionType } from 'src/app/modules/shared/enum/tbl-action-type.enum';
 import { LeaveEntitlementModel } from '../leave-entitlement-management.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MyErrorStateMatcher } from '../../work-management/add-edit-work/add-edit-work.component';
 import { EmployeeModel } from 'src/app/modules/shared/models/employee.model';
 import { LeaveTypeModel } from '../../leave-type-management/leave-type-management.model';
 import { environment } from 'src/enviroments/enviroment';
@@ -32,7 +31,7 @@ export class AddEditLeaveEntitlementComponent implements OnInit, OnDestroy, Afte
   frmLeaveEntitlement: FormGroup;
   isLoading = false;
   isLoadingLeaveType = false;
-  matcher = new MyErrorStateMatcher();
+  // matcher = new MyErrorStateMatcher();
   employeeChosen: EmployeeModel;
   isAssignee: boolean = false;
   isChange: boolean = false;
@@ -174,6 +173,8 @@ export class AddEditLeaveEntitlementComponent implements OnInit, OnDestroy, Afte
     if (this.isChange) {
       this.isChange = false;
       const dialogRef = this.dialog.open(ConfirmModalComponent, {
+        backdropClass: 'custom-backdrop',
+        hasBackdrop: true,
         data: {
           message: "Do you wish to close this popup? You will lose your unsaved data."
         }

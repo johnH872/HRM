@@ -1,0 +1,73 @@
+<div class="dialog-header" fxLayout="row" fxLayoutAlign="start center" mat-dialog-title
+  style="margin: unset; padding: 1px 10px 1px 28px" [nbSpinner]="isLoading">
+  <p-button label="Save" [disabled]="!form.valid" [loading]="isLoading" icon="pi pi-save" (click)="saveData()"
+    styleClass="p-button-sm"></p-button>
+  <div fxLayout="row" fxLayoutAlign="end center" class="ml-auto">
+    <button mat-icon-button aria-label="Close the dialog" (click)="closeDialog()" class="ml-auto">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</div>
+<mat-divider></mat-divider>
+<mat-dialog-content class="mat-typography" style="height: 100%; overflow: auto;">
+  <form [formGroup]="form" class="container">
+    <div class="p-fluid p-grid p-formgrid">
+      <div class="p-field p-col-12 p-md-2">
+        <label class="fs-14 fw-500" for="roleName">Role Name</label>
+        <input class="p-inputtext-sm" formControlName="roleName" id="roleName" type="roleName" pInputText />
+        <mat-error  *ngIf="
+          form?.controls?.roleName?.errors &&
+          (form?.controls?.roleName?.dirty ||
+            form?.controls?.roleName?.touched)
+          ">{{ form?.controls?.roleName["errorMessage"] }}</mat-error>
+      </div>
+    </div>
+    <div class="p-fluid p-grid p-formgrid">
+      <div class="p-field p-col-12 p-md-2">
+        <label class="fs-14 fw-500" for="displayName">Display Name</label>
+        <input class="p-inputtext-sm" formControlName="displayName" id="displayName" type="displayName" pInputText />
+        <mat-error *ngIf="
+          form?.controls?.displayName?.errors &&
+          (form?.controls?.displayName?.dirty ||
+            form?.controls?.displayName?.touched)
+          ">{{ form?.controls?.displayName["errorMessage"] }}</mat-error>
+      </div>
+    </div>
+    <div class="p-fluid p-grid p-formgrid">
+      <div class="p-field p-col-12 p-md-2">
+        <label class="fs-14 fw-500" for="roleDescription">Role Description</label>
+        <textarea class="p-inputtext-sm" rows="5" pInputTextarea formControlName="text"
+          formControlName="roleDescription" id="roleDescription" type="roleDescription"></textarea>
+        <mat-error  *ngIf="
+          form?.controls?.roleDescription?.errors &&
+          (form?.controls?.roleDescription?.dirty ||
+            form?.controls?.roleDescription?.touched)
+          ">{{ form?.controls?.roleDescription["errorMessage"] }}</mat-error>
+      </div>
+    </div>
+    <div class="p-fluid p-grid p-formgrid">
+      <div class="p-field p-col-12 p-md-2">
+        <label class="fs-14 fw-500" for="defaultScreen">Default Screen</label>
+        <input class="p-inputtext-sm" formControlName="defaultScreen" id="defaultScreen" type="defaultScreen"
+          pInputText />
+        <mat-error *ngIf="
+          form?.controls?.defaultScreen?.errors &&
+          (form?.controls?.defaultScreen?.dirty ||
+            form?.controls?.defaultScreen?.touched)
+          ">{{ form?.controls?.defaultScreen["errorMessage"] }}</mat-error>
+      </div>
+    </div>
+    <div class="p-fluid p-grid p-formgrid">
+      <div class="p-field p-col-12 p-md-2">
+        <label class="fs-14 fw-500" for="priority">Priority</label>
+        <p-inputNumber class="p-inputtext-sm" formControlName="priority" id="priority" type="priority"
+          inputId="integeronly" mode="decimal" [min]="0" [max]="100"> </p-inputNumber>
+        <mat-error *ngIf="
+          form?.controls?.priority?.errors &&
+          (form?.controls?.priority?.dirty ||
+            form?.controls?.priority?.touched)
+          ">{{ form?.controls?.priority["errorMessage"] }}</mat-error>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>

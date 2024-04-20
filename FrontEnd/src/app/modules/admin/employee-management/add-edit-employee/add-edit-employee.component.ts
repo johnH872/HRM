@@ -11,7 +11,6 @@ import { TblActionType } from 'src/app/modules/shared/enum/tbl-action-type.enum'
 import { EmployeeModel } from 'src/app/modules/shared/models/employee.model';
 import { EmployeeManagementService } from '../employee-management.service';
 import { Helper } from 'src/app/modules/shared/utility/Helper';
-import { UserManagementService } from '../../user-management/user-management.service';
 import { RoleModel } from 'src/app/modules/shared/models/role-model';
 import { RoleManagementService } from 'src/app/modules/shared/services/role-management.service';
 import { DatastateService } from '../../datastate-management/datastate.service';
@@ -39,7 +38,6 @@ export class AddEditEmployeeComponent implements OnInit, OnDestroy {
   constructor(
     public dialModalRef: MatDialogRef<AddEditEmployeeComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private userService: UserManagementService,
     private frmBuilder: RxFormBuilder,
     private authService: NbAuthService,
     private toast: NbToastrService,

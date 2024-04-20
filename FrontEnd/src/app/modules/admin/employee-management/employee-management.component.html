@@ -12,10 +12,10 @@
       <!-- <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import"
         class="mr-2 inline-block"></p-fileUpload>
       <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button> -->
-      <button pButton label="Clear" class="p-button-outlined p-button-sm" icon="pi pi-filter-slash"
+      <button pButton label="Clear" class="p-button-outlined p-button-sm" icon="pi pi-filter-slash mr-2"
         (click)="clear(table)"></button>
       <button pButton label="Refresh" class="p-button-outlined p-button-sm" icon="pi pi-refresh"
-        style="margin-left: 10px;" (click)="reset()"></button>
+        (click)="reset()"></button>
     </ng-template>
   </p-toolbar>
   <p-table #table styleClass="p-datatable-sm" [value]="dataTable" [paginator]="true" [rows]="10"
@@ -101,7 +101,6 @@
           <!-- <p-sortIcon field="nationality"></p-sortIcon> -->
         </th>
         <th pSortableColumn="nationality" style="min-width:200px">
-          Controlling
         </th>
       </tr>
     </ng-template>

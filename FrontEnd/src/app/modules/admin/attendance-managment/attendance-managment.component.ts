@@ -74,6 +74,8 @@ export class AttendanceManagmentComponent implements OnInit, OnDestroy {
       disableClose: true,
       height: '100vh',
       width: '600px',
+      backdropClass: 'custom-backdrop',
+      hasBackdrop: true,
       autoFocus: false,
       data: {
         model: model,

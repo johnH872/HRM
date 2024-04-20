@@ -3,9 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from './admin.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { DatastateManagementComponent } from './datastate-management/datastate-management.component';
-import { ReportManagementComponent } from './report-management/report-management.component';
-import { UserManagementComponent } from './user-management/user-management.component';
-import { WorkManagementComponent } from './work-management/work-management.component';
 import { EmployeeManagementComponent } from './employee-management/employee-management.component';
 import { LeaveTypeManagementComponent } from './leave-type-management/leave-type-management.component';
 import { LeaveEntitlementManagamentComponent } from './leave-entitlement-managament/leave-entitlement-managament.component';
@@ -14,6 +11,7 @@ import { PunchInOutComponent } from './attendance-managment/punch-in-out/punch-i
 import { LeaveRequestManagementComponent } from './leave-request-management/leave-request-management.component';
 import { ReportScheduleManagementComponent } from './report-schedule-management/report-schedule-management.component';
 import { AttendanceReportManagementComponent } from './attendance-managment/attendance-report-management/attendance-report-management.component';
+import { RoleManagementComponent } from './role-management/role-management.component';
 
 const routes: Routes = [{
   path: '',
@@ -24,20 +22,8 @@ const routes: Routes = [{
       component: DashboardComponent,
     },
     {
-      path: 'user',
-      component: UserManagementComponent,
-    },
-    {
       path: 'datastate',
       component: DatastateManagementComponent,
-    },
-    {
-      path: 'report',
-      component: ReportManagementComponent,
-    },
-    {
-      path: 'work',
-      component: WorkManagementComponent,
     },
     {
       path: 'employee',
@@ -66,6 +52,10 @@ const routes: Routes = [{
     {
       path: 'attendance-report',
       component: AttendanceReportManagementComponent,
+    },
+    {
+      path: 'roles',
+      component: RoleManagementComponent,
     },
     {
       path: '',

@@ -70,19 +70,9 @@ export const MENU_ITEMS: NbMenuItem[] = [
     icon: 'settings-2-outline',
     children: [
       {
-        title: 'DataStates',
-        icon: 'bookmark-outline',
-        link: '/admin/datastate',
-      },
-      {
         title: 'Roles',
-        icon: 'bookmark-outline',
-        link: '/admin/role',
-      },
-      {
-        title: 'Permissions',
-        icon: 'bookmark-outline',
-        link: '/admin/permission',
+        icon: 'award-outline',
+        link: '/admin/roles',
       },
     ],
   },

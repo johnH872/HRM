@@ -16,7 +16,8 @@ export default (sequelize, DataTypes) => {
     roleId: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUID
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
     },
     roleName: {
       type: DataTypes.STRING

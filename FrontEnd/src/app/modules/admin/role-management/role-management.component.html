@@ -1,0 +1,95 @@
+<div class="card w-100">
+    <p-toolbar styleClass="mb-4 gap-2">
+        <ng-template pTemplate="left">
+            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-button-sm mr-2"
+                (click)="addEditRole()"></button>
+            <button pButton pRipple [label]="Delete" icon="pi pi-trash" class="p-button-danger p-button-sm"
+                (click)="deleteRole()"
+                [disabled]="!selectedRoles || !selectedRoles?.length"></button>
+        </ng-template>
+
+        <ng-template pTemplate="right">
+            <button pButton label="Clear" class="p-button-outlined p-button-sm" icon="pi pi-filter-slash mr-2"
+                (click)="clear(table)"></button>
+            <button pButton label="Refresh" class="p-button-outlined p-button-sm" icon="pi pi-refresh"
+                (click)="reset()"></button>
+        </ng-template>
+    </p-toolbar>
+    <p-table #table styleClass="p-datatable-sm" [value]="dataTable" [paginator]="true" [rows]="10"
+        [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)"
+        [rowsPerPageOptions]="[10, 25, dataTable?.length]" [loading]="loading" [globalFilterFields]="['roleName']"
+        editMode="row" [(selection)]="selectedRoles" [rowHover]="true" [scrollable]="true" scrollHeight="700px"
+        dataKey="userId">
+        <ng-template pTemplate="caption">
+            <div class="flex">
+                <span class="p-input-icon-left ml-auto">
+                    <i class="pi pi-search"></i>
+                    <input pInputText class="p-inputtext-sm" type="text"
+                        (input)="table.filterGlobal($event.target.value, 'contains')"
+                        placeholder="Search by role name" />
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 4rem">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th pSortableColumn="roleName" style="min-width:150px">
+                    Role Name
+                    <p-columnFilter type="text" field="roleName" display="menu"></p-columnFilter>
+                    <p-sortIcon field="roleName"></p-sortIcon>
+                </th>
+                <th pSortableColumn="roleDescription" style="min-width:150px">
+                    Role Description
+                    <p-columnFilter type="date" field="roleDescription" display="menu"></p-columnFilter>
+                </th>
+                <th pSortableColumn="displayName" style="min-width:150px">
+                    Display Name
+                    <p-columnFilter type="date" field="displayName" display="menu"></p-columnFilter>
+                </th>
+                <th pSortableColumn="defaultScreen" style="min-width:150px">
+                    Default Screen
+                    <p-columnFilter type="date" field="defaultScreen" display="menu"></p-columnFilter>
+                </th>
+                <th pSortableColumn="priority" style="min-width:150px">
+                    Priority
+                    <p-columnFilter type="date" field="priority" display="menu"></p-columnFilter>
+                    <p-sortIcon field="priority"></p-sortIcon>
+                </th>
+                <th pSortableColumn="isShow" style="min-width:150px">
+                    is Show
+                    <p-columnFilter type="date" field="isShow" display="menu"></p-columnFilter>
+                </th>
+                <th style="min-width:150px">
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-role let-editing="editing" let-ri="rowIndex">
+            <tr [pEditableRow]="role">
+                <td>
+                    <p-tableCheckbox [value]="role"></p-tableCheckbox>
+                </td>
+                <td>{{ role?.roleName }}</td>
+                <td>{{ role?.roleDescription }}</td>
+                <td>{{ role?.displayName }}</td>
+                <td>{{ role?.defaultScreen }}</td>
+                <td>{{ role?.priority }}</td>
+                <td>{{ role?.isShow }}</td>
+                <td>
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-sm p-button-success mr-2"
+                        (click)="addEditRole(role)"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-sm p-button-warning"
+                        (click)="deleteRole(role)"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorleft">
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="20">No record found.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

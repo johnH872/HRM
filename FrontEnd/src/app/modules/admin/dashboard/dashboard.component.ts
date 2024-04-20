@@ -3,10 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MessageService } from 'primeng/api';
 import { Subject } from 'rxjs';
 import { NgxTableComponent } from '../../shared/components/ngx-table/ngx-table.component';
-import { UserProfileComponent } from '../work-management/user-profile/user-profile.component';
-import { WorkService } from '../work-management/work.service';
 import { PaymentService } from './payment.service';
-import { AddEditWorkComponent } from '../work-management/add-edit-work/add-edit-work.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,7 +23,6 @@ export class DashboardComponent {
     private paymentService: PaymentService,
     private messageService: MessageService,
     private dialog: MatDialog,
-    private workService: WorkService
   ) {
 
   }
@@ -192,34 +188,5 @@ export class DashboardComponent {
     // this.paymentService.getAllPayment().subscribe(e => {
     //   this.ngxTable.setData(e);
     // })
-  }
-
-  openUserDetail(row) {
-    const dialogRef = this.dialog.open(UserProfileComponent, {
-      height: 'auto',
-      width: '600px',
-      backdropClass: 'custom-backdrop',
-      hasBackdrop: true,
-      data: {
-        userId: row.payerId
-      },
-    });
-  }
-
-  openWorkDetail(row) {
-    this.workService.getWorkByWorkId(row.workId).subscribe(res => {
-      if(res.result) {
-        const dialogRef = this.dialog.open(AddEditWorkComponent, {
-          height: 'auto',
-          width: '900px',
-          backdropClass: 'custom-backdrop',
-          hasBackdrop: true,
-          data: {
-            model: res.result,
-            action: 'Edit'
-          },
-        });
-      }
-    })
   }
 }

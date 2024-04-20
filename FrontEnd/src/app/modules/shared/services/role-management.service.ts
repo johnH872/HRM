@@ -17,4 +17,12 @@ export class RoleManagementService {
   getRoles(): Observable<ReturnResult<RoleModel[]>> {
     return this.http.get<ReturnResult<RoleModel[]>>(`${this.baseUrl}/GetRoles`);
   }
+
+  saveRole(model: RoleModel): Observable<ReturnResult<RoleModel[]>> {
+    return this.http.post<ReturnResult<RoleModel[]>>(`${this.baseUrl}/SaveRole`, model);
+  }
+
+  deleteRoles(removeIds: String[]): Observable<ReturnResult<RoleModel[]>> {
+    return this.http.post<ReturnResult<RoleModel[]>>(`${this.baseUrl}/DeleteRoles`, removeIds);
+  }
 }

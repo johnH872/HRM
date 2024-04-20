@@ -137,6 +137,8 @@ export class AddEditLeaveRequestComponent implements OnInit, OnDestroy, AfterVie
     if (this.isChange) {
       this.isChange = false;
       const dialogRef = this.dialog.open(ConfirmModalComponent, {
+        backdropClass: 'custom-backdrop',
+        hasBackdrop: true,
         data: {
           message: "Do you wish to close this popup? You will lose your unsaved data."
         }
