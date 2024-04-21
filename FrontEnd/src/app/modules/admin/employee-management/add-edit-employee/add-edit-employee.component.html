@@ -12,12 +12,12 @@
 <mat-dialog-content class="mat-typography">
   <form [formGroup]="frmEmployee" class="container">
     <div class="row">
-      <div *ngIf="action == 0" class="col-12 fs-14 p-md-2">
+      <div *ngIf="action == 0" class="col-12 fs-14 p-md-1">
         <div class="alert alert-primary" role="alert" style="margin: unset;">
           If password and confirm password are empty, the system will auto generate a new password.
         </div>
       </div>
-      <div class="p-fluid p-grid p-formgrid p-md-2">
+      <div class="p-fluid p-grid p-formgrid p-md-1">
         <div class="p-field p-col-12">
           <label class="fs-14 fw-500" for="roles">Roles</label>
           <p-multiSelect id="roles" class="p-inputtext-sm" [options]="listRoles" formControlName="roleId"
@@ -29,7 +29,7 @@
             {{ frmEmployee?.controls?.roleId["errorMessage"] }}</mat-error>
         </div>
       </div>
-      <div class="p-fluid p-grid p-formgrid p-md-2">
+      <div class="p-fluid p-grid p-formgrid p-md-1">
         <div class="p-field p-col-12">
           <label class="fs-14 fw-500" for="email">Email</label>
           <input class="p-inputtext-sm" formControlName="email" id="email" type="email" pInputText />
@@ -41,7 +41,7 @@
         </div>
       </div>
 
-      <div class="p-fluid p-grid p-formgrid p-md-2">
+      <div class="p-fluid p-grid p-formgrid p-md-1">
         <div class="p-field p-col-12">
           <label class="fs-14 fw-500" for="password">{{action == 1 ? 'New Password' : 'Password'}}</label>
           <p-password class="p-inputtext-sm" formControlName="password" id="password" [toggleMask]="true"
@@ -54,7 +54,7 @@
         </div>
       </div>
 
-      <div class="p-fluid p-grid p-formgrid p-md-2">
+      <div class="p-fluid p-grid p-formgrid p-md-1">
         <div class="p-field p-col-12">
           <label class="fs-14 fw-500" for="confirmPassword">{{action == 1 ? 'Confirm New Password' : 'Confirm Password'}}</label>
           <p-password class="p-inputtext-sm" formControlName="confirmPassword" id="confirmPassword" [toggleMask]="true"
@@ -67,7 +67,7 @@
         </div>
       </div>
 
-      <div class="p-fluid p-grid p-formgrid p-md-2">
+      <div class="p-fluid p-grid p-formgrid p-md-1">
         <div class="p-field p-col-12">
           <label class="fs-14 fw-500" for="firstName">First Name</label>
           <input class="p-inputtext-sm" formControlName="firstName" id="firstName" type="firstName" pInputText />
@@ -79,7 +79,7 @@
         </div>
       </div>
 
-      <div class="p-fluid p-grid p-formgrid p-md-2">
+      <div class="p-fluid p-grid p-formgrid p-md-1">
         <div class="p-field p-col-12">
           <label class="fs-14 fw-500" for="middleName">Middle Name</label>
           <input required class="p-inputtext-sm" formControlName="middleName" id="middleName" type="middleName"
@@ -92,7 +92,7 @@
         </div>
       </div>
 
-      <div class="p-fluid p-grid p-formgrid p-md-2">
+      <div class="p-fluid p-grid p-formgrid p-md-1">
         <div class="p-field p-col-12">
           <label class="fs-14 fw-500" for="lastName">Last Name</label>
           <input required class="p-inputtext-sm" formControlName="lastName" id="lastName" type="lastName" pInputText />
@@ -104,7 +104,7 @@
         </div>
       </div>
 
-      <div class="p-fluid p-grid p-formgrid p-md-2">
+      <div class="p-fluid p-grid p-formgrid p-md-1">
         <div class="p-field p-col-12">
           <label class="fs-14 fw-500" for="gender">Gender</label>
           <div class="custom-radio-group">
@@ -122,7 +122,7 @@
         </div>
       </div>
 
-      <div class="p-fluid p-grid p-formgrid p-md-2">
+      <div class="p-fluid p-grid p-formgrid p-md-1">
         <div class="p-field p-col-12">
           <label class="fs-14 fw-500" for="phoneNumber">Phone Number</label>
           <input required class="p-inputtext-sm" formControlName="phoneNumber" id="phoneNumber" type="phoneNumber"
@@ -135,10 +135,11 @@
         </div>
       </div>
 
-      <div class="p-fluid p-grid p-formgrid p-md-2">
+      <div class="p-fluid p-grid p-formgrid p-md-1">
         <div class="p-field p-col-12">
           <label class="fs-14 fw-500" for="birth">Birth</label>
-          <p-calendar class="p-inputtext-sm" formControlName="birth" [showIcon]="true" id="birth" dateFormat="dd/mm/yy"></p-calendar>
+          <p-calendar class="p-inputtext-sm" formControlName="birth" [showIcon]="true" id="birth"
+            dateFormat="dd/mm/yy"></p-calendar>
 
           <mat-error *ngIf="
               frmEmployee?.controls?.birth?.errors &&
@@ -148,10 +149,11 @@
         </div>
       </div>
 
-      <div class="p-fluid p-grid p-formgrid p-md-2">
+      <div class="p-fluid p-grid p-formgrid p-md-1">
         <div class="p-field p-col-12">
           <label class="fs-14 fw-500" for="dateStartContract">Date Start Contract</label>
-          <p-calendar class="p-inputtext-sm" formControlName="dateStartContract" id="dateStartContract" [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
+          <p-calendar class="p-inputtext-sm" formControlName="dateStartContract" id="dateStartContract"
+            [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
           <mat-error *ngIf="
               frmEmployee?.controls?.dateStartContract?.errors &&
               (frmEmployee?.controls?.dateStartContract?.dirty || 
@@ -159,13 +161,13 @@
             {{ frmEmployee?.controls?.dateStartContract["errorMessage"] }}</mat-error>
         </div>
       </div>
-      
-      <div class="p-fluid p-grid p-formgrid p-md-2">
+
+      <div class="p-fluid p-grid p-formgrid p-md-1">
         <div class="p-field p-col-12">
           <label class="fs-14 fw-500" for="nationality">Nationality</label>
-          <p-dropdown (onChange)="onChooseNationality($event)" class="p-inputtext-sm" [disabled]="isGettingCountries" [options]="countriesData"
-            formControlName="nationality" optionLabel="name" optionValue="name" [filter]="true" filterBy="name"
-            [showClear]="true" placeholder="Select a Country">
+          <p-dropdown (onChange)="onChooseNationality($event)" class="p-inputtext-sm" [disabled]="isGettingCountries"
+            [options]="countriesData" formControlName="nationality" optionLabel="name" optionValue="name"
+            [filter]="true" filterBy="name" [showClear]="true" placeholder="Select a Country">
             <ng-template pTemplate="selectedItem">
               <div class="flex align-items-center gap-2 dropdown-items-with-img" *ngIf="selectedCountry">
                 <img [src]="selectedCountry.img" style="width: 27px" />
@@ -179,11 +181,6 @@
               </div>
             </ng-template>
           </p-dropdown>
-          <mat-error *ngIf="
-              frmEmployee?.controls?.phoneNumber?.errors &&
-              (frmEmployee?.controls?.phoneNumber?.dirty || 
-              frmEmployee?.controls?.phoneNumber?.touched)">
-            {{ frmEmployee?.controls?.phoneNumber["errorMessage"] }}</mat-error>
         </div>
       </div>
 
@@ -210,7 +207,7 @@
         </mat-form-field>
       </div> -->
 
-      <div class="p-fluid p-grid p-formgrid p-md-2">
+      <div class="p-fluid p-grid p-formgrid p-md-1">
         <div class="p-field p-col-12">
           <label class="fs-14 fw-500" for="jobTitle">Job Title</label>
           <input required class="p-inputtext-sm" formControlName="jobTitle" id="jobTitle" type="jobTitle" pInputText />

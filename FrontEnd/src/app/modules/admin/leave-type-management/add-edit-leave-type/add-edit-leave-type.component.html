@@ -1,14 +1,12 @@
-<div class="d-flex flex-wrap" mat-dialog-title style="margin: unset; padding: 1px 10px 1px 28px"
-  [nbSpinner]="isLoading">
-  <button mat-button color="primary" (click)="saveData()" [disabled]="!frmLeaveType?.valid">
-    <mat-icon>save</mat-icon>Save
-  </button>
-  <button mat-button color="primary" (click)="closeDialog()">
-    <mat-icon>clear</mat-icon>Cancel
-  </button>
-  <button mat-icon-button aria-label="Close the dialog" (click)="closeDialog()" class="ml-auto">
-    <mat-icon>close</mat-icon>
-  </button>
+<div class="dialog-header" fxLayout="row" fxLayoutAlign="start center" mat-dialog-title
+  style="margin: unset; padding: 1px 10px 1px 28px" [nbSpinner]="isLoading">
+  <p-button label="Save" [disabled]="!frmLeaveType.valid" [loading]="isLoading" icon="pi pi-save" (click)="saveData()"
+    styleClass="p-button-sm"></p-button>
+  <div fxLayout="row" fxLayoutAlign="end center" class="ml-auto">
+    <button mat-icon-button aria-label="Close the dialog" (click)="closeDialog()" class="ml-auto">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
 </div>
 <mat-divider></mat-divider>
 <mat-dialog-content class="mat-typography">

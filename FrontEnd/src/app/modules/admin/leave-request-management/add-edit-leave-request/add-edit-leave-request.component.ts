@@ -72,7 +72,7 @@ export class AddEditLeaveRequestComponent implements OnInit, OnDestroy, AfterVie
         if (token.isValid()) {
           this.currentUser = token.getPayload();
         }
-    });
+      });
     // this.permissionService.isGranted('view', 'accept-leave-request').subscribe(e => this.hasEditPermission = e);
     this.dataStateService.getDataStateByType("LEAVE_REQUEST").pipe(takeUntil(this.destroy$)).subscribe(resp => {
       if (resp.result) {
@@ -176,8 +176,17 @@ export class AddEditLeaveRequestComponent implements OnInit, OnDestroy, AfterVie
     this.employeeChosen = null;
   }
 
-  getAssignee(data: EmployeeModel) {
-    if (data && data !== this.employeeChosen) {
+  onChangeEmployee(e: any) {
+    if(e) {
+      this.frmLeaveRequest.get('userId').setValue(e.value);
+      var currentEmpIndex = this.listEmployees.findIndex(x => x.userId === e.value);
+      if(currentEmpIndex != -1 ) this.employeeChosen = this.listEmployees[currentEmpIndex];
+      this.getAssignee(this.employeeChosen, true);
+    }
+  }
+
+  getAssignee(data: EmployeeModel, forceToCheck: boolean = false) {
+    if (data && (data !== this.employeeChosen || forceToCheck)) {
       this.employeeChosen = data;
       this.leaveEntitlementService.getLeaveEntitlementByEmployeeId(this.employeeChosen?.userId).pipe(takeUntil(this.destroy$)).subscribe(resp => {
         if (resp.result) {
@@ -252,39 +261,39 @@ export class AddEditLeaveRequestComponent implements OnInit, OnDestroy, AfterVie
   }
 
   autoCalculateWorkingHour(startDate: Date | string, endDate: Date | string) {
-    let numberOfHour: number  = 0;
+    let numberOfHour: number = 0;
     startDate = new Date(startDate);
     endDate = new Date(endDate);
-    if(startDate && endDate) {
+    if (startDate && endDate) {
       const diffHour = Math.abs(startDate.getTime() - endDate.getTime()) / 36e5;
-      if(this.datePipe.transform(startDate, 'longDate') ==  this.datePipe.transform(endDate, 'longDate')) //In a day case
+      if (this.datePipe.transform(startDate, 'longDate') == this.datePipe.transform(endDate, 'longDate')) //In a day case
       {
-        if(diffHour >= 5.5) {
-            numberOfHour = diffHour - 1.5;
-            if(numberOfHour > 8) numberOfHour = 8;
+        if (diffHour >= 5.5) {
+          numberOfHour = diffHour - 1.5;
+          if (numberOfHour > 8) numberOfHour = 8;
         }
         else {
           numberOfHour = 3;
         }
       }
       else {
-          const dayOfWorking = (diffHour / 24) | 0; //get mainly working time
-          if(dayOfWorking < 1) numberOfHour = 8;
-          else {
-            numberOfHour = dayOfWorking * 8;
-            let workHour = diffHour - dayOfWorking * 24;
-            if(workHour > 9) {
-              workHour -= 9;
-              if(workHour >= 5.5) {
-                workHour = workHour - 1.5;
-                if(workHour > 8) workHour = 8;
-              }
-              else {
-                workHour = 3;
-              }
-              numberOfHour += workHour;
+        const dayOfWorking = (diffHour / 24) | 0; //get mainly working time
+        if (dayOfWorking < 1) numberOfHour = 8;
+        else {
+          numberOfHour = dayOfWorking * 8;
+          let workHour = diffHour - dayOfWorking * 24;
+          if (workHour > 9) {
+            workHour -= 9;
+            if (workHour >= 5.5) {
+              workHour = workHour - 1.5;
+              if (workHour > 8) workHour = 8;
             }
+            else {
+              workHour = 3;
+            }
+            numberOfHour += workHour;
           }
+        }
       }
     }
     return numberOfHour;

@@ -31,7 +31,7 @@ export class AddEditEmployeeComponent implements OnInit, OnDestroy {
   frmEmployee: FormGroup;
   isLoading = false;
   editorOptions = QuillConfiguration;
-  user;
+  user: any;
   listRoles: RoleModel[] = [];
   listCountries: any;
   configFilterContries: FilterConfig;
@@ -99,7 +99,7 @@ export class AddEditEmployeeComponent implements OnInit, OnDestroy {
         return resp.map(item => {
           const countryName = this.frmEmployee?.get('nationality')?.value;
           var returnObj = Object.assign({ name: `${item?.name?.common}`, img: item?.flags?.png });
-          if (countryName.toLowerCase() == item?.name?.common.toLowerCase()) {
+          if (countryName?.toLowerCase() == item?.name?.common?.toLowerCase()) {
             this.frmEmployee?.get('nationality')?.setValue(item?.name?.common);
             this.selectedCountry = returnObj;
           }
@@ -143,17 +143,6 @@ export class AddEditEmployeeComponent implements OnInit, OnDestroy {
             key: 'toast1', severity: 'success', summary: 'Success',
             detail: `Save employee successfully`, life: 2000
           });
-
-          if (this.action == 0 && isEmptyPassword) {
-            // this.userService.sendEmailResetPassword(resp.result.id).subscribe(emailResp => {
-            //   if (emailResp.result) {
-            //     this.toast.success(
-            //       `Please check email ${resp.result.email} to reset password`,
-            //       "Success")
-            //   }
-            // })
-          }
-
           this.dialModalRef.close(resp.result);
         } else {
           this.toast.danger(resp.message, 'Failure');
