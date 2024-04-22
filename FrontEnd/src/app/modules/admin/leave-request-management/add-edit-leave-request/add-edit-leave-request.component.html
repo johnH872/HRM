@@ -58,7 +58,8 @@
           <label class="fs-14 fw-500" for="employee">Employee</label>
           <p-dropdown (onChange)="onChangeEmployee($event)" class="p-inputtext-sm" [options]="listEmployees"
             formControlName="userId" optionValue="userId" [filter]="true" filterBy="firstName,middleName,lastName,email" [showClear]="true"
-            placeholder="Select an Employee">
+            placeholder="Select an Employee"
+            [readonly]="action === 0 ? false : true">
             <ng-template pTemplate="selectedItem">
               <div class="flex align-items-center gap-2 dropdown-items-with-img" *ngIf="employeeChosen">
                 <nb-user class="custom-nb-user-small" size="small"
@@ -138,7 +139,8 @@
           [options]="employeeListLeaveEntitlement"
           [(ngModel)]="leaveEntitlementChoosen ? leaveEntitlementChoosen?.leaveEntitlementId : leaveEntitlementDefault"
           placeholder="Choose Leave Entitlement" aria-describedby="leaveEntitlementId-help"
-          optionValue="leaveEntitlementId" (onChange)="selectionLeaveEntitlement($event)">
+          optionValue="leaveEntitlementId" (onChange)="selectionLeaveEntitlement($event)"
+          optionDisabled="disabled">
           <ng-template pTemplate="selectedItem">
             <div *ngIf="leaveEntitlementChoosen">
               {{leaveEntitlementChoosen?.LeaveType?.leaveTypeName}} ({{leaveEntitlementChoosen?.usableLeave -
@@ -148,8 +150,7 @@
           <ng-template let-leaveEntitlement pTemplate="item">
             <div fxLayout="row" fxLayoutAlign="space-between center">
               <div>
-                {{leaveEntitlement?.LeaveType?.leaveTypeName}} ({{leaveEntitlement?.usableLeave -
-                leaveEntitlement?.usedLeave}})
+                {{leaveEntitlement?.LeaveType?.leaveTypeName}} ({{leaveEntitlement?.usableLeave - leaveEntitlement?.usedLeave}})
               </div>
               <div *ngIf="leaveEntitlement?.LeaveType?.isPaidSalary">
                 <span class="badge badge-pill badge-primary" style="font-size: 12px"
