@@ -150,9 +150,18 @@ export class AddEditAttendanceComponent implements OnInit, OnDestroy, AfterViewI
     this.employeeChosen = null;
   }
 
-  getAssignee(data: EmployeeModel) {
-    if (data && data !== this.employeeChosen) {
+  getAssignee(data: EmployeeModel, forceToCheck: boolean = false) {
+    if (data && (data !== this.employeeChosen || forceToCheck)) {
       this.employeeChosen = data;
+    }
+  }
+
+  onChangeEmployee(e: any) {
+    if(e) {
+      this.frmAttendance.get('userId').setValue(e.value);
+      var currentEmpIndex = this.listEmployees.findIndex(x => x.userId === e.value);
+      if(currentEmpIndex != -1 ) this.employeeChosen = this.listEmployees[currentEmpIndex];
+      this.getAssignee(this.employeeChosen, true);
     }
   }
 }

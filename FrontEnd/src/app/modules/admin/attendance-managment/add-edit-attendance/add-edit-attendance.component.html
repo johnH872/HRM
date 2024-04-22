@@ -1,8 +1,7 @@
 <div class="d-flex flex-wrap" mat-dialog-title style="margin: unset; padding: 1px 10px 1px 28px"
   [nbSpinner]="isLoading">
-  <button mat-button color="primary" (click)="saveData()" [disabled]="!frmAttendance.valid">
-    <mat-icon fontSet=" material-icons-outlined">save</mat-icon>Save
-  </button>
+  <p-button label="Save" [disabled]="!frmAttendance?.valid" [loading]="isLoading" icon="pi pi-save"
+    (click)="saveData()" styleClass="p-button-sm"></p-button>
   <div fxLayout="row" fxLayoutAlign="end center" class="ml-auto">
     <button mat-icon-button aria-label="Close the dialog" (click)="closeDialog()" class="ml-auto">
       <mat-icon>close</mat-icon>
@@ -13,14 +12,37 @@
 <mat-dialog-content class="mat-typography" style="height: 100%; overflow: auto;">
   <form [formGroup]="frmAttendance" class="container">
     <div class="p-fluid p-grid p-formgrid">
-      <div class="p-field p-col-12">
+      <!-- <div class="p-field p-col-12">
         <app-employee-searching required [banks]="listEmployees" (userSelect)="getAssignee($event)"
           [currentUser]="employeeChosen" [readonly]="true">
         </app-employee-searching>
+      </div> -->
+      <div class="p-fluid p-grid p-formgrid p-md-1">
+        <div class="p-field p-col-12">
+          <label class="fs-14 fw-500" for="employee">Employee</label>
+          <p-dropdown (onChange)="onChangeEmployee($event)" class="p-inputtext-sm" [options]="listEmployees"
+            formControlName="userId" optionValue="userId" [filter]="true" filterBy="firstName,middleName,lastName,email" [showClear]="true"
+            placeholder="Select an Employee">
+            <ng-template pTemplate="selectedItem">
+              <div class="flex align-items-center gap-2 dropdown-items-with-img" *ngIf="employeeChosen">
+                <nb-user class="custom-nb-user-small" size="small"
+                  [name]="(employeeChosen?.firstName || '') + ' '  + (employeeChosen?.middleName || '') + ' ' + (employeeChosen?.lastName||'')"
+                  [title]="employeeChosen.email" [showTitle]="true" [picture]=" employeeChosen?.avatarUrl"></nb-user>
+              </div>
+            </ng-template>
+            <ng-template let-employee pTemplate="item">
+              <div class="flex align-items-center gap-2 dropdown-items-with-img">
+                <nb-user class="custom-nb-user-small" size="small"
+                  [name]="(employee?.firstName || '') + ' '  + (employee?.middleName || '') + ' ' + (employee?.lastName||'')"
+                  [title]="employee.email" [showTitle]="true" [picture]=" employee?.avatarUrl"></nb-user>
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </div>
       </div>
-      <div class="p-field p-col-12 p-md-2">
-        <label for="punchin">Punchin Date</label>
-        <p-calendar formControlName="punchinDate" inputId="punchin" [(ngModel)]="defaultPunchinDate"
+      <div class="p-field p-col-12 p-md-1">
+        <label class="fs-14 fw-500" for="punchin">Punchin Date</label>
+        <p-calendar class="p-inputtext-sm" formControlName="punchinDate" inputId="punchin" [(ngModel)]="defaultPunchinDate"
           aria-describedby="punchin-help" [showIcon]="true" [showClear]="true"
           [readonlyInput]="true" [showTime]="true" [hourFormat]="24"></p-calendar>
         <small id="punchin-help" *ngIf="
@@ -29,13 +51,13 @@
             frmAttendance?.controls?.punchinDate?.touched)
           ">{{ frmAttendance?.controls?.punchinDate["errorMessage"] }}</small>
       </div>
-      <div class="p-field p-col-12 p-md-2">
-        <label for="punchinNote">Punchin Note</label>
-        <input formControlName="punchinNote" id="punchinNote" type="punchinNote" pInputText />
+      <div class="p-field p-col-12 p-md-1">
+        <label class="fs-14 fw-500" for="punchinNote">Punchin Note</label>
+        <input class="p-inputtext-sm" formControlName="punchinNote" id="punchinNote" type="punchinNote" pInputText />
       </div>
-      <div class="p-field p-col-12 p-md-2">
-        <label for="punchout">Punchout Date</label>
-        <p-calendar formControlName="punchoutDate" inputId="punchout" [(ngModel)]="defaultPunchoutDate"
+      <div class="p-field p-col-12 p-md-1">
+        <label class="fs-14 fw-500" for="punchout">Punchout Date</label>
+        <p-calendar class="p-inputtext-sm" formControlName="punchoutDate" inputId="punchout" [(ngModel)]="defaultPunchoutDate"
           aria-describedby="punchout-help" [showIcon]="true" [showClear]="true"
           [readonlyInput]="true" [showTime]="true" [hourFormat]="24"></p-calendar>
         <small id="punchout-help" *ngIf="
@@ -44,9 +66,9 @@
             frmAttendance?.controls?.punchoutDate?.touched)
           ">{{ frmAttendance?.controls?.punchoutDate["errorMessage"] }}</small>
       </div>
-      <div class="p-field p-col-12 p-md-2">
-        <label for="punchoutNote">Punchout Note</label>
-        <input formControlName="punchoutNote" id="punchoutNote" type="punchoutNote" pInputText />
+      <div class="p-field p-col-12 p-md-1">
+        <label class="fs-14 fw-500" for="punchoutNote">Punchout Note</label>
+        <input class="p-inputtext-sm" formControlName="punchoutNote" id="punchoutNote" type="punchoutNote" pInputText />
       </div>
     </div>
   </form>
