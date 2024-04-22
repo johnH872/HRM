@@ -8,10 +8,9 @@
     </ng-template>
 
     <ng-template pTemplate="right">
-      <button pButton label="Clear" class="p-button-outlined p-button-sm" icon="pi pi-filter-slash"
+      <button pButton label="Clear" class="p-button-outlined p-button-sm mr-2" icon="pi pi-filter-slash"
         (click)="clear(table)"></button>
-      <button pButton label="Refresh" class="p-button-outlined p-button-sm" icon="pi pi-refresh"
-        style="margin-left: 10px;" (click)="reset()"></button>
+      <button pButton label="Refresh" class="p-button-outlined p-button-sm" icon="pi pi-refresh" (click)="reset()"></button>
     </ng-template>
   </p-toolbar>
   <p-table styleClass="p-datatable-sm" #table [value]="dataTable" [paginator]="true" [rows]="10"

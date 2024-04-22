@@ -2,10 +2,9 @@
   <!-- <p-toast></p-toast> -->
   <p-toolbar *ngIf="!isOnlyCurrentUser" styleClass="mb-4 gap-2">
     <ng-template pTemplate="left">
-      <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-button-sm"
+      <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-button-sm mr-2"
         (click)="addEditAttendance()"></button>
-      <button pButton pRipple [label]="Delete" icon="pi pi-trash" class="p-button-danger p-button-sm"
-        style="margin-left: 10px;" (click)="deleteSelectedAttendance()"
+      <button pButton pRipple [label]="Delete" icon="pi pi-trash" class="p-button-danger p-button-sm" (click)="deleteSelectedAttendance()"
         [disabled]="!selectedAttendances || !selectedAttendances?.length"></button>
     </ng-template>
 
@@ -13,9 +12,9 @@
       <!-- <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import"
           class="mr-2 inline-block"></p-fileUpload>
         <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button> -->
-      <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash mr-2"
+      <button pButton label="Clear" class="p-button-outlined p-button-sm  mr-2" icon="pi pi-filter-slash"
         (click)="clear(table)"></button>
-      <button pButton label="Refresh" class="p-button-outlined" icon="pi pi-refresh" (click)="reset()"></button>
+      <button pButton label="Refresh" class="p-button-outlined  p-button-sm" icon="pi pi-refresh" (click)="reset()"></button>
     </ng-template>
   </p-toolbar>
   <p-table #table styleClass="p-datatable-sm" [value]="dataTable" [paginator]="true" [rows]="10"

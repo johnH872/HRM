@@ -94,11 +94,11 @@ export class PunchInOutWebcamComponent implements OnInit, OnDestroy {
         this.canvas.getContext('2d').clearRect(0, 0, this.canvas.width, this.canvas.height);
         if (this.detection) {
           const bestMatch = faceMatcher.findBestMatch(this.detection.descriptor);
-          this.resizedDetections = faceapi.resizeResults(
-            this.detection,
-            this.displaySize
-          );
-          const box = this.resizedDetections.detection.box;
+          // this.resizedDetections = faceapi.resizeResults(
+          //   this.detection,
+          //   this.displaySize
+          // );
+          // const box = this.resizedDetections.detection.box;
           if (!this.detectedMaps.has(bestMatch.label)) this.detectedMaps.set(bestMatch.label, 0);
           else if (bestMatch.distance <= 0.45) {
             var existedCount = this.detectedMaps.get(bestMatch.label);
@@ -114,6 +114,7 @@ export class PunchInOutWebcamComponent implements OnInit, OnDestroy {
                 if (res.result) {
                   this.isOpeningDialog = true;
                   this.dialog.open(PunchCardComponent, {
+                    disableClose: true,
                     width: 'auto',
                     height: 'auto',
                     backdropClass: 'custom-backdrop',
@@ -134,6 +135,7 @@ export class PunchInOutWebcamComponent implements OnInit, OnDestroy {
           if (this.cancelClickCouting == 3) {
             this.isOpeningDialog = true;
             this.dialog.open(AlertCardComponent, {
+              disableClose: true,
               width: 'auto',
               height: 'auto',
               backdropClass: 'custom-backdrop',
@@ -151,6 +153,7 @@ export class PunchInOutWebcamComponent implements OnInit, OnDestroy {
                 var captureImg = this.canvas.toDataURL("image/png");
                 this.canvas.toBlob((blob: any) => {
                   this.dialog.open(ReportAttendanceDialogComponent, {
+                    disableClose: true,
                     width: 'auto',
                     height: 'auto',
                     backdropClass: 'custom-backdrop',
@@ -174,8 +177,8 @@ export class PunchInOutWebcamComponent implements OnInit, OnDestroy {
               }
             });
           }
-          const drawBox = new faceapi.draw.DrawBox(box, { label: bestMatch.toString(true) });
-          drawBox.draw(this.canvas);
+          // const drawBox = new faceapi.draw.DrawBox(box, { label: bestMatch.toString(true) });
+          // drawBox.draw(this.canvas);
         }
       }, 300);
     });
