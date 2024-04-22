@@ -19,10 +19,16 @@ class authController {
 
         const user = await dbContext.User.findOne({
             where: { email: email },
-            include: dbContext.Role
+            include: {
+                model: dbContext.Role,
+                attributes: ['roleId','roleName','displayName'],
+                through: {
+                    attributes: [],
+                }
+            }
         });
 
-        var roles = user.Roles.map(x => x.roleId);
+        // var roles = user.Roles.map(x => {x.roleId);
 
         //compare password with hashed password
         if (user && (await compare(password, user.password))) {
@@ -37,7 +43,7 @@ class authController {
                     jobTitle: user.jobTitle,
                     ownerId: user.ownerId,
                     avatarUrl: user.avatarUrl,
-                    roles: roles
+                    roles: user.Roles
                 }, 10 * 60 * 60);
             res.status(200).json({ accessToken });
         } else {

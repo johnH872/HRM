@@ -2,10 +2,10 @@
   <!-- <p-toast></p-toast> -->
   <p-toolbar styleClass="mb-4 gap-2">
     <ng-template pTemplate="left">
-      <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-button-sm mr-2"
+      <button *ngIf="isAdmin" pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-button-sm mr-2"
         (click)="addEditEmployee()"></button>
-      <button pButton pRipple [label]="Delete" icon="pi pi-trash" class="p-button-danger p-button-sm"
-        (click)="deleteSelectedEmployee()" [disabled]="!selectedEmployees || !selectedEmployees?.length"></button>
+      <button *ngIf="isAdmin" pButton pRipple [label]="Delete" icon="pi pi-trash" class="p-button-danger p-button-sm"
+        (click)="deleteEmployee()" [disabled]="!selectedEmployees || !selectedEmployees?.length"></button>
     </ng-template>
 
     <ng-template pTemplate="right">
@@ -105,7 +105,7 @@
         <td>
           <!-- <img [alt]="" [src]="employee?.avatarUrl" width="32" style="vertical-align: middle" />
           <b (click)="openEmployeeDetail(employee)" style="cursor: pointer;">{{ employee?.displayName }}</b> -->
-          <nb-user (click)="openEmployeeDetail(employee.manager)" class="custom-nb-user-small" size="small" [name]=" employee?.displayName" title="Engineer" [showTitle]="false"
+          <nb-user (click)="openEmployeeDetail(employee)" class="custom-nb-user-small" size="small" [name]=" employee?.displayName" title="Engineer" [showTitle]="false"
             [picture]="employee?.avatarUrl"></nb-user>
         </td>
         <td>{{ employee?.email }}</td>
@@ -130,7 +130,7 @@
         <td>
           <button pButton pRipple icon="pi pi-pencil" class="p-button-success p-button-sm mr-2"
             (click)="addEditEmployee(employee)"></button>
-          <button pButton pRipple icon="pi pi-trash" class="p-button-warning p-button-sm mr-2"
+          <button *ngIf="isAdmin" pButton pRipple icon="pi pi-trash" class="p-button-warning p-button-sm mr-2"
             (click)="deleteEmployee(employee)"></button>
           <button pButton pRipple icon="pi pi-camera" class="p-button-info p-button-sm mr-2"
             (click)="addEmployeeFaceRecog(employee)"></button>

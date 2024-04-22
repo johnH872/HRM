@@ -38,7 +38,9 @@ export class AddEditEmployeeComponent implements OnInit, OnDestroy {
   countriesData: any[] = [];
   isGettingCountries: boolean = false;
   selectedCountry: any;
-
+  listEmployees: EmployeeModel[];
+  selectedEmployee: EmployeeModel;
+  isAdmin: boolean = false;
   genders: any[] = [
     { name: 'Male', key: 'Male' },
     { name: 'Female', key: 'Female' },
@@ -60,9 +62,12 @@ export class AddEditEmployeeComponent implements OnInit, OnDestroy {
   ) {
     this.action = data?.action;
     this.employeeModel = data?.model ?? new EmployeeModel();
-    this.authService.onTokenChange().subscribe((token: NbAuthJWTToken) => {
+    this.listEmployees = data?.listEmployees ?? [];
+    this.isAdmin = data.isAdmin;
+
+    this.authService.onTokenChange().pipe(takeUntil(this.destroy$)).subscribe((token: NbAuthJWTToken) => {
       if (token.isValid()) {
-        this.user = token.getPayload();
+        this.user = token.getPayload().user;
       }
     });
     this.configFilterContries = {
@@ -82,6 +87,7 @@ export class AddEditEmployeeComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loadCountriesData();
     this.frmEmployee = this.frmBuilder.formGroup(EmployeeModel, this.employeeModel);
+    this.loadAllEmployeeData();
     this.frmEmployee?.get('birth')?.setValue(this.employeeModel?.birth ? new Date(this.employeeModel?.birth) : null);
     this.frmEmployee?.get('dateStartContract')?.setValue(this.employeeModel.dateStartContract ? new Date(this.employeeModel?.dateStartContract) : null);
     this.dialModalRef.updatePosition({ right: '0', });
@@ -90,6 +96,25 @@ export class AddEditEmployeeComponent implements OnInit, OnDestroy {
         this.listRoles = [...res.result];
       }
     });
+    
+    // disbale uneditable fields
+    if(this.action === TblActionType.Edit) {
+      this.frmEmployee.get('email').disable();
+      if(!this.isAdmin) {
+        this.frmEmployee.get('roleId').disable();
+        this.frmEmployee.get('dateStartContract').disable();
+      }
+    }
+  }
+
+  async loadAllEmployeeData() {
+    if (this.listEmployees?.length <= 0) {
+      var respListEmployee = await lastValueFrom(this.employeeService.getAllEmployee());
+      if (respListEmployee.result) {
+        this.listEmployees = respListEmployee.result;
+        this.onChangeEmployee({value: this.employeeModel.ownerId})
+      }
+    }
   }
 
   async loadCountriesData() {
@@ -153,10 +178,17 @@ export class AddEditEmployeeComponent implements OnInit, OnDestroy {
     }
   }
 
+  onChangeEmployee(e: any) {
+    if(e) {
+      this.frmEmployee.get('ownerId').setValue(e.value);
+      var currentEmpIndex = this.listEmployees.findIndex(x => x.userId === e.value);
+      if(currentEmpIndex != -1 ) this.selectedEmployee = this.listEmployees[currentEmpIndex];
+    }
+  }
+
   onChooseNationality(e) {
     if (e) {
       this.frmEmployee?.get('nationality')?.setValue(e.value);
-      // this.selectedCountry = e.value;
       let selectedIndex = this.countriesData.findIndex(x => x.name.toLowerCase() === e.value.toLowerCase());
       if (selectedIndex != -1) this.selectedCountry = this.countriesData[selectedIndex];
     }

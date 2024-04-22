@@ -31,6 +31,29 @@
       </div>
       <div class="p-fluid p-grid p-formgrid p-md-1">
         <div class="p-field p-col-12">
+          <label class="fs-14 fw-500" for="employee">Managed By</label>
+          <p-dropdown (onChange)="onChangeEmployee($event)" class="p-inputtext-sm" [options]="listEmployees"
+            formControlName="ownerId" optionValue="userId" [filter]="true" filterBy="firstName,middleName,lastName,email" [showClear]="true"
+            placeholder="Select an Employee">
+            <ng-template pTemplate="selectedItem">
+              <div class="flex align-items-center gap-2 dropdown-items-with-img" *ngIf="selectedEmployee">
+                <nb-user class="custom-nb-user-small" size="small"
+                  [name]="(selectedEmployee?.firstName || '') + ' '  + (selectedEmployee?.middleName || '') + ' ' + (selectedEmployee?.lastName||'')"
+                  [title]="selectedEmployee.email" [showTitle]="true" [picture]=" selectedEmployee?.avatarUrl"></nb-user>
+              </div>
+            </ng-template>
+            <ng-template let-employee pTemplate="item">
+              <div class="flex align-items-center gap-2 dropdown-items-with-img">
+                <nb-user class="custom-nb-user-small" size="small"
+                  [name]="(employee?.firstName || '') + ' '  + (employee?.middleName || '') + ' ' + (employee?.lastName||'')"
+                  [title]="employee.email" [showTitle]="true" [picture]=" employee?.avatarUrl"></nb-user>
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </div>
+      </div>
+      <div class="p-fluid p-grid p-formgrid p-md-1">
+        <div class="p-field p-col-12">
           <label class="fs-14 fw-500" for="email">Email</label>
           <input class="p-inputtext-sm" formControlName="email" id="email" type="email" pInputText />
           <mat-error *ngIf="

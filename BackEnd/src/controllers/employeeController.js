@@ -35,11 +35,12 @@ class employeeController {
         var returnResult = new ReturnResult();
         try {
             var roles = req.body;
+            var roleIds = roles.map(x => x.roleId);
             var maxPriority = await dbContext.Role.min(
                 'priority',
                 {
                     where: {
-                        roleId: roles
+                        roleId: roleIds
                     }
                 });
 
@@ -59,7 +60,7 @@ class employeeController {
                     }
                 ],
                 where: {
-                    '$Roles.priority$': { [Op.lte]: maxPriority }
+                    '$Roles.priority$': { [Op.gte]: maxPriority }
                 },
                 order: [
                     [dbContext.Role, 'priority', 'ASC']
@@ -219,6 +220,23 @@ class employeeController {
             var employeeId = req.params.id;
             const employee = await dbContext.User.findByPk(employeeId);
             if (employee) result.result = employee;
+        } catch (error) {
+            console.error(error);
+        }
+        return res.status(200).json(result);
+    }
+
+    async deleteEmployee(req, res, next) {
+        var result = new ReturnResult;
+        try {
+            var ids = req.body;
+            result.result = false;
+            const removedEmployees = await dbContext.User.destroy({
+                where: {
+                    userId: ids
+                }
+            });
+            if (removedEmployees) result.result = true;
         } catch (error) {
             console.error(error);
         }

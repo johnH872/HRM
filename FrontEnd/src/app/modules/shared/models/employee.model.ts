@@ -42,4 +42,5 @@ export class EmployeeModel {
     
     Roles: RoleModel[];
     displayName: string;
+    manager: EmployeeModel;
 }

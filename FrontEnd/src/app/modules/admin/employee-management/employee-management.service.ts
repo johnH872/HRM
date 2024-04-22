@@ -33,4 +33,8 @@ export class EmployeeManagementService {
   getOwnersByEmployeeId(employeeId: string): Observable<ReturnResult<EmployeeModel[]>> {
     return this.http.get<ReturnResult<EmployeeModel[]>>(`${this.baseUrl}/GetOwnersByEmployeeId?employeeId=${employeeId}`);
   }
+
+  deleteEmployees(ids: String[]): Observable<ReturnResult<EmployeeModel[]>> {
+    return this.http.post<ReturnResult<EmployeeModel[]>>(`${this.baseUrl}/DeleteEmployee`, ids);
+  }
 }
