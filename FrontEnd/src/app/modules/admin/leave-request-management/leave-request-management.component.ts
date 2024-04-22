@@ -10,6 +10,7 @@ import { TblActionType } from '../../shared/enum/tbl-action-type.enum';
 import { Table } from 'primeng/table';
 import { DatastateService } from '../datastate-management/datastate.service';
 import { DataStateModel } from '../datastate-management/data-state.model';
+import { NbToastrService } from '@nebular/theme';
 
 @Component({
   selector: 'app-leave-request-management',
@@ -33,6 +34,7 @@ export class LeaveRequestManagementComponent implements OnInit, OnDestroy {
     private employeeService: EmployeeManagementService,
     private dialog: MatDialog,
     private dataStateService: DatastateService,
+    private toast: NbToastrService,
   ) {
     this.employeeService.getAllEmployee().pipe(takeUntil(this.destroy$)).subscribe(res => {
       if (res.result) {
@@ -136,6 +138,19 @@ export class LeaveRequestManagementComponent implements OnInit, OnDestroy {
       var findName = this.lstLeaveRequestState?.find(x => x.dataStateId === state);
       if (findName) return findName?.dataStateName;
       else return '';
+    }
+  }
+
+  saveStatusInline(statusChange, row) {
+    if (statusChange && row) {
+      row.status = statusChange?.value;
+      this.leaveRequestService.saveLeaveRequest(row).pipe(takeUntil(this.destroy$)).subscribe(resp => {
+        if (resp.result) {
+          this.toast.success(`Change status successfully`, 'Success');
+        }
+      }).add(() => {
+        this.refreshData()
+      });
     }
   }
 }

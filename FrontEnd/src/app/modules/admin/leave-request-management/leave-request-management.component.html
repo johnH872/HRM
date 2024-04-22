@@ -116,9 +116,43 @@
 </div>
 
 <ng-template #status let-row="row">
-  <div class="badge badge-pill" [style.background-color]="handleDisplayStatus(row?.status, true)">
+  <!-- <div class="badge badge-pill" [style.background-color]="handleDisplayStatus(row.status, true)">
     <div style="color: white; ">
-      {{handleDisplayStatus(row?.status)}}
+      {{handleDisplayStatus(row.status)}}
     </div>
-  </div>
+  </div> -->
+  <mat-select [(ngModel)]="row.status" matTooltip="Click to edit" (selectionChange)="saveStatusInline($event, row)">
+    <mat-select-trigger>
+      <div class="badge badge-pill" [style.background-color]="handleDisplayStatus(row.status, true)">
+        <div style="color: white; ">
+          {{handleDisplayStatus(row.status)}}
+        </div>
+      </div>
+    </mat-select-trigger>
+    <mat-option *ngFor="let item of lstLeaveRequestState" [value]="item?.dataStateId">
+      <div class="badge badge-pill" [style.background-color]="item?.colorCode">
+        <div style="color: white; ">
+          {{item?.dataStateName}}
+        </div>
+      </div>
+    </mat-option>
+  </mat-select>
+  <!-- <p-dropdown class="p-inputtext-sm" [options]="lstLeaveRequestState"
+    [(ngModel)]="row.status" optionLabel="dataStateName" optionValue="dataStateId"
+    placeholder="Status">
+    <ng-template pTemplate="selectedItem">
+      <div class="badge badge-pill" [style.background-color]="handleDisplayStatus(row.status, true)">
+        <div style="color: white; ">
+          {{handleDisplayStatus(row.status)}}
+        </div>
+      </div>
+    </ng-template>
+    <ng-template let-leaveEntitlement pTemplate="item">
+      <div class="badge badge-pill" [style.background-color]="leaveEntitlement?.colorCode">
+        <div style="color: white; ">
+          {{leaveEntitlement?.dataStateName}}
+        </div>
+      </div>
+    </ng-template>
+  </p-dropdown> -->
 </ng-template>
