@@ -1,4 +1,5 @@
 import { ReturnResult } from "../models/DTO/returnResult.js";
+import 'dotenv/config';
 import db from '../models/index.js'
 const dbContext = await db;
 import path from 'path';
@@ -7,6 +8,7 @@ import * as faceapi from '@vladmandic/face-api'
 import { Op, where, literal } from "sequelize";
 import { uploadImage } from "../utils/cloundinary.js";
 import { leaveRequestStatus } from "../models/enums/leaveRequestStatus.js";
+import { socketIO } from "../app.js";
 const { Canvas, Image, ImageData } = canvas
 faceapi.env.monkeyPatch({ Canvas, Image, ImageData })
 class attendanceController {
@@ -216,6 +218,7 @@ class attendanceController {
                     });
                 if (employeeAttendance) returnResult.result = true;
             }
+            if(returnResult.result) socketIO.emit(process.env.PUNCH_IN_OUT, isPunchIn ? 'PUNCHIN' : 'PUNCHOUT');
             res.status(200).json(returnResult);
         } catch (error) {
             res.status(400).json(error);

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ReactiveFormConfig } from '@rxweb/reactive-form-validators';
 // import Redis from 'ioredis';
 import { HttpClient } from '@angular/common/http';
+import { SocketService } from './socket.service';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +16,7 @@ export class AppComponent implements OnInit {
   messages: string[] = [];
 
   constructor(
-    // private socketService: SocketService,
+    private socketService: SocketService,
     private httpClient: HttpClient
   ) {
 
@@ -61,9 +62,7 @@ export class AppComponent implements OnInit {
     // this.socketService.setupSocketConnection();
     // // Save facematcher data
     // this.socketService.socket.on('message', (data: any) => {
-    //   this.httpClient.post('../assets/traning_model/faceMatcher.json', JSON.stringify(data)).subscribe(res => {
-    //     console.log('Updated file');
-    //   })
+    //   console.log('data');
     // });
   }
 

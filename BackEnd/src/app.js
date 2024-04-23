@@ -2,8 +2,16 @@ import express, { json } from 'express';
 import 'dotenv/config';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import http from 'http';
+import { Server } from 'socket.io';
 
 const app = express();
+const server = http.createServer(app);
+const socketIO = new Server(server, {
+    cors: {
+        origins: ['http://localhost:4200/'],
+    }
+});
 import route from './routes/indexRoutes.js';
 import { Sequelize } from 'sequelize';
 import dbConfigs from './config/db.config.js';
@@ -26,8 +34,8 @@ sequelize.authenticate()
 app.use(json());
 app.use(cors());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
-app.use('/assets/images',express.static('assets/images'));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/assets/images', express.static('assets/images'));
 
 //base route    
 route(app);
@@ -37,5 +45,19 @@ route(app);
 generationLeaveEntitlementJob.start();
 balanceLeaveEntitlementJob.start();
 
-export default app;
+// app.get('/socket.io', (req, res) => {
+//     res.send('<h1>Hey Socket.io</h1>');
+// });
+
+socketIO.on('connection', (socket) => {
+    console.log('a user connected');
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
+});
+
+export {
+    server,
+    socketIO
+};
 
