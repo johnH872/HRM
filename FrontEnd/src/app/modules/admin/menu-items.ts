@@ -74,6 +74,11 @@ export const MENU_ITEMS: NbMenuItem[] = [
         icon: 'award-outline',
         link: '/admin/roles',
       },
+      {
+        title: 'Settings',
+        icon: 'award-outline',
+        link: '/admin/settings',
+      },
     ],
   },
 ];

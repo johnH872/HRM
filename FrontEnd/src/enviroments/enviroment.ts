@@ -20,6 +20,7 @@ export const environment = {
     apiUser: apiUrl + '/user',
     apiDataStateManagement: apiUrl + '/DataStateManagement',
     apiRoleManagement: apiUrl + '/RoleManagement',
+    apiSettingManagement: apiUrl + '/SettingManagement',
 
     // API FEATURES
     apiEmployeeManagement: apiUrl + '/EmployeeManagement',
