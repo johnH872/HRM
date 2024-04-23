@@ -1,0 +1,39 @@
+<div class="d-flex flex-wrap" mat-dialog-title style="margin: unset; padding: 1px 10px 1px 28px"
+  [nbSpinner]="isLoading">
+  <p-button label="Save" [disabled]="!frmSetting?.valid" [loading]="isLoading" icon="pi pi-save" (click)="saveData()"
+    styleClass="p-button-sm"></p-button>
+  <div fxLayout="row" fxLayoutAlign="end center" class="ml-auto">
+    <button mat-icon-button aria-label="Close the dialog" (click)="closeDialog()" class="ml-auto">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</div>
+<mat-divider></mat-divider>
+<mat-dialog-content class="mat-typography" style="height: 100%; overflow: auto;">
+  <form [formGroup]="frmSetting" class="container">
+    <div class="p-fluid p-grid p-formgrid">
+      <div class="p-field p-col-12 p-md-1">
+        <label class="fs-14 fw-500" for="key">Key</label>
+        <input class="p-inputtext-sm" formControlName="key" id="key" type="key" aria-describedby="key-help" pInputText />
+        <small id="key-help" *ngIf="
+          frmSetting?.controls?.key?.errors &&
+          (frmSetting?.controls?.key?.dirty ||
+            frmSetting?.controls?.key?.touched)
+          ">{{ frmSetting?.controls?.key["errorMessage"] }}</small>
+      </div>
+      <div class="p-field p-col-12 p-md-1">
+        <label class="fs-14 fw-500" for="key">Group</label>
+        <input class="p-inputtext-sm" formControlName="group" id="group" type="group" aria-describedby="group-help" pInputText />
+        <small id="group-help" *ngIf="
+          frmSetting?.controls?.group?.errors &&
+          (frmSetting?.controls?.group?.dirty ||
+            frmSetting?.controls?.group?.touched)
+          ">{{ frmSetting?.controls?.group["errorMessage"] }}</small>
+      </div>
+      <div class="p-field p-col-12 p-md-1">
+        <label class="fs-14 fw-500" for="key">Value</label>
+        <input class="p-inputtext-sm" formControlName="value" id="value" type="value" pInputText />
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>

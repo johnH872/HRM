@@ -12,6 +12,7 @@ import { LeaveRequestManagementComponent } from './leave-request-management/leav
 import { ReportScheduleManagementComponent } from './report-schedule-management/report-schedule-management.component';
 import { AttendanceReportManagementComponent } from './attendance-managment/attendance-report-management/attendance-report-management.component';
 import { RoleManagementComponent } from './role-management/role-management.component';
+import { SettingManagementComponent } from './setting-management/setting-management.component';
 
 const routes: Routes = [{
   path: '',
@@ -56,6 +57,10 @@ const routes: Routes = [{
     {
       path: 'roles',
       component: RoleManagementComponent,
+    },
+    {
+      path: 'settings',
+      component: SettingManagementComponent,
     },
     {
       path: '',

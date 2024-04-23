@@ -30,6 +30,8 @@ import { EmployeeDetailDialogComponent } from './employee-management/employee-de
 import { NgCircleProgressModule } from 'ng-circle-progress';
 import { RoleManagementComponent } from './role-management/role-management.component';
 import { AddEditRoleComponent } from './role-management/add-edit-role/add-edit-role.component';
+import { SettingManagementComponent } from './setting-management/setting-management.component';
+import { AddEditSettingComponent } from './setting-management/add-edit-setting/add-edit-setting.component';
 
 
 @NgModule({
@@ -58,7 +60,9 @@ import { AddEditRoleComponent } from './role-management/add-edit-role/add-edit-r
     AddEditAttendanceComponent,
     EmployeeDetailDialogComponent,
     RoleManagementComponent,
-    AddEditRoleComponent
+    AddEditRoleComponent,
+    SettingManagementComponent,
+    AddEditSettingComponent
   ],
   imports: [
     ThemeModule,
