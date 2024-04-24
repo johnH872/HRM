@@ -41,7 +41,7 @@ class LeaveRequestController {
             const model = req.body;
             var leaveDateFrom = new Date(model?.leaveDateFrom);
             var leaveDateTo = new Date(model?.leaveDateTo);
-            model.numberOfHour = calculateWorkingHour(leaveDateFrom, leaveDateTo);
+            model.numberOfHour = await calculateWorkingHour(leaveDateFrom, leaveDateTo);
             if (model.leaveRequestId === null || model.leaveRequestId === 0) { // Add new
                 model.status = leaveRequestStatus.WAITING;
                 const saveLeaveRequest = await dbContext.LeaveRequest.create({
@@ -189,7 +189,7 @@ async function handleLeaveEntitlementForLeaveRequest(userId, leaveEntitlementId)
     }
 }
 
-function calculateWorkingHour(startDate, endDate, timeZone = 7) {
+async function calculateWorkingHour(startDate, endDate, timeZone = 7) {
     let workingHour = 0;
     try {
         if (startDate && endDate) {
@@ -197,12 +197,22 @@ function calculateWorkingHour(startDate, endDate, timeZone = 7) {
             endDate = new Date(endDate);
             startDate.setHours(startDate.getHours() + timeZone);
             endDate.setHours(endDate.getHours() + timeZone);
+
+            var lstWorkingTimeSettings = await dbContext.Setting.findAll({
+                where: {
+                    group: 'WORKING_TIME'
+                }
+            });
+            var morningStart = lstWorkingTimeSettings?.find(item => item.key === 'MORNING_START')?.value?.split(':');
+            var morningEnd = lstWorkingTimeSettings?.find(item => item.key === 'MORNING_END')?.value?.split(':');
+            var afternoonStart = lstWorkingTimeSettings?.find(item => item.key === 'AFTERNOON_START')?.value?.split(':');
+            var afternoonEnd = lstWorkingTimeSettings?.find(item => item.key === 'AFTERNOON_END')?.value?.split(':');
             while (startDate.getTime() <= endDate.getTime()) {
                 // Check is not Saturday or Sunday
                 if (startDate.getDay() === 6 || startDate.getDay() === 0) {
                     startDate.setDate(startDate.getDate() + 1);
-                    startDate.setHours(8);
-                    startDate.setMinutes(30);
+                    startDate.setHours(Number(morningStart[0]) ?? 8);
+                    startDate.setMinutes(Number(morningStart[1]) ?? 30);
                     continue;
                 }
 
@@ -212,10 +222,10 @@ function calculateWorkingHour(startDate, endDate, timeZone = 7) {
                 estEndDate.setMinutes(30);
                 
                 if (endDate.getTime() <= estEndDate.getTime()) estEndDate = endDate;
-                workingHour += calculateWorkingHourInDay(startDate, estEndDate);
+                workingHour += await calculateWorkingHourInDay(startDate, estEndDate);
                 startDate.setDate(startDate.getDate() + 1);
-                startDate.setHours(8);
-                startDate.setMinutes(30);
+                startDate.setHours(Number(morningStart[0]) ?? 8);
+                startDate.setMinutes(Number(morningStart[1]) ?? 30);
             }
         }
     } catch (ex) {
@@ -224,22 +234,32 @@ function calculateWorkingHour(startDate, endDate, timeZone = 7) {
     return Math.round(workingHour);
 }
 
-function calculateWorkingHourInDay(startDate, endDate, timeZoneSetting = 7) {
+async function calculateWorkingHourInDay(startDate, endDate, timeZoneSetting = 7) {
     let workingHour = 0;
     try {
+        var lstWorkingTimeSettings = await dbContext.Setting.findAll({
+            where: {
+                group: 'WORKING_TIME'
+            }
+        });
+        var morningStart = lstWorkingTimeSettings?.find(item => item.key === 'MORNING_START')?.value?.split(':');
+        var morningEnd = lstWorkingTimeSettings?.find(item => item.key === 'MORNING_END')?.value?.split(':');
+        var afternoonStart = lstWorkingTimeSettings?.find(item => item.key === 'AFTERNOON_START')?.value?.split(':');
+        var afternoonEnd = lstWorkingTimeSettings?.find(item => item.key === 'AFTERNOON_END')?.value?.split(':');
         if (startDate.getUTCDate() === endDate.getUTCDate()) {
             var morningStartTime = new Date(startDate);
-            morningStartTime.setHours(8 + timeZoneSetting);
-            morningStartTime.setMinutes(30);
+            morningStartTime.setHours((Number(morningStart[0]) ?? 8) + timeZoneSetting);
+            morningStartTime.setMinutes(Number(morningStart[1]) ?? 30);
             var morningEndTime = new Date(startDate);
-            morningEndTime.setHours(12 + timeZoneSetting);
+            morningEndTime.setHours((Number(morningEnd[0]) ?? 12) + timeZoneSetting);
+            morningEndTime.setMinutes(Number(morningEnd[1]) ?? 0);
             const morningWorkingHours = getOverlapDuration(morningStartTime, morningEndTime, startDate, endDate);
             var afternoonStartTime = new Date(startDate);
-            afternoonStartTime.setHours(13 + timeZoneSetting);
+            afternoonStartTime.setHours((Number(afternoonStart[0]) ?? 13) + timeZoneSetting);
+            afternoonStartTime.setMinutes(Number(afternoonStart[1]) ?? 0);
             var afternoonEndTime = new Date(startDate);
-            afternoonEndTime.setDate(afternoonEndTime.getDate() + 1);
-            afternoonEndTime.setHours(0);
-            afternoonEndTime.setMinutes(30);
+            afternoonEndTime.setHours((Number(afternoonEnd[0]) ?? 17) + timeZoneSetting);
+            afternoonEndTime.setMinutes(Number(afternoonEnd[1]) ?? 30);
             const afternoonWorkingHours = getOverlapDuration(afternoonStartTime, afternoonEndTime, startDate, endDate);
             const totalWorkingHours = morningWorkingHours + afternoonWorkingHours;
             workingHour = totalWorkingHours;

@@ -18,6 +18,8 @@ import { LeaveEntitlementManagamentService } from '../../leave-entitlement-manag
 import { DatePipe } from '@angular/common';
 import { NbAccessChecker } from '@nebular/security';
 import { LeaveRequestStatus } from 'src/app/modules/shared/enum/leave-request-status.enum';
+import { SettingModel } from '../../setting-management/setting-management.model';
+import { SettingManagementService } from '../../setting-management/setting-management.service';
 
 @Component({
   selector: 'app-add-edit-leave-request',
@@ -49,6 +51,8 @@ export class AddEditLeaveRequestComponent implements OnInit, OnDestroy, AfterVie
   defaultStartTime: Date = new Date();
   defaultEndTime: Date = new Date();
 
+  lstWorkingTimeSettings: SettingModel[] = [];
+
   constructor(
     public dialModalRef: MatDialogRef<AddEditLeaveRequestComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -63,6 +67,7 @@ export class AddEditLeaveRequestComponent implements OnInit, OnDestroy, AfterVie
     private leaveEntitlementService: LeaveEntitlementManagamentService,
     private datePipe: DatePipe,
     private permissionService: NbAccessChecker,
+    private settingService: SettingManagementService,
   ) {
     this.action = data?.action ?? TblActionType.Add;
     this.leaveRequestModel = data?.model ?? new LeaveRequestModel();
@@ -74,9 +79,15 @@ export class AddEditLeaveRequestComponent implements OnInit, OnDestroy, AfterVie
         }
       });
     // this.permissionService.isGranted('view', 'accept-leave-request').subscribe(e => this.hasEditPermission = e);
-    this.dataStateService.getDataStateByType("LEAVE_REQUEST").pipe(takeUntil(this.destroy$)).subscribe(resp => {
+    this.dataStateService.getDataStateByType('LEAVE_REQUEST').pipe(takeUntil(this.destroy$)).subscribe(resp => {
       if (resp.result) {
         this.listStatus = resp.result;
+      }
+    });
+
+    this.settingService.getSettingByGroup('WORKING_TIME').pipe(takeUntil(this.destroy$)).subscribe(resp => {
+      if (resp.result) {
+        this.lstWorkingTimeSettings = resp.result;
       }
     });
   }
@@ -218,18 +229,23 @@ export class AddEditLeaveRequestComponent implements OnInit, OnDestroy, AfterVie
     if (e) {
       this.defaultStartTime = new Date();
       this.defaultEndTime = new Date();
+      var morningStart = this.lstWorkingTimeSettings?.find(item => item.key === 'MORNING_START')?.value?.split(':');
+      var morningEnd = this.lstWorkingTimeSettings?.find(item => item.key === 'MORNING_END')?.value?.split(':');
+      var afternoonStart = this.lstWorkingTimeSettings?.find(item => item.key === 'AFTERNOON_START')?.value?.split(':');
+      var afternoonEnd = this.lstWorkingTimeSettings?.find(item => item.key === 'AFTERNOON_END')?.value?.split(':');
+
       switch (e.value) {
         case 'Entire day':
-          this.defaultStartTime.setHours(8, 30, 0);
-          this.defaultEndTime.setHours(17, 30, 0);
+          this.defaultStartTime.setHours(Number(morningStart[0]) ?? 8, Number(morningStart[1]) ?? 30, 0);
+          this.defaultEndTime.setHours(Number(afternoonEnd[0]) ?? 17, Number(afternoonEnd[1]) ?? 30, 0);
           break;
         case 'Morning':
-          this.defaultStartTime.setHours(8, 30, 0);
-          this.defaultEndTime.setHours(13, 30, 0);
+          this.defaultStartTime.setHours(Number(morningStart[0]) ?? 8, Number(morningStart[1]) ?? 30, 0);
+          this.defaultEndTime.setHours(Number(morningEnd[0]) ?? 12, Number(morningEnd[1]) ?? 0, 0);
           break;
         case 'Afternoon':
-          this.defaultStartTime.setHours(13, 30, 0);
-          this.defaultEndTime.setHours(17, 30, 0);
+          this.defaultStartTime.setHours(Number(afternoonStart[0]) ?? 13, Number(afternoonStart[1]) ?? 0, 0);
+          this.defaultEndTime.setHours(Number(afternoonEnd[0]) ?? 17, Number(afternoonEnd[1]) ?? 30, 0);
           break;
       }
     }
