@@ -1,0 +1,210 @@
+<div>
+  <div fxLayout="row" fxLayoutAlign="space-between center">
+    <div style="display:flex; justify-content: left">
+    </div>
+    <div style="display:flex; justify-content: center;">
+      <!-- <mat-button-toggle-group class="attendance-report-mode" [(ngModel)]="typeMode">
+        <mat-button-toggle value="List" ngDefaultControl [ngClass]="{'selected-button-type': typeMode === 'List'}">
+          <mat-icon>lists</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle value="Grid" [ngClass]="{'selected-button-type': typeMode === 'Grid'}">
+          <mat-icon>auto_awesome_mosaic</mat-icon>
+        </mat-button-toggle>
+      </mat-button-toggle-group> -->
+    </div>
+    <div style="display: flex; justify-content: right">
+      <mat-toolbar style="display: flex; justify-content: right; background-color: #edf1f7; align-items: center;">
+        <nb-toggle (checkedChange)="getMyEmployeeAttendance($event)" style="margin-right: 20px; margin-top: 10px;"
+          [checked]="isMyEmployee"> My Employees </nb-toggle>
+        <button mat-raised-button style="background-color: #b45cea; color: white;" class="button-app-function" (click)="refreshData()">
+          <mat-icon>refresh</mat-icon>
+        </button>
+        <button mat-raised-button style="background-color: #b45cea; color: white;" class="button-app-function" (click)="prevData()">
+          <mat-icon>arrow_back_ios</mat-icon>
+        </button>
+        <button mat-raised-button style="background-color: #b45cea; color: white;" class="button-app-function" (click)="refreshThis()">
+          {{ timeModeDisplay }}
+        </button>
+        <button mat-raised-button style="background-color: #b45cea; color: white;" class="button-app-function" (click)="nextData()">
+          <mat-icon>arrow_forward_ios</mat-icon>
+        </button>
+        <button mat-raised-button style="background-color: #b45cea; color: white;" [matMenuTriggerFor]="exportMenu" [nbSpinner]="btnExportState"
+          class="button-app-function">Export</button>
+      </mat-toolbar>
+    </div>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="space-between center">
+    <div style="display:flex; justify-content: left">
+    </div>
+    <div style="display: flex; justify-content: right">
+      <mat-toolbar style="background-color: #edf1f7; align-items: center;">
+        <form [formGroup]="frmGroup" class="form-function-filter">
+          <div class="col-12" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="12px"
+            style="height: 64px;">
+            <app-dropdown-filter class="dropdown-filter-function" [columnName]="'Choose role'"
+              [filter]="configFilterRole" [value]="reportScheduleModel?.listRoles ?? null"
+              (onFilter)="onFilterDropDownRole($event)">
+            </app-dropdown-filter>
+
+            <app-dropdown-filter class="dropdown-filter-function" [columnName]="'Choose employee'"
+              [filter]="configFilterEmployee" [value]="reportScheduleModel?.listProfile ?? null"
+              (onFilter)="onFilterDropDownEmployee($event)">
+            </app-dropdown-filter>
+
+            <mat-label style="font-size: 14px;">From date:</mat-label>
+            <mat-form-field class="form-function-filter" appearance="fill">
+              <input matInput [matDatepicker]="fromDatePicker" formControlName="fromDate" readonly
+                (click)="fromDatePicker.open()">
+              <mat-datepicker #fromDatePicker>
+              </mat-datepicker>
+            </mat-form-field>
+
+            <mat-label style="font-size: 14px;">To date:</mat-label>
+            <mat-form-field class="form-function-filter" appearance="fill">
+              <input matInput [matDatepicker]="toDatePicker" formControlName="toDate" readonly
+                (click)="toDatePicker.open()">
+              <mat-datepicker #toDatePicker>
+              </mat-datepicker>
+            </mat-form-field>
+          </div>
+        </form>
+        <button mat-raised-button style="color: white; margin: 0 10px;" class="background-gradient"
+          (click)="applyFilter()">
+          Apply Filter
+        </button>
+      </mat-toolbar>
+    </div>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="center center" style="height: 30px; padding-bottom: 15px;">
+    <mat-button-toggle-group multiple (change)="changeStatus($event)" [(ngModel)]="listStatusChoose"
+      style="border: none; background-color: #edf1f7; height: 42px;">
+      <mat-button-toggle *ngFor="let item of listStatus" style="border: none; background-color: #edf1f7;"
+        value="{{ item?.value }}" [ngStyle]="{'color': !listStatusChoose?.includes(item?.value) ? '#cccccc' : ''}">
+        <mat-icon style="margin-right: 0px !important;"
+          [ngStyle]="{'color': !listStatusChoose?.includes(item?.value) ? '#dddddd' : item?.codeColor}">fiber_manual_record</mat-icon>
+        {{ item?.display }}
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+  <div [nbSpinner]="isLoading" class="example-container mat-elevation-z2">
+    <div class="example-table-container" #dataTable>
+      <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="userName" sticky>
+          <th mat-header-cell *matHeaderCellDef
+            class="header-table-color first-table-cell-fixed"
+            style="text-align: center; background-color: #b45cea; color: white;"> Employee </th>
+          <td mat-cell *matCellDef="let element" [class.bold-row]="element.userName"
+            style="text-align: left; border-color: #e0e0e0;">
+            <b style="padding-left: 10px; cursor: pointer;" (click)="openEmployeeDetail(element.userId)">
+              {{element.userName}} </b>
+          </td>
+          <!-- <td mat-cell *matFooterCellDef style="text-align: center;"
+            class="first-header-table-color custom-font table-cell-fixed"> Available </td> -->
+        </ng-container>
+
+        <ng-container *ngFor="let column of headerData">
+          <ng-container [matColumnDef]="column.key">
+            <ng-container *ngIf="timeMode === 'Week'">
+              <th mat-header-cell *matHeaderCellDef [attr.colspan]="column.length" style="text-align: center;"
+                class="header-table-color custom-font tableCellFixedWeek"
+                [ngStyle]="{'background-color': (column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'today' ? '#8dc63f' : '#ea83ac'}">
+                {{column?.value}}
+              </th>
+              <ng-container *ngIf="viewMode === 'Attendance'">
+                <td mat-cell *matCellDef="let element" class="data-bold-row custom-font"
+                  [style.color]="element[column.key] === '--' ? 'black': 'white'"
+                  [style.background-color]="(element[column.key] !== '--' && element[column.key]) ? (element[column.key] | handleDisplayColor: timeMode: (element[column.key + '-leaveType'] !== 'NoPaid' ? element[column.key + '-leave'] : null)) : (element[column.key + '-leave'] ? '#d7d7d7' : '')"
+                  [style.opacity]="((column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'weekend' ? '40%' : '')">
+                  <div fxLayout="row" fxLayoutAlign="center center"
+                    [ngStyle]="{'cursor': (element[column.key] != '--' || element[column.key + '-leave'] != null) ? 'pointer' : null}"
+                    [matMenuTriggerFor]="(element[column.key] != '--' || element[column.key + '-leave'] != null) ? popoverCellDetail : nonDisplayMenu"
+                    [matMenuTriggerData]="{ data: element[column.key + '-detail'], title: element.userName +  ' - ' + column?.value }">
+                    {{element[column.key]}}
+                  </div>
+                </td>
+              </ng-container>
+              <ng-container *ngIf="viewMode === 'Leave'">
+                <td mat-cell *matCellDef="let element" class="data-bold-row"
+                  [style.color]="element[column.key] === '--' ? 'black': 'white'"
+                  [style.background-color]="element[column.key + '-leave'] ? '#d7d7d7' : ''"
+                  [style.opacity]="((column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'weekend' ? '40%' : '')">
+                  <div fxLayout="row" fxLayoutAlign="space-between center"
+                    [ngStyle]="{'cursor': (element[column.key] != '--' || element[column.key + '-leave'] != null) ? 'pointer' : null}"
+                    [matMenuTriggerFor]="(element[column.key] != '--' || element[column.key + '-leave'] != null) ? popoverCellDetail : nonDisplayMenu"
+                    [matMenuTriggerData]="{ data: element[column.key + '-detail'], title: element.userName +  ' - ' + column?.value }">
+                    <div fxFlex="15" style="display:flex; justify-content: right;">
+                      <mat-icon *ngIf="element[column.key + '-leave'] ? true : false"
+                        [ngStyle]="{'color': element[column.key + '-leaveType'] === 'Paid' ? '#3366cc' : '#996600'}"
+                        class="icon-leave">person_off</mat-icon>
+                    </div>
+                    <div fxFlex="85" style="padding-right: 25px; text-align: center;" *ngIf="element[column.key + '-leave'] ? true : false">
+                      [{{element[column.key + '-leaveType']}}] {{element[column.key + '-leave']}}
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+              <ng-container *ngIf="viewMode === 'Both'">
+                <td mat-cell *matCellDef="let element" class="data-bold-row custom-font"
+                  [style.color]="element[column.key] === '--' ? 'black': 'white'"
+                  [style.background-color]="(element[column.key] !== '--' && element[column.key]) ? (element[column.key] | handleDisplayColor: timeMode: (element[column.key + '-leaveType'] !== 'NoPaid' ? element[column.key + '-leave'] : null)) : (element[column.key + '-leave'] ? '#d7d7d7' : '')"
+                  [style.opacity]="((column?.value | checkColorToday: timeMode: frmGroup?.get('fromDate')?.value) === 'weekend' ? '40%' : '')">
+                  <div fxLayout="row" fxLayoutAlign="space-between center"
+                    [ngStyle]="{'cursor': (element[column.key] != '--' || element[column.key + '-leave'] != null) ? 'pointer' : null}"
+                    [matMenuTriggerFor]="(element[column.key] != '--' || element[column.key + '-leave'] != null) ? popoverCellDetail : nonDisplayMenu"
+                    [matMenuTriggerData]="{ data: element[column.key + '-detail'], title: element.userName +  ' - ' + column?.value }">
+                    <div fxFlex="15" style="display:flex; justify-content: right;">
+                      <mat-icon *ngIf="element[column.key + '-leave'] ? true : false"
+                        matTooltip="[{{element[column.key + '-leaveType']}}] {{element[column.key + '-leave']}}"
+                        [ngStyle]="{'color': element[column.key + '-leaveType'] === 'Paid' ? '#3366cc' : '#996600'}"
+                        class="icon-leave">person_off</mat-icon>
+                    </div>
+                    <div fxFlex="85" style="padding-right: 25px; text-align: center;">
+                      {{element[column.key]}}
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+
+        <ng-container matColumnDef="grandTotal" stickyEnd>
+          <th mat-header-cell *matHeaderCellDef
+            class="header-table-color total-table-cell-fixed"
+            style="text-align: center; background-color: #b45cea; color: white;">
+            <b>Total</b>
+          </th>
+          <td mat-cell *matCellDef="let element" [class.bold-row]="element.userName"
+            style="text-align: right; border-color: #e0e0e0;">
+            <b *ngIf="viewMode !== 'Leave'">
+              {{element.grandTotal | numberFormat}} </b>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="headerData2;sticky: true" class="report-header-row"></tr>
+        <tr mat-row *matRowDef="let row; columns: headerData2;" class="report-row"></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<mat-menu #popoverCellDetail="matMenu" xPosition="after">
+  <ng-template matMenuContent let-data="data" let-title="title">
+    <div (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+      <app-popover-detail-attendance-cell [data]="data" [titleHeader]="title"
+        (onRefresh)="onRefresh()"></app-popover-detail-attendance-cell>
+    </div>
+  </ng-template>
+</mat-menu>
+
+<mat-menu #exportMenu="matMenu" xPosition="after">
+  <button mat-menu-item color="primary" [nbSpinner]="btnExportState" class="button-app-function"
+    (click)="exportData(false)">
+    Summary Report
+  </button>
+  <button mat-menu-item color="primary" [nbSpinner]="btnExportState" class="button-app-function" (click)="exportData(true)">
+    Detail Report
+  </button>
+</mat-menu>
+
+<mat-menu #nonDisplayMenu="matMenu" class="d-none"></mat-menu>

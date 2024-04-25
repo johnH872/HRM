@@ -22,7 +22,7 @@ module.exports = {
       description: {
         type: Sequelize.STRING
       },
-      code_color: {
+      codeColor: {
         type: Sequelize.STRING
       },
       createdAt: {

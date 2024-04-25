@@ -32,6 +32,7 @@ import { RoleManagementComponent } from './role-management/role-management.compo
 import { AddEditRoleComponent } from './role-management/add-edit-role/add-edit-role.component';
 import { SettingManagementComponent } from './setting-management/setting-management.component';
 import { AddEditSettingComponent } from './setting-management/add-edit-setting/add-edit-setting.component';
+import { WorkCalendarManagementComponent } from './work-calendar-management/work-calendar-management.component';
 
 
 @NgModule({
@@ -62,7 +63,8 @@ import { AddEditSettingComponent } from './setting-management/add-edit-setting/a
     RoleManagementComponent,
     AddEditRoleComponent,
     SettingManagementComponent,
-    AddEditSettingComponent
+    AddEditSettingComponent,
+    WorkCalendarManagementComponent
   ],
   imports: [
     ThemeModule,

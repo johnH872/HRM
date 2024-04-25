@@ -13,6 +13,7 @@ import { ReportScheduleManagementComponent } from './report-schedule-management/
 import { AttendanceReportManagementComponent } from './attendance-managment/attendance-report-management/attendance-report-management.component';
 import { RoleManagementComponent } from './role-management/role-management.component';
 import { SettingManagementComponent } from './setting-management/setting-management.component';
+import { WorkCalendarManagementComponent } from './work-calendar-management/work-calendar-management.component';
 
 const routes: Routes = [{
   path: '',
@@ -45,6 +46,10 @@ const routes: Routes = [{
     {
       path: 'report-schedule',
       component: ReportScheduleManagementComponent,
+    },
+    {
+      path: 'work-calendar',
+      component: WorkCalendarManagementComponent,
     },
     {
       path: 'attendances',

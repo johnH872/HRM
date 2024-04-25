@@ -18,7 +18,7 @@ module.exports = {
         type: Sequelize.DATE
       },
       workingType: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       workingHour: {
         type: Sequelize.DOUBLE

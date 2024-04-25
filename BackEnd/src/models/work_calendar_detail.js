@@ -34,7 +34,7 @@ export default (sequelize, DataTypes) => {
     description: {
       type: DataTypes.STRING
     },
-    code_color: {
+    codeColor: {
       type: DataTypes.STRING
     },
     createdAt: {

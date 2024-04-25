@@ -56,7 +56,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
       {
         title: 'Work Calendar',
         icon: 'person-outline',
-        link: '/admin/calendar',
+        link: '/admin/work-calendar',
       },
       {
         title: 'Report Schedule',

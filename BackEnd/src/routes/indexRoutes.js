@@ -11,6 +11,7 @@ import faceRecogRoute from './faceRecogRoute.js';
 import attendanceRoute from './attendanceRoute.js';
 import reportScheduleRoute from './reportScheduleRoute.js';
 import settingRoute from './settingRoute.js';
+import workCalendarRoute from './workCalendarRoute.js';
 
 const baseUrl = "/api"
 
@@ -28,5 +29,6 @@ function route(app) {
     app.use(`${baseUrl}/AttendanceManagement`, attendanceRoute);
     app.use(`${baseUrl}/ReportScheduleManagement`, reportScheduleRoute);
     app.use(`${baseUrl}/SettingManagement`, settingRoute);
+    app.use(`${baseUrl}/WorkCalendarManagement`, workCalendarRoute);
 }
 export default route;

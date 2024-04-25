@@ -33,7 +33,7 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.DATE
     },
     workingType: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     },
     workingHour: {
       type: DataTypes.DOUBLE
