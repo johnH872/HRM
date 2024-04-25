@@ -17,6 +17,7 @@ import { Sequelize } from 'sequelize';
 import dbConfigs from './config/db.config.js';
 import { generationLeaveEntitlementJob } from './cronJobs/generationLeaveEntitlementJobs.js';
 import { balanceLeaveEntitlementJob } from './cronJobs/balanceLeaveEntitlementJobs.js';
+import { workCalendarJob } from './cronJobs/workCalendarJobs.js';
 
 //database connection
 const sequelize = new Sequelize(
@@ -41,7 +42,7 @@ app.use('/assets/images', express.static('assets/images'));
 route(app);
 
 // cron jobs
-// outDateWork.start();
+workCalendarJob.start();
 generationLeaveEntitlementJob.start();
 balanceLeaveEntitlementJob.start();
 
