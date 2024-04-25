@@ -30,3 +30,12 @@ export interface ReportScheduleResult {
     data: ReportScheduleDatum[]
     column: Column[]
 }
+
+export interface WorkCalendarDatum extends Datum {
+    workCalendarMonthly: any[]
+}
+
+export interface WorkCalendarResult {
+    data: WorkCalendarDatum[]
+    column: Column[]
+}

@@ -42,3 +42,24 @@ export class DataFilterReportSchedule {
     listRoles = [];
     listStatusLeave = [];
 }
+
+export class WorkCalendarDatum extends Datum {
+    workCalendarMonthly = []
+}
+
+export class WorkCalendarResult {
+    data = new WorkCalendarDatum();
+    column = new Column();
+}
+
+export class DataFilterWorkCalendar {
+    timeMode;
+    viewMode;
+    fromDate;
+    toDate;
+    order = 0;
+    listProfile = [];
+    listStatus = [];
+    listRoles = [];
+    listStatusLeave = [];
+}

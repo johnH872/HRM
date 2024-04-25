@@ -13,8 +13,8 @@ export class WorkCalendarManagementService {
     baseUrl = environment.apiWorkCalendarManagement;
     constructor(private http: HttpClient) { }
 
-    getReportSchedule(dataFilter: DataFilterWorkCalendar) {
-        return this.http.post<ReturnResult<any>>(`${this.baseUrl}/GetReportSchedule`, dataFilter);
+    getWorkCalendar(dataFilter: DataFilterWorkCalendar) {
+        return this.http.post<ReturnResult<any>>(`${this.baseUrl}/GetWorkCalendar`, dataFilter);
     }
 
     // exportAttendanceReport(model: AttendanceReportExportModel): Observable<ReturnResult<AttendanceModel[]>> {

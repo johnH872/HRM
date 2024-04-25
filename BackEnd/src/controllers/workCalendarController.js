@@ -1,14 +1,14 @@
 import { ReturnResult } from "../models/DTO/returnResult.js";
 import { Op, literal, col } from 'sequelize';
 import db from '../models/index.js'
-import { Column, ReportScheduleDatum, ReportScheduleResult } from "../models/DTO/report-schedule.js";
+import { Column, ReportScheduleDatum, ReportScheduleResult, WorkCalendarDatum } from "../models/DTO/report-schedule.js";
 import { leaveRequestStatus } from "../models/enums/leaveRequestStatus.js";
 import { format } from 'date-fns';
 
 const dbContext = await db;
 
 class WorkCalendarController {
-    async getReportSchedule(req, res, next) {
+    async getWorkCalendar(req, res, next) {
         var returnResult = new ReturnResult();
         try {
             const dataFilterReport = req.body;
@@ -19,27 +19,10 @@ class WorkCalendarController {
             var queryEmployees = {
                 
             };
-            var queryAttendance = {
+            var queryWorkCalendar = {
                 [Op.and]: [
-                    literal(`DATE_ADD('${dataFilterReport.fromDate}', INTERVAL ${timeZoneSetting} HOUR) <= DATE_ADD(${'Attendance.punchinDate'}, INTERVAL ${timeZoneSetting} HOUR)`),
-                    literal(`DATE_ADD(${'Attendance.punchinDate'}, INTERVAL ${timeZoneSetting} HOUR) <= DATE_ADD('${dataFilterReport.toDate}', INTERVAL ${timeZoneSetting} HOUR)`),
-                ],
-            };
-            var queryLeave = {
-                status: leaveRequestStatus.APPROVED,
-                [Op.or]: [
-                    {
-                        [Op.and]: [
-                            literal(`DATE_ADD('${dataFilterReport.fromDate}', INTERVAL ${timeZoneSetting} HOUR) <= DATE_ADD(${'LeaveRequest.leaveDateFrom'}, INTERVAL ${timeZoneSetting} HOUR)`),
-                            literal(`DATE_ADD(${'LeaveRequest.leaveDateFrom'}, INTERVAL ${timeZoneSetting} HOUR) <= DATE_ADD('${dataFilterReport.toDate}', INTERVAL ${timeZoneSetting} HOUR)`),
-                        ],
-                    },
-                    {
-                        [Op.and]: [
-                            literal(`DATE_ADD('${dataFilterReport.fromDate}', INTERVAL ${timeZoneSetting} HOUR) <= DATE_ADD(${'LeaveRequest.leaveDateTo'}, INTERVAL ${timeZoneSetting} HOUR)`),
-                            literal(`DATE_ADD(${'LeaveRequest.leaveDateTo'}, INTERVAL ${timeZoneSetting} HOUR) <= DATE_ADD('${dataFilterReport.toDate}', INTERVAL ${timeZoneSetting} HOUR)`),
-                        ],
-                    }
+                    literal(`DATE_ADD('${dataFilterReport.fromDate}', INTERVAL ${timeZoneSetting} HOUR) <= DATE_ADD(${'WorkCalendar.workingDate'}, INTERVAL ${timeZoneSetting} HOUR)`),
+                    literal(`DATE_ADD(${'WorkCalendar.workingDate'}, INTERVAL ${timeZoneSetting} HOUR) <= DATE_ADD('${dataFilterReport.toDate}', INTERVAL ${timeZoneSetting} HOUR)`),
                 ],
             };
 
@@ -58,20 +41,14 @@ class WorkCalendarController {
                 queryEmployees.userId = {
                     [Op.in]: lstUserHasRole
                 };
-                queryAttendance.userId = {
-                    [Op.in]: lstUserHasRole
-                };
-                queryLeave.userId = {
+                queryWorkCalendar.userId = {
                     [Op.in]: lstUserHasRole
                 };
             } else if (dataFilterReport.listProfile && dataFilterReport.listProfile.length > 0) {
                 queryEmployees.userId = {
                     [Op.in]: dataFilterReport.listProfile
                 };
-                queryAttendance.userId = {
-                    [Op.in]: dataFilterReport.listProfile
-                };
-                queryLeave.userId = {
+                queryWorkCalendar.userId = {
                     [Op.in]: dataFilterReport.listProfile
                 };
             } else if (dataFilterReport.listRoles && dataFilterReport.listRoles.length > 0) {
@@ -88,25 +65,8 @@ class WorkCalendarController {
                 queryEmployees.userId = {
                     [Op.in]: lstUserHasRole
                 };
-                queryAttendance.userId = {
+                queryWorkCalendar.userId = {
                     [Op.in]: lstUserHasRole
-                };
-                queryLeave.userId = {
-                    [Op.in]: lstUserHasRole
-                };
-            }
-
-            if (dataFilterReport.listStatusLeave && dataFilterReport.listStatusLeave.length > 0) {
-                if (dataFilterReport.listStatusLeave.includes('noPaid') && dataFilterReport.listStatusLeave.includes('paid')) {
-                    queryLeave = queryLeave;
-                } else if (dataFilterReport.listStatusLeave.includes('paid')) {
-                    queryLeave['$LeaveEntitlement.LeaveType.isPaidSalary$'] = true;
-                } else if (dataFilterReport.listStatusLeave.includes('noPaid')) {
-                    queryLeave['$LeaveEntitlement.LeaveType.isPaidSalary$'] = false;
-                }
-            } else {
-                queryLeave['$LeaveType.isPaidSalary$'] = {
-                    [Op.or]: [true, false],
                 };
             }
 
@@ -117,8 +77,8 @@ class WorkCalendarController {
                 ]
             });
 
-            const lstAttendancesModel = await dbContext.Attendance.findAll({
-                where: queryAttendance,
+            const lstWorkCalendarsModel = await dbContext.WorkCalendar.findAll({
+                where: queryWorkCalendar,
                 include: [
                     {
                         model: dbContext.User,
@@ -139,293 +99,48 @@ class WorkCalendarController {
                             'isAppliedFace',
                         ],
                     },
+                    {
+                        model: dbContext.WorkCalendarDetail
+                    }
                 ],
                 attributes: [
-                    'attendanceId',
+                    'workCalendarId',
                     'userId',
-                    'punchinDate',
-                    'punchinNote',
-                    'punchinOffset',
-                    'punchoutDate',
-                    'punchoutNote',
-                    'punchoutOffset',
-                    [
-                      literal(
-                        `CASE 
-                            WHEN ${'Attendance.punchoutTime'} > ${'Attendance.punchinTime'} 
-                                THEN (${'Attendance.punchoutTime'} - ${'Attendance.punchinTime'}) / 3600000
-                            ELSE 0
-                        END`
-                      ),
-                      'duration',
-                    ],
+                    'workingDate',
+                    'workingType',
+                    'workingHour',
                 ],                
             });
 
-            const lstLeavesModel = await dbContext.LeaveRequest.findAll({
-                where: queryLeave,
-                include: [
-                    {
-                        model: dbContext.User,
-                        attributes: [
-                            'userId',
-                            'firstName',
-                            'middleName',
-                            'lastName',
-                            'email',
-                            'birth',
-                            'gender',
-                            'nationality',
-                            'avatarUrl',
-                            'phoneNumber',
-                            'jobTitle',
-                            'dateStartContract',
-                            'ownerId',
-                            'isAppliedFace',
-                        ],
-                    },
-                    {
-                        model: dbContext.LeaveEntitlement,
-                        attributes: [
-                            'leaveEntitlementId',
-                            'userId',
-                            'leaveTypeId',
-                            'startDate',
-                            'endDate',
-                            'availableLeave',
-                            'usableLeave',
-                            'usedLeave',
-                            'effectedYear'
-                        ],
-                        include: [
-                            {
-                                model: dbContext.LeaveType,
-                                attributes: [
-                                    'leaveTypeId',
-                                    'leaveTypeName',
-                                    'defaultStartDay',
-                                    'defaultStartMonth',
-                                    'defaultEndDay',
-                                    'defaultEndMonth',
-                                    'defaultBudget',
-                                    'isPaidSalary',
-                                ],
-                            },
-                        ],
-                    },
-                ],
-                attributes: [
-                    'leaveRequestId',
-                    'userId',
-                    'leaveEntitlementId',
-                    'leaveDateFrom',
-                    'leaveDateTo',
-                    'session',
-                    'numberOfHour',
-                    'status',
-                    'note',
-                    'reason',
-                ]
-            });
-
             lstEmployeesModel.forEach(employee => {
-                var dataOwner = new ReportScheduleDatum();
+                var dataOwner = new WorkCalendarDatum();
                 dataOwner.userName = employee?.firstName + ' ' + employee?.middleName + ' ' + employee?.lastName;
                 dataOwner.userId = employee?.userId;
-                dataOwner.attendanceMonthly = [];
-                dataOwner.attendanceDetailMonthly = [];
-                dataOwner.leaveRequestMonthly = [];
-                dataOwner.leaveRequestTypeMonthly = [];
+                dataOwner.workCalendarMonthly = [];
                 var startDate = new Date(dataFilterReport.fromDate);
                 startDate.setHours(startDate.getHours() + timeZoneSetting);
                 var endDate = new Date(dataFilterReport.toDate);
                 endDate.setHours(endDate.getHours() + timeZoneSetting);
                 var currentDate = startDate;
-                var totalDurationInRange = 0;
-                var totalDayWorkingInRange = 0;
                 while (currentDate.getTime() <= endDate.getTime()) {
                     const key = `${currentDate.getMonth() + 1}/${currentDate.getDate()}`;
-                    var lstAttendanceDetail = [];
-                    var totalDurationInDay = 0;
+                    var lstWorkCalendar = [];
 
-                    var indexFirstAttendanceInDay = lstAttendancesModel.findIndex(attendance => 
-                        attendance.userId = employee.userId &&
-                        attendance.punchinDate.getDate() === currentDate.getDate() &&
-                        attendance.punchinDate.getMonth() === currentDate.getMonth() &&
-                        attendance.punchinDate.getFullYear() === currentDate.getFullYear());
-                    var firstAttendanceInDay = lstAttendancesModel[indexFirstAttendanceInDay];
-                    var indexLastAttendanceInDay = lstAttendancesModel.findLastIndex(attendance => 
-                        attendance.userId = employee.userId &&
-                        attendance.punchinDate.getDate() === currentDate.getDate() &&
-                        attendance.punchinDate.getMonth() === currentDate.getMonth() &&
-                        attendance.punchinDate.getFullYear() === currentDate.getFullYear());
-                    var lastAttendanceInDate = lstAttendancesModel[indexLastAttendanceInDay];
-                    lstAttendancesModel.forEach(item => {
-                        var attendanceItem = item?.dataValues;
-                        if (attendanceItem.User.userId === employee.userId &&
-                            attendanceItem.punchinDate.getDate() === currentDate.getDate() &&
-                            attendanceItem.punchinDate.getMonth() === currentDate.getMonth() &&
-                            attendanceItem.punchinDate.getFullYear() === currentDate.getFullYear()) {
-                                totalDurationInDay += attendanceItem.duration;
-                                lstAttendanceDetail.push({
-                                    attendanceId: attendanceItem.attendanceId,
-                                    userId: attendanceItem.userId,
-                                    User: attendanceItem.User,
-                                    punchinDate: attendanceItem.punchinDate,
-                                    punchoutDate: attendanceItem.punchoutDate,
-                                    duration: attendanceItem.duration,
-                                });
+                    lstWorkCalendarsModel.forEach(item => {
+                        var workCalendarItem = item?.dataValues;
+                        if (workCalendarItem.User.userId === employee.userId &&
+                            workCalendarItem.workingDate.getDate() === currentDate.getDate() &&
+                            workCalendarItem.workingDate.getMonth() === currentDate.getMonth() &&
+                            workCalendarItem.workingDate.getFullYear() === currentDate.getFullYear()) {
+                                lstWorkCalendar.push(workCalendarItem);
                             }
                     });
 
-                    var indexFirstLeaveInDate = lstLeavesModel.findIndex(leave => 
-                        leave.userId === employee.userId && 
-                        leave.leaveDateFrom.getDate() === currentDate.getDate());
-                    var firstLeaveInDate = lstLeavesModel[indexFirstLeaveInDate];
-                    var indexLastLeaveInDate = lstLeavesModel.findLastIndex(leave => 
-                        leave.userId === employee.userId && 
-                        leave.leaveDateFrom.getDate() === currentDate.getDate());
-                    var lastLeaveInDate = lstLeavesModel[indexLastLeaveInDate];
-                    var totalNumberOfHourInDay = 0;
-                    lstLeavesModel.forEach(item => {
-                        var leaveItem = item.dataValues;
-                        if (leaveItem.userId === employee.userId &&
-                            leaveItem.leaveDateFrom.getDate() === currentDate.getDate()) {
-                            totalNumberOfHourInDay += item.numberOfHour;
-                            lstAttendanceDetail.push({
-                                leaveRequestId: leaveItem.leaveRequestId,
-                                userId: leaveItem.userId,
-                                User: leaveItem.User,
-                                reason: leaveItem.reason,
-                                leaveEntitlementId: leaveItem.leaveEntitlementId,
-                                LeaveEntitlement: leaveItem.LeaveEntitlement,
-                                leaveDateFrom: leaveItem.leaveDateFrom,
-                                leaveDateTo: leaveItem.leaveDateTo,
-                                numberOfHour: leaveItem.numberOfHour,
-                                status: leaveItem.status,
-                                session: leaveItem.session,
-                                note: leaveItem.note,
-                            });
-                        }
-                    });
-
-                    switch (dataFilterReport.timeMode) {
-                        case 'Day':
-                        case 'Week':
-                            if (firstLeaveInDate != null && lastLeaveInDate != null && totalNumberOfHourInDay > 0) {
-                                dataOwner.leaveRequestMonthly.push({
-                                    [key + '-leave']: `${format(firstLeaveInDate.leaveDateFrom, 'HH:mm')} - ${format(lastLeaveInDate.leaveDateTo, 'HH:mm')} (${totalNumberOfHourInDay}h)`
-                                });
-                                dataOwner.leaveRequestTypeMonthly.push({
-                                    [key + '-leaveType']: firstLeaveInDate.LeaveEntitlement.LeaveType.isPaidSalary ? 'Paid' : 'NoPaid'
-                                });
-                            } else {
-                                dataOwner.leaveRequestMonthly.push({
-                                    [key + '-leave']: null
-                                });
-                                dataOwner.leaveRequestTypeMonthly.push({
-                                    [key + '-leaveType']: null
-                                });
-                            }
-                            if (dataFilterReport.listStatus.includes('red') && 0 < totalDurationInDay && totalDurationInDay < 9.00) {
-                                if (firstAttendanceInDay != null && lastAttendanceInDate != null) {
-                                    dataOwner.attendanceMonthly.push({
-                                        [key]: `${format(firstAttendanceInDay.punchinDate, 'HH:mm')} - ${lastAttendanceInDate.punchoutDate ? format(lastAttendanceInDate.punchoutDate, 'HH:mm') : '??:??'} = ${totalDurationInDay.toFixed(2)}h`
-                                    });
-                                    totalDurationInRange += totalDurationInDay;
-                                } else {
-                                    dataOwner.attendanceMonthly.push({
-                                        [key]: `--`
-                                    });
-                                }
-                            }
-                            if (dataFilterReport.listStatus.includes('yellow')) {
-                                if (firstAttendanceInDay != null && lastAttendanceInDate != null) {
-                                    if (!lastAttendanceInDate.punchoutDate) {
-                                        dataOwner.attendanceMonthly.push({
-                                            [key]: `${format(firstAttendanceInDay.punchinDate, 'HH:mm')} - ${lastAttendanceInDate.punchoutDate ? format(lastAttendanceInDate.punchoutDate, 'HH:mm') : '??:??'} = ${totalDurationInDay.toFixed(2)}h`
-                                        });
-                                        totalDurationInRange += totalDurationInDay;
-                                    }
-                                } else {
-                                    dataOwner.attendanceMonthly.push({
-                                        [key]: `--`
-                                    });
-                                }
-                            }
-                            if (dataFilterReport.listStatus.includes('green') && 9.00 <= totalDurationInDay && totalDurationInDay < 10.00) {
-                                if (firstAttendanceInDay != null && lastAttendanceInDate != null) {
-                                    dataOwner.attendanceMonthly.push({
-                                        [key]: `${format(firstAttendanceInDay.punchinDate, 'HH:mm')} - ${lastAttendanceInDate.punchoutDate ? format(lastAttendanceInDate.punchoutDate, 'HH:mm') : '??:??'} = ${totalDurationInDay.toFixed(2)}h`
-                                    });
-                                    totalDurationInRange += totalDurationInDay;
-                                } else {
-                                    dataOwner.attendanceMonthly.push({
-                                        [key]: `--`
-                                    });
-                                }
-                            }
-                            if (dataFilterReport.listStatus.includes('purple') && totalDurationInDay >= 10.00) {
-                                if (firstAttendanceInDay != null && lastAttendanceInDate != null) {
-                                    dataOwner.attendanceMonthly.push({
-                                        [key]: `${format(firstAttendanceInDay.punchinDate, 'HH:mm')} - ${lastAttendanceInDate.punchoutDate ? format(lastAttendanceInDate.punchoutDate, 'HH:mm') : '??:??'} = ${totalDurationInDay.toFixed(2)}h`
-                                    });
-                                    totalDurationInRange += totalDurationInDay;
-                                } else {
-                                    dataOwner.attendanceMonthly.push({
-                                        [key]: `--`
-                                    });
-                                }
-                            }
-                            break;
-                        case 'Month':
-                            if (firstLeaveInDate != null && lastLeaveInDate != null && totalNumberOfHourInDay > 0) {
-                                dataOwner.leaveRequestMonthly.push({
-                                    [key + '-leave']: `${format(firstLeaveInDate.leaveDateFrom, 'HH:mm')} - ${format(lastLeaveInDate.leaveDateTo, 'HH:mm')} (${totalNumberOfHourInDay}h)`
-                                });
-                                dataOwner.leaveRequestTypeMonthly.push({
-                                    [key + '-leaveType']: firstLeaveInDate.LeaveEntitlement.LeaveType.isPaidSalary ? 'Paid' : 'NoPaid'
-                                });
-                            } else {
-                                dataOwner.leaveRequestMonthly.push({
-                                    [key + '-leave']: null
-                                });
-                                dataOwner.leaveRequestTypeMonthly.push({
-                                    [key + '-leaveType']: null
-                                });
-                            }
-                            if (dataFilterReport.listStatus.includes('yellow')) {
-                                dataOwner.attendanceMonthly.push({
-                                    [key]: null
-                                });
-                            }
-                            if (dataFilterReport.listStatus.includes('red') && 0 < totalDurationInDay && totalDurationInDay < 9.00) {
-                                dataOwner.attendanceMonthly.push({
-                                    [key]: `${totalDurationInDay.toFixed(2)}`
-                                });
-                                totalDayWorkingInRange += totalDurationInDay;
-                            }
-                            if (dataFilterReport.listStatus.includes('green') && 9.00 <= totalDurationInDay && totalDurationInDay < 10.00) {
-                                dataOwner.attendanceMonthly.push({
-                                    [key]: `${totalDurationInDay.toFixed(2)}`
-                                });
-                                totalDayWorkingInRange += totalDurationInDay;
-                            }
-                            if (dataFilterReport.listStatus.includes('purple') && totalDurationInDay >= 10.00) {
-                                dataOwner.attendanceMonthly.push({
-                                    [key]: `${totalDurationInDay.toFixed(2)}`
-                                });
-                                totalDayWorkingInRange += totalDurationInDay;
-                            }
-                            break;
-                    }
-
-                    dataOwner.attendanceDetailMonthly.push({
-                        [key + '-detail']: lstAttendanceDetail
+                    dataOwner.workCalendarMonthly.push({
+                        [key]: lstWorkCalendar
                     });
                     currentDate.setDate(currentDate.getDate() + 1);
                 }
-                dataOwner.grandTotal = totalDayWorkingInRange;
                 reportDatas.push(dataOwner);
             });
             returnResult.result = {
