@@ -42,7 +42,7 @@ async function generateDefaultWorkCalendar(allOutDateWork) {
                 await dbContext.WorkCalendar.create({
                     userId: employee.userId,
                     workingDate: new Date(currentDate),
-                    workingType: workingTypeSetting?.value ?? 'Unknown',
+                    workingType: Number(workingTypeSetting?.value) ?? 1,
                     workingHour: Number(workingHourSetting?.value) ?? 8
                 })
                 .then((res) => {})
