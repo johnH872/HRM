@@ -10,10 +10,13 @@ import { EmployeeManagementService } from '../employee-management/employee-manag
 import { NbAuthJWTToken, NbAuthService } from '@nebular/auth';
 import { Router } from '@angular/router';
 import { FilterType } from '../../shared/enum/filter-type.enum';
-import { map } from 'rxjs';
+import { map, takeUntil } from 'rxjs';
 import { MatOption } from '@angular/material/core';
 import { DataFilterWorkCalendar } from './work-calendar-management.model';
 import { WorkCalendarManagementService } from './work-calendar-management.service';
+import { DataStateModel } from '../datastate-management/data-state.model';
+import { DatastateService } from '../datastate-management/datastate.service';
+import { NbToastrService } from '@nebular/theme';
 
 @Component({
   selector: 'app-work-calendar-management',
@@ -60,6 +63,9 @@ export class WorkCalendarManagementComponent implements OnInit {
   isMyEmployee: boolean = false;
   listOwners: string[] = [];
   btnExportState = false;
+
+  lstWorkType: DataStateModel[] = [];
+  lstWorkHours: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
   
   constructor(
     private frmBuilder: RxFormBuilder,
@@ -67,6 +73,8 @@ export class WorkCalendarManagementComponent implements OnInit {
     private userService: EmployeeManagementService,
     private authService: NbAuthService,
     private router: Router,
+    private toast: NbToastrService,
+    private dataStateService: DatastateService,
   ) { 
     this.dataFilterWorkCalendar = new DataFilterWorkCalendar();
     this.configFilterEmployee = {
@@ -101,6 +109,11 @@ export class WorkCalendarManagementComponent implements OnInit {
     //   firstLoad: true
     // } as FilterConfig;
     this.userService.getAllEmployee();
+    this.dataStateService.getDataStateByType('WORK_TYPE').subscribe(resp => {
+      if (resp.result) {
+        this.lstWorkType = resp.result;
+      }
+    });
   }
 
   async ngOnInit() {
@@ -127,7 +140,7 @@ export class WorkCalendarManagementComponent implements OnInit {
       this.data.column.forEach(element => {
         this.headerData.push(...element.month)
       });
-      this.headerData2 = [...this.defaultHeader, ...new Set(this.headerData.map(e => { return e.key })), ...['grandTotal']]; //Distinct a list to prevent duplicate column
+      this.headerData2 = [...this.defaultHeader, ...new Set(this.headerData.map(e => { return e.key }))];
       this.dataSource = [];
       this.setupData(this.data.data, this.dataSource);
       // this.footerData = {...this.dataSource[this.dataSource.length - 1]};
@@ -327,5 +340,31 @@ export class WorkCalendarManagementComponent implements OnInit {
   async changeViewMode() {
     this.dataFilterWorkCalendar.viewMode = this.viewMode;
     await this.changeAttendanceReportMode();
+  }
+
+  async editWorkType(value, data) {
+    if (value && data) {
+      const model = data;
+      model.workingType = value.value;
+      var resp = await this.workCalendarService.saveWorkCalendar(model).toPromise();
+      if (resp.result) {
+        this.toast.success(`Save leave request successfully`, 'Success');
+        await this.callDataSource();
+      }
+    }
+  }
+
+  async editWorkHour(value, data) {
+    if (value && data) {
+      if (value && data) {
+        const model = data;
+        model.workingHour = value.value;
+        var resp = await this.workCalendarService.saveWorkCalendar(model).toPromise();
+        if (resp.result) {
+          this.toast.success(`Save leave request successfully`, 'Success');
+          await this.callDataSource();
+        }
+      }
+    }
   }
 }

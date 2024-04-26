@@ -124,7 +124,6 @@ class WorkCalendarController {
                 var currentDate = startDate;
                 while (currentDate.getTime() <= endDate.getTime()) {
                     const key = `${currentDate.getMonth() + 1}/${currentDate.getDate()}`;
-                    var lstWorkCalendar = [];
 
                     lstWorkCalendarsModel.forEach(item => {
                         var workCalendarItem = item?.dataValues;
@@ -132,12 +131,10 @@ class WorkCalendarController {
                             workCalendarItem.workingDate.getDate() === currentDate.getDate() &&
                             workCalendarItem.workingDate.getMonth() === currentDate.getMonth() &&
                             workCalendarItem.workingDate.getFullYear() === currentDate.getFullYear()) {
-                                lstWorkCalendar.push(workCalendarItem);
+                                dataOwner.workCalendarMonthly.push({
+                                    [key]: workCalendarItem
+                                });
                             }
-                    });
-
-                    dataOwner.workCalendarMonthly.push({
-                        [key]: lstWorkCalendar
                     });
                     currentDate.setDate(currentDate.getDate() + 1);
                 }
@@ -151,6 +148,62 @@ class WorkCalendarController {
         } catch(error) {
             res.status(400).json(error);
             console.log(error)
+        }
+    }
+
+    async saveWorkCalendar(req, res, next) {
+        var result = new ReturnResult();
+        try {
+            const model = req.body;
+            if (model.workCalendarId === null || model.workCalendarId === 0) { // Add new
+                const saveWorkCalendar = await dbContext.WorkCalendar.create({
+                    userId: model.userId,
+                    workingType: model.workingType,
+                    workingHour: model.workingHour,
+                    workingDate: model.workingDate
+                });
+                if (saveWorkCalendar) {
+                    result.result = saveWorkCalendar;
+                } else {
+                    result.message = "Cannot save work calendar";
+                }
+            } else { // Edit
+                // Find existing WorkCalendar
+                const existWorkCalendar = await dbContext.WorkCalendar.findOne({
+                    where: {
+                        workCalendarId: model.workCalendarId
+                    }
+                });
+                if (existWorkCalendar) {
+                    const saveWorkCalendar = await dbContext.WorkCalendar.update({
+                        userId: model.userId ?? existWorkCalendar.userId,
+                        workingType: model.workingType ?? existWorkCalendar.workingType,
+                        workingHour: model.workingHour ?? existWorkCalendar.workingHour,
+                        workingDate: model.workingDate ?? existWorkCalendar.workingDate
+                    }, {
+                        where: {
+                            workCalendarId: model.workCalendarId
+                        },
+                        returning: true,
+                        plain: true
+                    });
+                    if (saveWorkCalendar) {
+                        result.result = await dbContext.WorkCalendar.findOne({
+                            where: {
+                                workCalendarId: model.workCalendarId
+                            }
+                        });
+                    } else {
+                        result.message = 'Can not save WorkCalendar';
+                    }
+                } else {
+                    result.message = 'WorkCalendar not found';
+                }
+            }
+            return res.status(200).json(result);
+        } catch(error) {
+            res.status(400).json(error);
+            console.log(error);
         }
     }
 }

@@ -24,7 +24,7 @@ const routes: Routes = [{
       component: DashboardComponent,
     },
     {
-      path: 'datastate',
+      path: 'data-state',
       component: DatastateManagementComponent,
     },
     {

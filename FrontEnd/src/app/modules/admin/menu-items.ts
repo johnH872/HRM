@@ -79,6 +79,11 @@ export const MENU_ITEMS: NbMenuItem[] = [
         icon: 'award-outline',
         link: '/admin/settings',
       },
+      {
+        title: 'DataStates',
+        icon: 'award-outline',
+        link: '/admin/data-state',
+      },
     ],
   },
 ];

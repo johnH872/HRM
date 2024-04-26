@@ -38,6 +38,7 @@ async function generateDefaultWorkCalendar(allOutDateWork) {
             }
         });
         while (currentDate.getTime() <= endDate.getTime()) {
+            if (currentDate.getDay() === 0 || currentDate.getDay() === 6) continue;
             lstEmployees.map(async employee => {
                 await dbContext.WorkCalendar.create({
                     userId: employee.userId,

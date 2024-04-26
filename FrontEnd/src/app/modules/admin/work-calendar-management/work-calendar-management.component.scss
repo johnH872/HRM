@@ -22,15 +22,14 @@
   th.mat-header-cell,
   td.mat-cell {
     text-align: center;
-    border-left: 0.5px solid #e0e0e0;
-    border-right: 0.5px solid #e0e0e0;
+    border-left: 0.5px solid #696969;
+    border-right: 0.5px solid #696969;
     padding: 0px !important;
-    border-color: #e0e0e0;
+    border-color: #696969;
   }
   
   .custom-font {
     font-size: 14px;
-    color: white;
   }
   
   .custom-group-header-font {
@@ -55,13 +54,15 @@
   }
   
   .header-table-color {
-    border-color: white;
+    border-color: #696969;
     text-align: center;
+    font-weight: bold;
+    color: #186598;
   }
   
   .first-header-color {
     background-color: #307abd;
-    border-color: white;
+    border-color: #696969;
     text-align: center;
     font-weight: bold;
   }
@@ -109,22 +110,6 @@
     max-height: 26px;
   }
   
-  .icon-modified {
-    display: flex;
-    align-items: center;
-    font-size: large;
-    cursor: pointer;
-    color: #ffffff;
-  }
-  
-  .icon-leave {
-    display: flex;
-    align-items: center;
-    font-size: large;
-    cursor: pointer;
-    font-weight: bolder;
-  }
-  
   .form-function-filter {
     display: flex;
     align-items: center;
@@ -157,4 +142,21 @@
   .selected-button-type {
     background-color: #ff9393;
     color: white;
+  }
+
+  :host ::ng-deep .p-dropdown {
+    .p-icon-wrapper {
+      display: none;
+    }
+    .p-dropdown-items {
+      position: fixed;
+    }
+    .p-dropdown-trigger {
+      width: 0%;
+    }
+    border: none;
+  }
+
+  :host ::ng-deep .p-inputgroup .p-inputwrapper>.p-component {
+    width: 100%;
   }
