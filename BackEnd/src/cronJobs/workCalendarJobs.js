@@ -40,16 +40,24 @@ async function generateDefaultWorkCalendar(allOutDateWork) {
         while (currentDate.getTime() <= endDate.getTime()) {
             if (currentDate.getDay() === 0 || currentDate.getDay() === 6) continue;
             lstEmployees.map(async employee => {
-                await dbContext.WorkCalendar.create({
-                    userId: employee.userId,
-                    workingDate: new Date(currentDate),
-                    workingType: Number(workingTypeSetting?.value) ?? 1,
-                    workingHour: Number(workingHourSetting?.value) ?? 8
-                })
-                .then((res) => {})
-                .catch((err) => {
-                    console.error(err);
+                var checkExistingWorkCalendarInDay = await dbContext.WorkCalendar.findOne({
+                    where: {
+                        userId: employee.userId,
+                        workingDate: currentDate
+                    }
                 });
+                if (checkExistingWorkCalendarInDay !== null) {
+                    await dbContext.WorkCalendar.create({
+                        userId: employee.userId,
+                        workingDate: new Date(currentDate),
+                        workingType: Number(workingTypeSetting?.value) ?? 1,
+                        workingHour: Number(workingHourSetting?.value) ?? 8
+                    })
+                    .then((res) => {})
+                    .catch((err) => {
+                        console.error(err);
+                    });
+                }
             });
             currentDate.setDate(currentDate.getDate() + 1);
         }
