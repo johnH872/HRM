@@ -343,8 +343,8 @@ class attendanceController {
                 where: {
                     userId: userId,
                     [Op.and]: [
-                        literal(`DATE_ADD('${dataFilter.rangeDateValue.startDate}', INTERVAL ${timeZoneSetting} HOUR) <= DATE_ADD(${'Attendance.punchinDate'}, INTERVAL ${timeZoneSetting} HOUR)`),
-                        literal(`DATE_ADD(${'Attendance.punchinDate'}, INTERVAL ${timeZoneSetting} HOUR) <= DATE_ADD('${dataFilter.rangeDateValue.endDate}', INTERVAL ${timeZoneSetting} HOUR)`),
+                        literal(`DATE_ADD('${dataFilter?.rangeDateValue?.startDate || dataFilter.startDate}', INTERVAL ${timeZoneSetting} HOUR) <= DATE_ADD(${'Attendance.punchinDate'}, INTERVAL ${timeZoneSetting} HOUR)`),
+                        literal(`DATE_ADD(${'Attendance.punchinDate'}, INTERVAL ${timeZoneSetting} HOUR) <= DATE_ADD('${dataFilter?.rangeDateValue?.endDate || dataFilter.endDate}', INTERVAL ${timeZoneSetting} HOUR)`),
                     ],
                 },
                 attributes: [

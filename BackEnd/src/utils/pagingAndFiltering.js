@@ -9,6 +9,7 @@ const mappingPage = (page, data) => {
         page.totalPages = data.totalPages ?? 0;
         page.filter = data.filter ?? [];
         page.selected = data.selected ?? [];
+        page.roles = data.roles;
     }
     return page;
 }

@@ -80,15 +80,40 @@ class employeeController {
         var page = new Page();
         try {
             page = mappingPage(page, req.body);
+            var roleIds = page.roles.map(x => x.roleId);
+            var maxPriority = await dbContext.Role.min(
+                'priority',
+                {
+                    where: {
+                        roleId: roleIds
+                    }
+                });
+
             let queries = {};
+            queries.subQuery= false,
 
             queries = pagingData(page, queries);
             queries = filterData(page, queries);
 
             // Custom filterName
             var displayNameIndex = page.filter.findIndex(x => x.prop === 'employeeName' && x.value);
+            // include for manager and role
+            queries.include = [
+                {
+                    model: dbContext.Role,
+                    through: {
+                        attributes: [],
+                    }
+                },
+                {
+                    model: dbContext.User,
+                    as: 'manager',
+                    attributes: employeeValidReturnVariable
+                }
+            ];
+            queries.where['$Roles.priority$'] = { [Op.gte]: maxPriority };
             if (displayNameIndex !== -1) {
-                queries.where['$and'] = Sequelize.where(Sequelize.fn('concat', Sequelize.col('firstName'), ' ', Sequelize.col('middleName'), ' ', Sequelize.col('lastName')), {
+                queries.where['$and'] = Sequelize.where(Sequelize.fn('concat', Sequelize.col('User.firstName'), ' ', Sequelize.col('User.middleName'), ' ', Sequelize.col('User.lastName')), {
                     [Op.substring]: page.filter[displayNameIndex].value,
                 });
             }
@@ -218,7 +243,15 @@ class employeeController {
         var result = new ReturnResult;
         try {
             var employeeId = req.params.id;
-            const employee = await dbContext.User.findByPk(employeeId);
+            const employee = await dbContext.User.findByPk(employeeId, {
+                include: [
+                    {
+                        model: dbContext.User,
+                        as: 'manager',
+                        attributes: employeeValidReturnVariable
+                    }
+                ],
+            });
             if (employee) result.result = employee;
         } catch (error) {
             console.error(error);
