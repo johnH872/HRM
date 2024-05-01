@@ -11,6 +11,7 @@ export default (sequelize, DataTypes) => {
     static associate(models) {
       User.belongsToMany(models.Role, { through: 'User_Role', foreignKey:"userId"});
       User.belongsTo(User, { foreignKey: 'ownerId', as: 'manager' }); 
+      User.hasMany(models.WorkCalendar, { foreignKey: 'userId' }); 
     }
   }
   User.init({

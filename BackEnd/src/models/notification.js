@@ -25,7 +25,7 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     isRead: {
-      type: DataTypes.NUMBER
+      type: DataTypes.BOOLEAN
     },
     title: {
       type: DataTypes.STRING

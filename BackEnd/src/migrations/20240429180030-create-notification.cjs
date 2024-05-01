@@ -16,7 +16,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       isRead: {
-        type: Sequelize.NUMBER
+        type: Sequelize.BOOLEAN
       },
       title: {
         type: Sequelize.STRING

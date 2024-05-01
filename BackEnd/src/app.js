@@ -4,6 +4,8 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import http from 'http';
 import { Server } from 'socket.io';
+import admin from 'firebase-admin';
+import serviceAccount from '../config/push-notification-key.json' assert { type: "json" };
 
 const app = express();
 const server = http.createServer(app);
@@ -18,6 +20,7 @@ import dbConfigs from './config/db.config.js';
 import { generationLeaveEntitlementJob } from './cronJobs/generationLeaveEntitlementJobs.js';
 import { balanceLeaveEntitlementJob } from './cronJobs/balanceLeaveEntitlementJobs.js';
 import { workCalendarJob } from './cronJobs/workCalendarJobs.js';
+import { notificationJobs } from './cronJobs/NotificationJobs.js';
 
 //database connection
 const sequelize = new Sequelize(
@@ -45,6 +48,7 @@ route(app);
 workCalendarJob.start();
 generationLeaveEntitlementJob.start();
 balanceLeaveEntitlementJob.start();
+notificationJobs.start();
 
 // app.get('/socket.io', (req, res) => {
 //     res.send('<h1>Hey Socket.io</h1>');
@@ -55,6 +59,11 @@ socketIO.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log('---------------A user disconnected------------');
     });
+});
+
+// firbase setup
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
 });
 
 export {
