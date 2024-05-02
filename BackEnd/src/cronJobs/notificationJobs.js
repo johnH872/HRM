@@ -9,7 +9,7 @@ import { NotificationType } from '../models/enums/notificationType.js';
 const dbContext = await db;
 
 const notificationJobs = CronJob.from({
-    cronTime: '10 * * * * *',
+    cronTime: '0 */5 * * * *',
     onTick: async function () {
         // Auto create work calendar in the first day of the month '0 0 1 * * *'
         await generateNotification();
@@ -20,7 +20,7 @@ const notificationJobs = CronJob.from({
 
 async function generateNotification() {
     try {
-        console.log('------------- START: notificationJobs ------------------')
+        console.log(`------------- START: notificationJobs ${moment().format('HH:mm')} ------------------`)
         var startDate = moment();
         var endDate = moment();
 
@@ -32,8 +32,8 @@ async function generateNotification() {
             minute: splittedStartHour[1],
             second: 0
         });
-        // const endSendNotiTime = moment(startDate).add(15,'minutes');
-        const endSendNotiTimeMorning = moment(startDate).add(4, 'hours');
+        const endSendNotiTimeMorning = moment(startDate).add(30,'minutes');
+        // const endSendNotiTimeMorning = moment(startDate).add(4, 'hours');
 
         // End hour
         const afternoonEndTime = await getSettingByKeyAndGroup('AFTERNOON_END', 'WORKING_TIME');
@@ -43,9 +43,15 @@ async function generateNotification() {
             minute: splittedEndHour[1],
             second: 0
         });
-        // const endSendNotiTime = moment(endDate).add(15,'minutes');
-        const endSendNotiTimeAfternoon = moment(endDate).add(4, 'hours');
-        if (morningStartTime && afternoonEndTime && endSendNotiTimeMorning && endSendNotiTimeAfternoon) {
+        const endSendNotiTimeAfternoon = moment(endDate).add(30,'minutes');
+        // const endSendNotiTimeAfternoon = moment(endDate).add(6, 'hours');
+        if (
+            endDate
+            && startDate
+            && endSendNotiTimeMorning
+            && endSendNotiTimeAfternoon
+            && (moment().isBetween(endDate, endSendNotiTimeAfternoon) || moment().isBetween(startDate, endSendNotiTimeMorning))) {
+
             var startOfDate = moment().startOf('day');
             var endOfDate = moment().endOf('day');
             var fcmTokens = [];
@@ -54,35 +60,59 @@ async function generateNotification() {
             var notificationModels = [];
             const notiTile = 'Reminder';
             const notiContent = `You haven\'t ${moment().isBefore(endDate) ? 'punched in' : 'punched out'}  yet`
+
             if (!fcmTokenCache) {
-                console.log('------------- END: notificationJobs ------------------')
+                console.log('------------- END: notificationJobs (no token devices) ------------------')
                 return;
             };
             validUserIds = Object.keys(fcmTokenCache);
-            // Only send notification for employees connected to the system for the 1st time and working days has been applied.
-            const listEmpIds = await dbContext.User.findAll({
-                raw: true,
-                attributes: ['userId'],
-                include: {
-                    model: dbContext.WorkCalendar,
-                    where: {
-                        workingDate: {
-                            [Op.gte]: startOfDate,
-                            [Op.lte]: endOfDate,
-                        },
-                        workingHour: {
-                            [Op.gt]: 0
-                        }
-                    }
+            // Only send notification for employees connected to the system for the 1st time 
+            // && working days has been applied.
+            // && haven't punch in or out yet
+            const whereClauseAttendance = moment().isBetween(startDate, endSendNotiTimeMorning) ? {
+                punchinDate: {
+                    [Op.between]: [startOfDate, endOfDate],
                 },
+            } : {
+                punchinDate: {
+                    [Op.between]: [startOfDate, endOfDate],
+                },
+                punchoutDate: {
+                    [Op.eq]: null,
+                },
+            };
+
+            const listEmpIds = await dbContext.User.findAll({
+                // raw: true,
+                attributes: ['userId'],
+                include: [
+                    {
+                        model: dbContext.WorkCalendar,
+                        where: {
+                            workingDate: {
+                                [Op.between]: [startOfDate, endOfDate],
+                            },
+                            workingHour: {
+                                [Op.gt]: 0
+                            }
+                        }
+                    },
+                    {
+                        model: dbContext.Attendance,
+                        where: whereClauseAttendance
+                    }
+                ],
                 where: {
                     userId: validUserIds
                 }
             });
 
-            validUserIds = listEmpIds.map(x => x.userId);
-            if(validUserIds?.length <= 0) {
-                console.log('------------- END: notificationJobs ------------------')
+            // Only send noti when user haven't punched in the morning
+            // && punched in but haven't punched out in the afternoon
+            if(moment().isBetween(startDate, endSendNotiTimeMorning)) validUserIds = listEmpIds.filter(x => x.Attendances?.length === 0).map(x => x.userId);
+            else validUserIds = listEmpIds.filter(x => x.Attendances?.length > 0).map(x => x.userId);
+            if (validUserIds?.length <= 0) {
+                console.log('------------- END: notificationJobs (0 - notification sent)------------------')
                 return;
             }
             for (let userId of validUserIds) {
@@ -120,17 +150,19 @@ async function generateNotification() {
 
             // Send a message to the device corresponding to the provided
             // registration token.
-            console.log(fcmTokens);
-            getMessaging().sendMulticast(message)
+            getMessaging().sendEachForMulticast(message)
                 .then((response) => {
                     // Response is a message ID string.
                     console.log('Successfully sent message:', response);
+                    console.log('------------- END: notificationJobs ------------------')
                 })
                 .catch((error) => {
                     console.log('Error sending message:', error);
+                    console.log('------------- END: notificationJobs ------------------')
                 });
-            console.log('------------- START: notificationJobs ------------------')
 
+        } else {
+            console.log('------------- END: notificationJobs (out of time) ------------------')
         }
     } catch (err) {
         console.error(err);

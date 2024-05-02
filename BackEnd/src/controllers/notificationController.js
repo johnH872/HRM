@@ -12,7 +12,10 @@ class NotificationController {
             const notifications = await dbContext.Notification.findAll({
                 where: {
                     userId
-                }
+                },
+                order: [
+                    ['createdAt', 'DESC'],
+                ],
             })
             result.result = notifications;
             return res.status(200).json(result);
@@ -35,9 +38,9 @@ class NotificationController {
                     isRead: true
                 },
                 {
-                    where: whereClause
-                })
-            if(notifications) result.result = true;
+                    where: whereClause,
+                },)
+            if (notifications) result.result = true;
             return res.status(200).json(result);
         } catch (error) {
             res.status(400).json(error);
@@ -48,19 +51,19 @@ class NotificationController {
     async saveFCMToken(req, res, next) {
         var result = new ReturnResult();
         try {
-            const {token} = req.body;
+            const { token } = req.body;
             const userId = req.params.userId;
             localRedis.get(process.env.DB_HOST, async (err, result) => {
                 if (err) {
                     console.error(err);
                 } else {
                     var model = JSON.parse(result);
-                    if(!model) {
+                    if (!model) {
                         model = {};
                         model[userId] = [token];
                     } else {
-                        if(model?.[userId]?.length > 0) {
-                            if(!model[userId].includes(token)) model[userId] = [...model[userId], token];
+                        if (model?.[userId]?.length > 0) {
+                            if (!model[userId].includes(token)) model[userId] = [...model[userId], token];
                         }
                         else model[userId] = [token];
                     }

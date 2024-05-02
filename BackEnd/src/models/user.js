@@ -12,6 +12,7 @@ export default (sequelize, DataTypes) => {
       User.belongsToMany(models.Role, { through: 'User_Role', foreignKey:"userId"});
       User.belongsTo(User, { foreignKey: 'ownerId', as: 'manager' }); 
       User.hasMany(models.WorkCalendar, { foreignKey: 'userId' }); 
+      User.hasMany(models.Attendance, { foreignKey: 'userId' }); 
     }
   }
   User.init({
