@@ -12,16 +12,10 @@ const workCalendarJob = CronJob.from({
     timeZone: 'Asia/Ho_Chi_Minh'
 });
 
-async function generateDefaultWorkCalendar(allOutDateWork) {
+async function generateDefaultWorkCalendar() {
     try {
-        var startDate = new Date();
-        startDate.setHours(0, 0, 0, 0);
-        var endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0);
-        var currentDate = startDate;
-    
         // Get lst Employee
         var lstEmployees = await dbContext.User.findAll();
-
         // Get lst working type default setting
         var workingTypeSetting = await dbContext.Setting.findOne({
             where: {
@@ -29,7 +23,6 @@ async function generateDefaultWorkCalendar(allOutDateWork) {
                 group: 'WORKING_TYPE'
             }
         });
-
         // Get working hour default setting
         var workingHourSetting = await dbContext.Setting.findOne({
             where: {
@@ -37,16 +30,24 @@ async function generateDefaultWorkCalendar(allOutDateWork) {
                 group: 'WORKING_HOUR'
             }
         });
-        while (currentDate.getTime() <= endDate.getTime()) {
-            if (currentDate.getDay() === 0 || currentDate.getDay() === 6) continue;
-            lstEmployees.map(async employee => {
+
+        lstEmployees.forEach(async employee => {
+            var startDate = new Date();
+            startDate.setHours(0, 0, 0, 0);
+            var endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0);
+            var currentDate = startDate;
+            while (currentDate.getTime() <= endDate.getTime()) {
+                if (currentDate.getDay() === 0 || currentDate.getDay() === 6) {
+                    currentDate.setDate(currentDate.getDate() + 1);
+                    continue;
+                }
                 var checkExistingWorkCalendarInDay = await dbContext.WorkCalendar.findOne({
                     where: {
                         userId: employee.userId,
                         workingDate: currentDate
                     }
                 });
-                if (checkExistingWorkCalendarInDay !== null) {
+                if (checkExistingWorkCalendarInDay === null) {
                     await dbContext.WorkCalendar.create({
                         userId: employee.userId,
                         workingDate: new Date(currentDate),
@@ -55,12 +56,12 @@ async function generateDefaultWorkCalendar(allOutDateWork) {
                     })
                     .then((res) => {})
                     .catch((err) => {
-                        console.error(err);
+                      console.error(err);
                     });
                 }
-            });
-            currentDate.setDate(currentDate.getDate() + 1);
-        }
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+        });
     } catch (err) {
         console.error(err);
     }
