@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { environment } from "src/enviroments/enviroment";
 import { ReturnResult } from "../../shared/models/return-result";
-import { DataFilterWorkCalendar, WorkCalendarModel } from "./work-calendar-management.model";
+import { DataFilterWorkCalendar, WorkCalendarDetailModel, WorkCalendarModel } from "./work-calendar-management.model";
 
 @Injectable({
     providedIn: 'root'
@@ -19,6 +19,10 @@ export class WorkCalendarManagementService {
 
     saveWorkCalendar(model: WorkCalendarModel): Observable<ReturnResult<WorkCalendarModel>> {
         return this.http.post<ReturnResult<WorkCalendarModel>>(`${this.baseUrl}/SaveWorkCalendar`, model);
+    }
+
+    saveWorkCalendarDetail(model: WorkCalendarDetailModel): Observable<ReturnResult<WorkCalendarDetailModel>> {
+        return this.http.post<ReturnResult<WorkCalendarDetailModel>>(`${this.baseUrl}/SaveWorkCalendarDetail`, model);
     }
 
     // exportAttendanceReport(model: AttendanceReportExportModel): Observable<ReturnResult<AttendanceModel[]>> {

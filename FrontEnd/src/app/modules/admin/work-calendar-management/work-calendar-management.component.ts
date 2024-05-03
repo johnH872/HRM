@@ -12,11 +12,14 @@ import { Router } from '@angular/router';
 import { FilterType } from '../../shared/enum/filter-type.enum';
 import { map, takeUntil } from 'rxjs';
 import { MatOption } from '@angular/material/core';
-import { DataFilterWorkCalendar } from './work-calendar-management.model';
+import { DataFilterWorkCalendar, WorkCalendarDetailModel } from './work-calendar-management.model';
 import { WorkCalendarManagementService } from './work-calendar-management.service';
 import { DataStateModel } from '../datastate-management/data-state.model';
 import { DatastateService } from '../datastate-management/datastate.service';
 import { NbToastrService } from '@nebular/theme';
+import { MatDialog } from '@angular/material/dialog';
+import { AddEditWorkCalendarDetailComponent } from './add-edit-work-calendar-detail/add-edit-work-calendar-detail.component';
+import { TblActionType } from '../../shared/enum/tbl-action-type.enum';
 
 @Component({
   selector: 'app-work-calendar-management',
@@ -75,6 +78,7 @@ export class WorkCalendarManagementComponent implements OnInit {
     private router: Router,
     private toast: NbToastrService,
     private dataStateService: DatastateService,
+    private dialog: MatDialog,
   ) { 
     this.dataFilterWorkCalendar = new DataFilterWorkCalendar();
     this.configFilterEmployee = {
@@ -366,5 +370,25 @@ export class WorkCalendarManagementComponent implements OnInit {
         }
       }
     }
+  }
+
+  testWorkCalendarDetail(model: WorkCalendarDetailModel = null) {
+    const dialogRef = this.dialog.open(AddEditWorkCalendarDetailComponent, {
+      disableClose: true,
+      height: "40%",
+      width: "40%",
+      backdropClass: 'custom-backdrop',
+      hasBackdrop: true,
+      autoFocus: false,
+      data: {
+        model: model,
+        action: model ? TblActionType.Edit : TblActionType.Add
+      }
+    });
+    dialogRef.afterClosed().subscribe(async response => {
+      if (response) {
+        await this.callDataSource();
+      }
+    });
   }
 }

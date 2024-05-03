@@ -206,6 +206,64 @@ class WorkCalendarController {
             console.log(error);
         }
     }
+
+    async saveWorkCalendarDetail(req, res, next) {
+        var result = new ReturnResult();
+        try {
+            const model = req.body;
+            if (model.workCalendarDetailId === null || model.workCalendarDetailId === 0) { // Add new
+                const saveWorkCalendarDetail = await dbContext.WorkCalendarDetail.create({
+                    workCalendarId: model.workCalendarId,
+                    from: model.from,
+                    to: model.to,
+                    description: model.description,
+                    codeColor: model.codeColor
+                });
+                if (saveWorkCalendarDetail) {
+                    result.result = saveWorkCalendarDetail;
+                } else {
+                    result.message = "Cannot save work calendar detail";
+                }
+            } else { // Edit
+                // Find existing WorkCalendarDetail
+                const existWorkCalendarDetail = await dbContext.WorkCalendarDetail.findOne({
+                    where: {
+                        workCalendarDetailId: model.workCalendarDetailId
+                    }
+                });
+                if (existWorkCalendarDetail) {
+                    const saveWorkCalendarDetail = await dbContext.WorkCalendarDetail.update({
+                        workCalendarId: model.workCalendarId ?? existWorkCalendarDetail.workCalendarId,
+                        from: model.from ?? existWorkCalendarDetail.from,
+                        to: model.to ?? existWorkCalendarDetail.to,
+                        description: model.description ?? existWorkCalendarDetail.description,
+                        codeColor: model.codeColor  ?? existWorkCalendarDetail.codeColor
+                    }, {
+                        where: {
+                            workCalendarDetailId: model.workCalendarDetailId
+                        },
+                        returning: true,
+                        plain: true
+                    });
+                    if (saveWorkCalendarDetail) {
+                        result.result = await dbContext.WorkCalendarDetail.findOne({
+                            where: {
+                                workCalendarDetailId: model.workCalendarDetailId
+                            }
+                        });
+                    } else {
+                        result.message = 'Can not save Work Calendar Detail';
+                    }
+                } else {
+                    result.message = 'Work Calendar Detail not found';
+                }
+            }
+            return res.status(200).json(result);
+        } catch(error) {
+            res.status(400).json(error);
+            console.log(error);
+        }
+    }
 }
 
 function getAllColumnReport(dataFilterReport, timeZoneSetting) {

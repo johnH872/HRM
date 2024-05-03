@@ -160,7 +160,8 @@ const primengModules = [
   DialogModule,
   CardModule,
   StepsModule,
-  RadioButtonModule
+  RadioButtonModule,
+  ColorPickerModule
 ]
 
 @NgModule({

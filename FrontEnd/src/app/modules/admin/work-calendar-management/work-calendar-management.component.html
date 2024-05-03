@@ -23,6 +23,10 @@
     </div>
     <div style="display: flex; justify-content: right">
       <mat-toolbar style="display: flex; justify-content: right; background-color: #edf1f7; align-items: center;">
+        <button mat-raised-button style="background-color: #b45cea; color: white;" class="button-app-function"
+          (click)="testWorkCalendarDetail()">
+          <mat-icon>refresh</mat-icon>
+        </button>
         <nb-toggle (checkedChange)="getMyEmployeeAttendance($event)" style="margin-right: 20px; margin-top: 10px;"
           [checked]="isMyEmployee"> My Employees </nb-toggle>
         <button mat-raised-button style="background-color: #b45cea; color: white;" class="button-app-function"
