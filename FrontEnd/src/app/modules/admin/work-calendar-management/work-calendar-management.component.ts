@@ -150,6 +150,7 @@ export class WorkCalendarManagementComponent implements OnInit {
       // this.footerData = {...this.dataSource[this.dataSource.length - 1]};
       // this.dataSource.pop();
     }
+    console.log(this.dataSource)
     this.isLoading = !this.isLoading;
   }
 
@@ -370,25 +371,5 @@ export class WorkCalendarManagementComponent implements OnInit {
         }
       }
     }
-  }
-
-  testWorkCalendarDetail(model: WorkCalendarDetailModel = null) {
-    const dialogRef = this.dialog.open(AddEditWorkCalendarDetailComponent, {
-      disableClose: true,
-      height: "40%",
-      width: "40%",
-      backdropClass: 'custom-backdrop',
-      hasBackdrop: true,
-      autoFocus: false,
-      data: {
-        model: model,
-        action: model ? TblActionType.Edit : TblActionType.Add
-      }
-    });
-    dialogRef.afterClosed().subscribe(async response => {
-      if (response) {
-        await this.callDataSource();
-      }
-    });
   }
 }

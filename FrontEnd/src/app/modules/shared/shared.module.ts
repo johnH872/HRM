@@ -43,7 +43,7 @@ import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.
 import { NgxTableComponent } from './components/ngx-table/ngx-table.component';
 import { MatTableComponent } from './components/mat-table/mat-table.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
-import { ColorPickerModule } from 'ngx-color-picker';
+// import { ColorPickerModule } from 'ngx-color-picker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { RichInlineEditComponent } from './components/rich-inline-edit/rich-inline-edit.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
@@ -80,6 +80,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { CardModule } from 'primeng/card';
 import { StepsModule } from 'primeng/steps';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { ColorPickerModule } from 'primeng/colorpicker';
+import { ListboxModule } from 'primeng/listbox';
 
 const materialModules = [
   MatFormFieldModule,
@@ -161,7 +163,8 @@ const primengModules = [
   CardModule,
   StepsModule,
   RadioButtonModule,
-  ColorPickerModule
+  ColorPickerModule,
+  ListboxModule,
 ]
 
 @NgModule({

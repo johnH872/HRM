@@ -160,3 +160,19 @@
   :host ::ng-deep .p-inputgroup .p-inputwrapper>.p-component {
     width: 100%;
   }
+
+  :host ::ng-deep {
+    .p-listbox {
+      border: none;
+      .p-listbox-list .p-listbox-item {
+        padding: 0 !important;
+        .p-highlight {
+          color: white !important;
+        }
+      }
+      .p-listbox-list {
+        padding: 0 !important;
+      }
+    }
+    
+  }

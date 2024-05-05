@@ -23,10 +23,6 @@
     </div>
     <div style="display: flex; justify-content: right">
       <mat-toolbar style="display: flex; justify-content: right; background-color: #edf1f7; align-items: center;">
-        <button mat-raised-button style="background-color: #b45cea; color: white;" class="button-app-function"
-          (click)="testWorkCalendarDetail()">
-          <mat-icon>refresh</mat-icon>
-        </button>
         <nb-toggle (checkedChange)="getMyEmployeeAttendance($event)" style="margin-right: 20px; margin-top: 10px;"
           [checked]="isMyEmployee"> My Employees </nb-toggle>
         <button mat-raised-button style="background-color: #b45cea; color: white;" class="button-app-function"
@@ -118,8 +114,8 @@
               <ng-container *ngIf="viewMode === 'Both'">
                 <td mat-cell *matCellDef="let element" class="custom-font" style="border-color: #696969;">
                   <div fxLayout="column" fxLayoutAlign="space-around center">
-                    <ng-container *ngTemplateOutlet="workCalendar; context: {data: element[column.key]}"></ng-container>
-                    <ng-container *ngTemplateOutlet="workCalendarDetail; context: {data: element[column.key]}"></ng-container>
+                    <ng-container fxFlex="40" *ngTemplateOutlet="workCalendar; context: {data: element[column.key]}"></ng-container>
+                    <ng-container fxFlex="60"  *ngTemplateOutlet="workCalendarDetail; context: {data: element[column.key]}"></ng-container>
                   </div>
                 </td>
               </ng-container>
@@ -150,6 +146,10 @@
           </p-dropdown>
           <p-dropdown [options]="lstWorkHours" [(ngModel)]="data.workingHour"
             (onChange)="editWorkHour($event, data)"></p-dropdown>
+          <i class="pi pi-plus-circle"
+            style="align-items: center; display: flex;"
+            [matMenuTriggerFor]="addEditWorkCalendarDetail"
+            [matMenuTriggerData]="{ id: data?.workCalendarId, model: null }"></i>
         </div>
       </div>
     </div>
@@ -157,14 +157,23 @@
 </ng-template>
 
 <ng-template #workCalendarDetail let-data="data">
-  <!-- <p-listbox [options]="cities" [(ngModel)]="selectedCity" optionLabel="name"></p-listbox> -->
+  <p-listbox [options]="data?.WorkCalendarDetails">
+    <ng-template let-item pTemplate="item">
+      <div [ngStyle]="{'background-color': item?.codeColor}"
+        style="color: white;"
+        [matMenuTriggerFor]="addEditWorkCalendarDetail"
+        [matMenuTriggerData]="{ id: data?.workCalendarId, model: item }">
+        <span style="">{{item?.from}} - {{item?.to}}</span><br>
+        <span>{{item?.description}}</span>
+      </div>
+    </ng-template>
+  </p-listbox>
 </ng-template>
 
-<mat-menu #popoverCellDetail="matMenu" xPosition="after">
-  <ng-template matMenuContent let-data="data" let-title="title">
+<mat-menu #addEditWorkCalendarDetail="matMenu" xPosition="after">
+  <ng-template matMenuContent let-id="id" let-model="model">
     <div (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
-      <app-popover-detail-attendance-cell [data]="data" [titleHeader]="title"
-        (onRefresh)="onRefresh()"></app-popover-detail-attendance-cell>
+      <app-add-edit-work-calendar-detail [id]="id" [model]="model" (onRefresh)="callDataSource()"></app-add-edit-work-calendar-detail>
     </div>
   </ng-template>
 </mat-menu>

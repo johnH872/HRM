@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { TblActionType } from 'src/app/modules/shared/enum/tbl-action-type.enum';
 import { WorkCalendarDetailModel } from '../work-calendar-management.model';
@@ -11,6 +11,7 @@ import { NbToastrService } from '@nebular/theme';
 import { DatastateService } from '../../datastate-management/datastate.service';
 import { MessageService } from 'primeng/api';
 import { WorkCalendarManagementService } from '../work-calendar-management.service';
+import moment from 'moment';
 
 @Component({
   selector: 'app-add-edit-work-calendar-detail',
@@ -18,6 +19,10 @@ import { WorkCalendarManagementService } from '../work-calendar-management.servi
   styleUrls: ['./add-edit-work-calendar-detail.component.scss']
 })
 export class AddEditWorkCalendarDetailComponent implements OnInit, OnDestroy {
+  @Input() id: any;
+  @Input() model: any;
+  @Output() onRefresh = new EventEmitter<any>();
+
   user;
   private destroy$: Subject<void> = new Subject<void>();
   action: TblActionType;
@@ -27,8 +32,8 @@ export class AddEditWorkCalendarDetailComponent implements OnInit, OnDestroy {
   isAdmin: boolean = false;
 
   constructor(
-    public dialModalRef: MatDialogRef<AddEditWorkCalendarDetailComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    // public dialModalRef: MatDialogRef<AddEditWorkCalendarDetailComponent>,
+    // @Inject(MAT_DIALOG_DATA) public data: any,
     private frmBuilder: RxFormBuilder,
     private authService: NbAuthService,
     private toast: NbToastrService,
@@ -37,10 +42,7 @@ export class AddEditWorkCalendarDetailComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private workCalendarService: WorkCalendarManagementService,
   ) {
-    this.action = data?.action;
-    this.dataModel = data?.model ?? new WorkCalendarDetailModel();
-    this.isAdmin = data.isAdmin;
-
+    // this.isAdmin = data.isAdmin;
     this.authService.onTokenChange().pipe(takeUntil(this.destroy$)).subscribe((token: NbAuthJWTToken) => {
       if (token.isValid()) {
         this.user = token.getPayload().user;
@@ -49,6 +51,8 @@ export class AddEditWorkCalendarDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.dataModel = this.model ?? new WorkCalendarDetailModel();
+    this.action = this.dataModel?.workCalendarDetailId ? TblActionType.Edit : TblActionType.Add;
     this.frmData = this.frmBuilder.formGroup(WorkCalendarDetailModel, this.dataModel);
     // this.dialModalRef.updatePosition({ right: '0', });
   }
@@ -62,22 +66,20 @@ export class AddEditWorkCalendarDetailComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  closeDialog() {
-    this.dialModalRef.close();
-  }
-
   saveData() {
-    if (this.frmData.valid) {
+    if (this.frmData?.valid) {
       this.isLoading = !this.isLoading;
       const model: WorkCalendarDetailModel = Object.assign({}, this.frmData.value);
-
+      model.workCalendarId = this.id ?? this.model.workCalendarId;
+      model.from = moment(model.from).format('hh:mm A') === 'Invalid date' ? model.from : moment(model.from).format('hh:mm A');
+      model.to = moment(model.to).format('hh:mm A') === 'Invalid date' ? model.to : moment(model.to).format('hh:mm A');
       this.workCalendarService.saveWorkCalendarDetail(model).subscribe(resp => {
         if (resp.result) {
           this.messageService.add({
             key: 'toast1', severity: 'success', summary: 'Success',
             detail: `Save work calendar detail successfully`, life: 2000
           });
-          this.dialModalRef.close(resp.result);
+          this.onRefresh.emit(resp);
         } else {
           this.toast.danger(resp.message, 'Failure');
         }
