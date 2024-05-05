@@ -15,9 +15,9 @@ class WorkCalendarController {
             const timeZoneSetting = 7;
             var reportDatas = [];
             var lstColumn = getAllColumnReport(dataFilterReport, timeZoneSetting);
-            
+
             var queryEmployees = {
-                
+
             };
             var queryWorkCalendar = {
                 [Op.and]: [
@@ -109,7 +109,7 @@ class WorkCalendarController {
                     'workingDate',
                     'workingType',
                     'workingHour',
-                ],                
+                ],
             });
 
             lstEmployeesModel.forEach(employee => {
@@ -131,10 +131,10 @@ class WorkCalendarController {
                             workCalendarItem.workingDate.getDate() === currentDate.getDate() &&
                             workCalendarItem.workingDate.getMonth() === currentDate.getMonth() &&
                             workCalendarItem.workingDate.getFullYear() === currentDate.getFullYear()) {
-                                dataOwner.workCalendarMonthly.push({
-                                    [key]: workCalendarItem
-                                });
-                            }
+                            dataOwner.workCalendarMonthly.push({
+                                [key]: workCalendarItem
+                            });
+                        }
                     });
                     currentDate.setDate(currentDate.getDate() + 1);
                 }
@@ -145,7 +145,7 @@ class WorkCalendarController {
                 column: lstColumn,
             };
             res.status(200).json(returnResult);
-        } catch(error) {
+        } catch (error) {
             res.status(400).json(error);
             console.log(error)
         }
@@ -201,7 +201,7 @@ class WorkCalendarController {
                 }
             }
             return res.status(200).json(result);
-        } catch(error) {
+        } catch (error) {
             res.status(400).json(error);
             console.log(error);
         }
@@ -237,7 +237,7 @@ class WorkCalendarController {
                         from: model.from ?? existWorkCalendarDetail.from,
                         to: model.to ?? existWorkCalendarDetail.to,
                         description: model.description ?? existWorkCalendarDetail.description,
-                        codeColor: model.codeColor  ?? existWorkCalendarDetail.codeColor
+                        codeColor: model.codeColor ?? existWorkCalendarDetail.codeColor
                     }, {
                         where: {
                             workCalendarDetailId: model.workCalendarDetailId
@@ -259,7 +259,34 @@ class WorkCalendarController {
                 }
             }
             return res.status(200).json(result);
-        } catch(error) {
+        } catch (error) {
+            res.status(400).json(error);
+            console.log(error);
+        }
+    }
+
+    async getWorkCalendarByUserId(req, res, next) {
+        var result = new ReturnResult();
+        try {
+            const dataFilter = req.body;
+            const timeZoneSetting = 7;
+            const queryWorkCalendar = {
+                userId: dataFilter.userIds,
+                workingDate: {
+                    [Op.between]: [new Date(dataFilter.fromDate), new Date(dataFilter.toDate)],
+                }
+            };
+            const lstWorkCalendarsModel = await dbContext.WorkCalendar.findAll({
+                where: queryWorkCalendar,
+                include: [
+                    {
+                        model: dbContext.WorkCalendarDetail,
+                    },
+                ],
+            });
+            result.result = lstWorkCalendarsModel;
+            return res.status(200).json(result);
+        } catch (error) {
             res.status(400).json(error);
             console.log(error);
         }
