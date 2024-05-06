@@ -49,8 +49,8 @@ export class AttendanceManagementService {
     return this.http.get<ReturnResult<ReportAttendanceModel[]>>(`${this.baseUrl}/GetAllAttendanceReport/${email}`)
   }
 
-  saveAttendanceReport(model: ReportAttendanceModel): Observable<ReturnResult<ReportAttendanceModel[]>> {
-    return this.http.post<ReturnResult<ReportAttendanceModel[]>>(`${this.baseUrl}/SaveAttendanceReport`, model)
+  saveAttendanceReport(model: ReportAttendanceModel, userId: String=''): Observable<ReturnResult<ReportAttendanceModel[]>> {
+    return this.http.post<ReturnResult<ReportAttendanceModel[]>>(`${this.baseUrl}/SaveAttendanceReport?userId=${userId}`, model)
   }
 
   deleteAttendanceReport(ids: number[]): Observable<ReturnResult<ReportAttendanceModel[]>> {

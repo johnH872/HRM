@@ -9,6 +9,7 @@ import { Op, where, literal } from "sequelize";
 import { uploadImage } from "../utils/cloundinary.js";
 import { leaveRequestStatus } from "../models/enums/leaveRequestStatus.js";
 import { socketIO } from "../app.js";
+import moment from "moment";
 const { Canvas, Image, ImageData } = canvas
 faceapi.env.monkeyPatch({ Canvas, Image, ImageData })
 class attendanceController {
@@ -294,6 +295,9 @@ class attendanceController {
         try {
             returnResult.result = false;
             const { statusId, attendanceReportId } = req.body;
+            const userId = req.query.userId;
+            const oldAttendanceReport = await dbContext.AttendanceReport.findByPk(attendanceReportId);
+            var oldStatusId = oldAttendanceReport.statusId;
             const updatedRes = await dbContext.AttendanceReport.update({
                 statusId
             }, {
@@ -304,6 +308,43 @@ class attendanceController {
             if (updatedRes) {
                 returnResult.result = true;
             }
+            if(oldStatusId == 1 && statusId == 2 && userId ) {
+                if(oldAttendanceReport.type === 'PUNCHIN') {
+                    await dbContext.Attendance.create({
+                        userId,
+                        punchinDate: oldAttendanceReport.createdAt,
+                        punchinTime: oldAttendanceReport.createdAt.getTime(),
+                        punchinNote: '',
+                        punchinOffset: -420,
+                        punchInImageUrl: oldAttendanceReport.imageUrl,
+                        punchoutDate: null,
+                        punchoutTime: null,
+                        punchoutNote: null,
+                        punchoutOffset: null,
+                        punchOutImageUrl: null,
+                    });
+                }
+
+                if(oldAttendanceReport.type === 'PUNCHOUT') {
+                    var startDate = moment(oldAttendanceReport.createdAt).utc().startOf('day');
+                    var endDate = moment(oldAttendanceReport.createdAt).utc().endOf('day');
+                    await dbContext.Attendance.update({
+                        punchoutDate: oldAttendanceReport.createdAt,
+                        punchoutTime: oldAttendanceReport.createdAt.getTime(),
+                        punchoutNote: '',
+                        punchoutOffset: -420,
+                        punchOutImageUrl: oldAttendanceReport.imageUrl,
+                    }, {
+                        where: {
+                            punchoutDate: null, 
+                            punchoutTime: null,
+                            punchinDate: {
+                                [Op.between]: [startDate, endDate]
+                            }
+                        }
+                    });
+                }
+            } 
             res.status(200).json(returnResult);
         } catch (error) {
             res.status(400).json(error);

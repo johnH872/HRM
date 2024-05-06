@@ -276,11 +276,29 @@ class WorkCalendarController {
         }
     }
 
+    async removeWorkCalendarDetails(req, res, next) {
+        var result = new ReturnResult();
+        try {
+            const ids = req.body;
+            const lstWorkCalendarsModel = await dbContext.WorkCalendarDetail.destroy({
+                where: {
+                    workCalendarDetailId: ids
+                }  
+            });
+            if(lstWorkCalendarsModel > 0) {
+                result.result = true;
+            } else result.result = false;
+            return res.status(200).json(result);
+        } catch (error) {
+            res.status(400).json(error);
+            console.log(error);
+        }
+    }
+
     async getWorkCalendarByUserId(req, res, next) {
         var result = new ReturnResult();
         try {
             const dataFilter = req.body;
-            const timeZoneSetting = 7;
             const queryWorkCalendar = {
                 userId: dataFilter.userIds,
                 workingDate: {

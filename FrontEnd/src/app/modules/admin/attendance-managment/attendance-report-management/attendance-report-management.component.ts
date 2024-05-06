@@ -119,7 +119,7 @@ export class AttendanceReportManagementComponent implements OnInit, OnDestroy {
 
   saveAttendanceReport(isApprove: boolean, attendanceReport: ReportAttendanceModel) {
     attendanceReport.statusId = isApprove ? LeaveRequestStatus.APPROVED : LeaveRequestStatus.REJECTED;
-    this.attendanceService.saveAttendanceReport(attendanceReport).subscribe(res => {
+    this.attendanceService.saveAttendanceReport(attendanceReport, this.userModel.userId).subscribe(res => {
       if (res.result) {
         this.messageService.add({
           key: 'toast1', severity: 'success', summary: 'Success',

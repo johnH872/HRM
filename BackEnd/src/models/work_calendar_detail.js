@@ -51,6 +51,8 @@ export default (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'WorkCalendarDetail',
+    paranoid: true,
+    timestamps: true
   });
   return WorkCalendarDetail;
 };
