@@ -3,7 +3,7 @@ import { ReturnResult } from "../models/DTO/returnResult.js";
 import db from '../models/index.js'
 import { Page } from "../models/DTO/page.js";
 import { PagedData } from "../models/DTO/pagedData.js";
-import { Op, Sequelize } from "sequelize";
+import { Op, Sequelize, where } from "sequelize";
 import { filterData, mappingPage, pagingData } from "../utils/pagingAndFiltering.js";
 import { employeeValidReturnVariable } from "../utils/helper.js";
 const dbContext = await db;
@@ -270,6 +270,23 @@ class employeeController {
                 }
             });
             if (removedEmployees) result.result = true;
+        } catch (error) {
+            console.error(error);
+        }
+        return res.status(200).json(result);
+    }
+
+    async getOwnersByEmployeeId(req, res, next) {
+        var result = new ReturnResult;
+        try {
+            var employeeId = req.query.employeeId;
+            const resp = await dbContext.User.findAll({
+                where: {
+                    ownerId: employeeId
+                }
+            });
+            if (resp) result.result = resp;
+            else result.message = "No such employee";
         } catch (error) {
             console.error(error);
         }

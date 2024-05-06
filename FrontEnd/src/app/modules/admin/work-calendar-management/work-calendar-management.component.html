@@ -139,8 +139,8 @@
             (onChange)="editWorkType($event, data)">
             <ng-template pTemplate="selectedItem">
               <div *ngIf="data.workingType">
-                <i class="pi pi-building" *ngIf="data.workingType === 5"></i>
-                <i class="pi pi-home" *ngIf="data.workingType === 6"></i>
+                <i class="pi pi-building" *ngIf="data.workingType === 5" style="color: #a33ce3;"></i>
+                <i class="pi pi-home" *ngIf="data.workingType === 6" style="color: #f78282"></i>
               </div>
             </ng-template>
           </p-dropdown>
@@ -157,17 +157,19 @@
 </ng-template>
 
 <ng-template #workCalendarDetail let-data="data">
-  <p-listbox [options]="data?.WorkCalendarDetails">
-    <ng-template let-item pTemplate="item">
-      <div [ngStyle]="{'background-color': item?.codeColor}"
-        style="color: white;"
-        [matMenuTriggerFor]="addEditWorkCalendarDetail"
-        [matMenuTriggerData]="{ id: data?.workCalendarId, model: item }">
-        <span style="">{{item?.from}} - {{item?.to}}</span><br>
-        <span>{{item?.description}}</span>
-      </div>
-    </ng-template>
-  </p-listbox>
+  <div style="max-height: 64px; min-height: 64px; overflow: auto;">
+    <p-listbox [options]="data?.WorkCalendarDetails">
+      <ng-template let-item pTemplate="item">
+        <div [ngStyle]="{'background-color': item?.codeColor}"
+          style="color: white;"
+          [matMenuTriggerFor]="addEditWorkCalendarDetail"
+          [matMenuTriggerData]="{ id: data?.workCalendarId, model: item }">
+          <span style="">{{item?.from}} - {{item?.to}}</span><br>
+          <span>{{item?.description}}</span>
+        </div>
+      </ng-template>
+    </p-listbox>
+  </div>
 </ng-template>
 
 <mat-menu #addEditWorkCalendarDetail="matMenu" xPosition="after">

@@ -44,7 +44,7 @@ class ReportScheduleController {
             };
 
             if (dataFilterReport.listProfile && dataFilterReport.listProfile.length > 0 && dataFilterReport.listRoles && dataFilterReport.listRoles.length > 0) {
-                var lstUserHasRole = dbContext.User_Role.findAll({
+                var lstUserHasRole = await dbContext.User_Role.findAll({
                     where: {
                         roleId: {
                             [Op.in]: dataFilterReport.listRoles,
@@ -54,15 +54,17 @@ class ReportScheduleController {
                         'userId'
                     ]
                 });
-                lstUserHasRole = lstUserHasRole.concat(dataFilterReport.listProfile);
+                var lstUserFound = [];
+                lstUserHasRole.forEach(item => lstUserFound.push(item.dataValues.userId));
+                lstUserFound = lstUserFound.concat(dataFilterReport.listProfile);
                 queryEmployees.userId = {
-                    [Op.in]: lstUserHasRole
+                    [Op.in]: lstUserFound
                 };
                 queryAttendance.userId = {
-                    [Op.in]: lstUserHasRole
+                    [Op.in]: lstUserFound
                 };
                 queryLeave.userId = {
-                    [Op.in]: lstUserHasRole
+                    [Op.in]: lstUserFound
                 };
             } else if (dataFilterReport.listProfile && dataFilterReport.listProfile.length > 0) {
                 queryEmployees.userId = {
@@ -75,7 +77,7 @@ class ReportScheduleController {
                     [Op.in]: dataFilterReport.listProfile
                 };
             } else if (dataFilterReport.listRoles && dataFilterReport.listRoles.length > 0) {
-                var lstUserHasRole = dbContext.User_Role.findAll({
+                var lstUserHasRole = await dbContext.User_Role.findAll({
                     where: {
                         roleId: {
                             [Op.in]: dataFilterReport.listRoles,
@@ -85,14 +87,16 @@ class ReportScheduleController {
                         'userId'
                     ]
                 });
+                var lstUserFound = [];
+                lstUserHasRole.forEach(item => lstUserFound.push(item.dataValues.userId));
                 queryEmployees.userId = {
-                    [Op.in]: lstUserHasRole
+                    [Op.in]: lstUserFound
                 };
                 queryAttendance.userId = {
-                    [Op.in]: lstUserHasRole
+                    [Op.in]: lstUserFound
                 };
                 queryLeave.userId = {
-                    [Op.in]: lstUserHasRole
+                    [Op.in]: lstUserFound
                 };
             }
 

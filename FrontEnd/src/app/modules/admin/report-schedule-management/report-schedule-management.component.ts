@@ -13,6 +13,7 @@ import { FilterType } from '../../shared/enum/filter-type.enum';
 import { map } from 'rxjs';
 import { MatOption } from '@angular/material/core';
 import { Helper } from '../../shared/utility/Helper';
+import { RoleManagementService } from '../../shared/services/role-management.service';
 
 @Component({
   selector: 'app-report-schedule-management',
@@ -64,6 +65,7 @@ export class ReportScheduleManagementComponent implements OnInit {
     private frmBuilder: RxFormBuilder,
     private attendanceService: ReportScheduleManagementService,
     private userService: EmployeeManagementService,
+    private roleService: RoleManagementService,
     private authService: NbAuthService,
     private router: Router,
   ) { 
@@ -84,21 +86,21 @@ export class ReportScheduleManagementComponent implements OnInit {
         this.user = token.getPayload();
       }
     });
-    // this.configFilterRole = {
-    //   filterType: FilterType.DropDown,
-    //   filterValue: this.userService.getAllRoles().pipe(map(x => {
-    //     if (x.result) {
-    //       x.result.map(item => {
-    //         var indexRole = this.listStatusRole.findIndex(role => role.display === item.displayName);
-    //         if (indexRole > -1) this.listStatusRole[indexRole].value = item.id;
-    //       });
-    //       return x.result.map(item => Object.assign({ text: `${item?.displayName}`, value: item.id }));
-    //     } else return [];
-    //   })),
-    //   displayText: 'text',
-    //   displayValue: 'value',
-    //   firstLoad: true
-    // } as FilterConfig;
+    this.configFilterRole = {
+      filterType: FilterType.DropDown,
+      filterValue: this.roleService.getRoles().pipe(map(x => {
+        if (x.result) {
+          x.result.map(item => {
+            var indexRole = this.listStatusRole.findIndex(role => role.display === item.displayName);
+            if (indexRole > -1) this.listStatusRole[indexRole].value = item.roleId;
+          });
+          return x.result.map(item => Object.assign({ text: `${item?.displayName}`, value: item.roleId }));
+        } else return [];
+      })),
+      displayText: 'text',
+      displayValue: 'value',
+      firstLoad: true
+    } as FilterConfig;
     this.userService.getAllEmployee();
   }
 

@@ -20,6 +20,7 @@ import { NbToastrService } from '@nebular/theme';
 import { MatDialog } from '@angular/material/dialog';
 import { AddEditWorkCalendarDetailComponent } from './add-edit-work-calendar-detail/add-edit-work-calendar-detail.component';
 import { TblActionType } from '../../shared/enum/tbl-action-type.enum';
+import { RoleManagementService } from '../../shared/services/role-management.service';
 
 @Component({
   selector: 'app-work-calendar-management',
@@ -45,10 +46,8 @@ export class WorkCalendarManagementComponent implements OnInit {
   footerData: WorkCalendarDatum;
   defaultHeader = ["userName"];
   listStatus = [
-    { codeColor: "#ff0009", value: "red", display: "Short of hours (< 9h)" },
-    { codeColor: "#ffaa00", value: "yellow", display: "Not punchout" },
-    { codeColor: "#8dc63f", value: "green", display: "Normal (9h to 10h)" },
-    { codeColor: "#008080", value: "purple", display: "Overtime (> 10h)" },
+    { codeColor: "#a33ce3", value: "5", display: "At Company" },
+    { codeColor: "#f78282", value: "6", display: "At Home" },
   ];
   listStatusLeave = [
     { codeColor: "#996600", value: "noPaid", display: "Unpaid Leave" },
@@ -74,6 +73,7 @@ export class WorkCalendarManagementComponent implements OnInit {
     private frmBuilder: RxFormBuilder,
     private workCalendarService: WorkCalendarManagementService,
     private userService: EmployeeManagementService,
+    private roleService: RoleManagementService,
     private authService: NbAuthService,
     private router: Router,
     private toast: NbToastrService,
@@ -97,21 +97,21 @@ export class WorkCalendarManagementComponent implements OnInit {
         this.user = token.getPayload();
       }
     });
-    // this.configFilterRole = {
-    //   filterType: FilterType.DropDown,
-    //   filterValue: this.userService.getAllRoles().pipe(map(x => {
-    //     if (x.result) {
-    //       x.result.map(item => {
-    //         var indexRole = this.listStatusRole.findIndex(role => role.display === item.displayName);
-    //         if (indexRole > -1) this.listStatusRole[indexRole].value = item.id;
-    //       });
-    //       return x.result.map(item => Object.assign({ text: `${item?.displayName}`, value: item.id }));
-    //     } else return [];
-    //   })),
-    //   displayText: 'text',
-    //   displayValue: 'value',
-    //   firstLoad: true
-    // } as FilterConfig;
+    this.configFilterRole = {
+      filterType: FilterType.DropDown,
+      filterValue: this.roleService.getRoles().pipe(map(x => {
+        if (x.result) {
+          x.result.map(item => {
+            var indexRole = this.listStatusRole.findIndex(role => role.display === item.displayName);
+            if (indexRole > -1) this.listStatusRole[indexRole].value = item.roleId;
+          });
+          return x.result.map(item => Object.assign({ text: `${item?.displayName}`, value: item.roleId }));
+        } else return [];
+      })),
+      displayText: 'text',
+      displayValue: 'value',
+      firstLoad: true
+    } as FilterConfig;
     this.userService.getAllEmployee();
     this.dataStateService.getDataStateByType('WORK_TYPE').subscribe(resp => {
       if (resp.result) {
@@ -125,7 +125,7 @@ export class WorkCalendarManagementComponent implements OnInit {
   }
 
   async initialData() {
-    const attendanceReportStatus = window.localStorage.getItem('attendanceReportStatus');
+    const attendanceReportStatus = window.localStorage.getItem('workCalendarStatus');
     attendanceReportStatus == null ? this.listStatus.map(item => this.listStatusChoose?.push(item?.value)) : this.listStatusChoose = attendanceReportStatus?.split(',');
     const attendanceReportLeaveStatus = window.localStorage.getItem('attendanceReportLeaveStatus');
     attendanceReportLeaveStatus == null ? this.listStatusLeave.map(item => this.listStatusLeaveChoose?.push(item?.value)) : this.listStatusLeaveChoose = attendanceReportLeaveStatus?.split(',');
@@ -150,7 +150,6 @@ export class WorkCalendarManagementComponent implements OnInit {
       // this.footerData = {...this.dataSource[this.dataSource.length - 1]};
       // this.dataSource.pop();
     }
-    console.log(this.dataSource)
     this.isLoading = !this.isLoading;
   }
 
@@ -206,7 +205,7 @@ export class WorkCalendarManagementComponent implements OnInit {
     this.dataFilterWorkCalendar.listProfile = [];
     this.dataFilterWorkCalendar.listRoles = [];
     this.listStatus.map(item => this.listStatusChoose?.push(item?.value));
-    window.localStorage.setItem('attendanceReportStatus', `${this.listStatusChoose}`);
+    window.localStorage.setItem('workCalendarStatus', `${this.listStatusChoose}`);
     this.listStatusLeave.map(item => this.listStatusLeaveChoose?.push(item?.value));
     window.localStorage.setItem('attendanceReportLeaveStatus', `${this.listStatusLeaveChoose}`);
     // this.listStatusRole.map(item => this.listStatusRoleChoose?.push(item?.value));
@@ -292,9 +291,12 @@ export class WorkCalendarManagementComponent implements OnInit {
   async getMyEmployeeAttendance(event: boolean) {
     this.isMyEmployee = event;
     if (event) {
-      var resultOwner = await this.userService.getOwnersByEmployeeId(this.user?.nameid).toPromise();
+      var resultOwner = await this.userService.getOwnersByEmployeeId(this.user?.user?.userId).toPromise();
       if (resultOwner.result) {
         this.listOwners = resultOwner.result.map(item => item.userId);
+        if (this.listOwners.length <= 0) {
+          this.listOwners.push('Nothing');
+        }
         this.dataFilterWorkCalendar.listRoles = [];
         this.listStatusRoleChoose = [];
         this.dataFilterWorkCalendar.listProfile = [];
@@ -310,7 +312,7 @@ export class WorkCalendarManagementComponent implements OnInit {
   }
 
   async changeStatus(event: any) {
-    window.localStorage.setItem('attendanceReportStatus', `${this.listStatusChoose}`);
+    window.localStorage.setItem('workCalendarStatus', `${this.listStatusChoose}`);
     this.dataFilterWorkCalendar.listStatus = this.listStatusChoose;
     this.frmGroup.get('listStatus').setValue(this.dataFilterWorkCalendar?.listStatus);
     await this.callDataSource();
@@ -353,7 +355,7 @@ export class WorkCalendarManagementComponent implements OnInit {
       model.workingType = value.value;
       var resp = await this.workCalendarService.saveWorkCalendar(model).toPromise();
       if (resp.result) {
-        this.toast.success(`Save leave request successfully`, 'Success');
+        this.toast.success(`Save working type successfully`, 'Success');
         await this.callDataSource();
       }
     }
@@ -366,7 +368,7 @@ export class WorkCalendarManagementComponent implements OnInit {
         model.workingHour = value.value;
         var resp = await this.workCalendarService.saveWorkCalendar(model).toPromise();
         if (resp.result) {
-          this.toast.success(`Save leave request successfully`, 'Success');
+          this.toast.success(`Save working hours successfully`, 'Success');
           await this.callDataSource();
         }
       }

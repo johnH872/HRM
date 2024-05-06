@@ -1,4 +1,4 @@
-import { prop } from "@rxweb/reactive-form-validators";
+import { prop, required } from "@rxweb/reactive-form-validators";
 
 export class WorkCalendarModel {
     @prop()
@@ -19,10 +19,13 @@ export class WorkCalendarDetailModel {
     @prop()
     workCalendarId: number;
     @prop()
+    @required()
     from: string | null;
     @prop()
+    @required()
     to: string | null;
     @prop()
+    @required()
     description: string | null;
     @prop()
     codeColor: string | null;

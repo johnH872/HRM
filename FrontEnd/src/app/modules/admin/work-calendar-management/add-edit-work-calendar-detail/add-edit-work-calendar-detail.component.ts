@@ -71,8 +71,8 @@ export class AddEditWorkCalendarDetailComponent implements OnInit, OnDestroy {
       this.isLoading = !this.isLoading;
       const model: WorkCalendarDetailModel = Object.assign({}, this.frmData.value);
       model.workCalendarId = this.id ?? this.model.workCalendarId;
-      model.from = moment(model.from).format('hh:mm A') === 'Invalid date' ? model.from : moment(model.from).format('hh:mm A');
-      model.to = moment(model.to).format('hh:mm A') === 'Invalid date' ? model.to : moment(model.to).format('hh:mm A');
+      model.from = moment(model.from).format('HH:mm') === 'Invalid date' ? model.from : moment(model.from).format('HH:mm');
+      model.to = moment(model.to).format('HH:mm') === 'Invalid date' ? model.to : moment(model.to).format('HH:mm');
       this.workCalendarService.saveWorkCalendarDetail(model).subscribe(resp => {
         if (resp.result) {
           this.messageService.add({

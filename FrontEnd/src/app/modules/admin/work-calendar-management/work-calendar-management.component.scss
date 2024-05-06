@@ -157,6 +157,13 @@
     border: none;
   }
 
+  :host ::ng-deep .p-dropdown-panel .p-dropdown-items {
+    padding: 0 !important;
+    background-color: antiquewhite;
+    max-height: 20%;
+    overflow: auto;
+  }
+
   :host ::ng-deep .p-inputgroup .p-inputwrapper>.p-component {
     width: 100%;
   }
