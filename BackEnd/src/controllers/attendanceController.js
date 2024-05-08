@@ -219,7 +219,10 @@ class attendanceController {
                     });
                 if (employeeAttendance) returnResult.result = true;
             }
-            if(returnResult.result) socketIO.emit(process.env.PUNCH_IN_OUT, isPunchIn ? 'PUNCHIN' : 'PUNCHOUT');
+            if(returnResult.result) socketIO.emit(process.env.PUNCH_IN_OUT, {
+                type: isPunchIn ? 'PUNCHIN' : 'PUNCHOUT',
+                employeeId
+            });
             res.status(200).json(returnResult);
         } catch (error) {
             res.status(400).json(error);

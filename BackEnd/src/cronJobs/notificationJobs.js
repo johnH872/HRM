@@ -32,7 +32,7 @@ async function generateNotification() {
             minute: splittedStartHour[1],
             second: 0
         });
-        const endSendNotiTimeMorning = moment(startDate).add(30,'minutes');
+        const endSendNotiTimeMorning = moment(startDate).add(30, 'minutes');
         // const endSendNotiTimeMorning = moment(startDate).add(4, 'hours');
 
         // End hour
@@ -43,7 +43,7 @@ async function generateNotification() {
             minute: splittedEndHour[1],
             second: 0
         });
-        const endSendNotiTimeAfternoon = moment(endDate).add(30,'minutes');
+        const endSendNotiTimeAfternoon = moment(endDate).add(30, 'minutes');
         // const endSendNotiTimeAfternoon = moment(endDate).add(6, 'hours');
         if (
             endDate
@@ -66,6 +66,7 @@ async function generateNotification() {
                 return;
             };
             validUserIds = Object.keys(fcmTokenCache);
+            console.log(fcmTokenCache, 'Hoang');
             // Only send notification for employees connected to the system for the 1st time 
             // && working days has been applied.
             // && haven't punch in or out yet
@@ -109,8 +110,12 @@ async function generateNotification() {
 
             // Only send noti when user haven't punched in the morning
             // && punched in but haven't punched out in the afternoon
-            if(moment().isBetween(startDate, endSendNotiTimeMorning)) validUserIds = listEmpIds.filter(x => x.Attendances?.length === 0).map(x => x.userId);
-            else validUserIds = listEmpIds.filter(x => x.Attendances?.length > 0).map(x => x.userId);
+            if (moment().isBetween(startDate, endSendNotiTimeMorning)) {
+                if (listEmpIds.length != 0) {
+                    validUserIds = [...new Set(listEmpIds.filter(x => x.Attendances?.length === 0).map(x => x.userId))];
+                } else validUserIds = [...new Set(validUserIds)]
+            }
+            else validUserIds = [...new Set(listEmpIds.filter(x => x.Attendances?.length > 0).map(x => x.userId))];
             if (validUserIds?.length <= 0) {
                 console.log('------------- END: notificationJobs (0 - notification sent)------------------')
                 return;
@@ -130,7 +135,12 @@ async function generateNotification() {
 
             // create notifications
             await dbContext.Notification.bulkCreate(notificationModels);
-
+            if (fcmTokens.length <= 0) {
+                console.log('------------- END: no tokens ------------------');
+                return;
+            }
+            fcmTokens = [...new Set(fcmTokens)];
+            console.log(fcmTokens);
             const message = {
                 notification: {
                     title: notiTile,

@@ -90,9 +90,9 @@ class employeeController {
                 });
 
             let queries = {};
-            queries.subQuery= false,
+            queries.subQuery = false,
 
-            queries = pagingData(page, queries);
+                queries = pagingData(page, queries);
             queries = filterData(page, queries);
 
             // Custom filterName
@@ -223,7 +223,15 @@ class employeeController {
                             });
                         }
                         result.result = await dbContext.User.findOne({
-                            where: { userId: model.userId }
+                            where: {
+                                userId: model.userId
+                            },
+                            include:
+                            {
+                                model: dbContext.User,
+                                as: 'manager',
+                                attributes: employeeValidReturnVariable
+                            }
                         });
                     } else {
                         result.message = 'Can not save employee';
