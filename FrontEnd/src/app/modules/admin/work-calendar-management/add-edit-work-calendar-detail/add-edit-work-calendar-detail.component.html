@@ -45,7 +45,7 @@
 <div class="dialog-header" fxLayout="row" fxLayoutAlign="end end" mat-dialog-title
   style="margin: unset; padding-top: 40px" [nbSpinner]="isLoading">
   <p-button
-    label="Delete" [disabled]="!frmData.valid" [loading]="isLoading" icon="pi pi-times" (click)="saveData()"
+    label="Delete" [disabled]="!frmData.valid" [loading]="isLoading" icon="pi pi-times" (click)="deleteData()"
     styleClass="p-button-sm p-button-rounded p-button-outlined p-button-danger"></p-button>
   <p-button
     label="Save" [disabled]="!frmData.valid" [loading]="isLoading" icon="pi pi-save" (click)="saveData()"

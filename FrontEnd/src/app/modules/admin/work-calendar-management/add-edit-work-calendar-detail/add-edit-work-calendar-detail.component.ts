@@ -88,4 +88,20 @@ export class AddEditWorkCalendarDetailComponent implements OnInit, OnDestroy {
       });
     }
   }
+
+  deleteData() {
+    this.workCalendarService.deleteWorkCalendarDetail(this.dataModel?.workCalendarDetailId).subscribe(resp => {
+      if (resp.result) {
+        this.messageService.add({
+          key: 'toast1', severity: 'success', summary: 'Success',
+          detail: `Delete work calendar detail successfully`, life: 2000
+        });
+        this.onRefresh.emit(resp);
+      } else {
+        this.toast.danger(resp.message, 'Failure');
+      }
+    }).add(() => {
+      this.isLoading = !this.isLoading;
+    });
+  }
 }

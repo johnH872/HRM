@@ -295,6 +295,25 @@ class WorkCalendarController {
         }
     }
 
+    async deleteWorkCalendarDetail(req, res, next) {
+        var result = new ReturnResult();
+        try {
+            const id = req.body.workCalendarDetailId;
+            const lstWorkCalendarsModel = await dbContext.WorkCalendarDetail.destroy({
+                where: {
+                    workCalendarDetailId: id
+                }  
+            });
+            if(lstWorkCalendarsModel > 0) {
+                result.result = true;
+            } else result.result = false;
+            return res.status(200).json(result);
+        } catch (error) {
+            res.status(400).json(error);
+            console.log(error);
+        }
+    }
+
     async getWorkCalendarByUserId(req, res, next) {
         var result = new ReturnResult();
         try {

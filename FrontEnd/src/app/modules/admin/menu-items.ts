@@ -3,7 +3,7 @@ import { NbMenuItem } from '@nebular/theme';
 export const MENU_ITEMS: NbMenuItem[] = [
   {
     title: 'Dashboard',
-    icon: 'shopping-cart-outline',
+    icon: 'pie-chart-outline',
     link: '/admin/dashboard',
     home: true,
   },
@@ -22,45 +22,45 @@ export const MENU_ITEMS: NbMenuItem[] = [
         children: [
           {
             title: 'Leave Request',
-            icon: 'briefcase-outline',
+            icon: 'umbrella-outline',
             link: '/admin/leave-request',
           },
           {
             title: 'Leave Entitlement',
-            icon: 'briefcase-outline',
+            icon: 'link-2-outline',
             link: '/admin/leave-entitlement',
           },
           {
             title: 'Leave Type',
-            icon: 'briefcase-outline',
+            icon: 'funnel-outline',
             link: '/admin/leave-type',
           },
         ],
       },
       {
         title: 'Attendance',
-        icon: 'person-done-outline',
+        icon: 'sun-outline',
         children: [
           {
             title: 'Attendances',
-            icon: 'checkmark-square-outline',
+            icon: 'smartphone-outline',
             link: '/admin/attendances',
           },
           {
             title: 'Reports',
-            icon: 'alert-triangle-outline',
+            icon: 'shake-outline',
             link: '/admin/attendance-report',
           },
         ],
       },
       {
         title: 'Work Calendar',
-        icon: 'person-outline',
+        icon: 'calendar-outline',
         link: '/admin/work-calendar',
       },
       {
         title: 'Report Schedule',
-        icon: 'person-outline',
+        icon: 'pantone-outline',
         link: '/admin/report-schedule',
       },
     ],
@@ -71,17 +71,17 @@ export const MENU_ITEMS: NbMenuItem[] = [
     children: [
       {
         title: 'Roles',
-        icon: 'award-outline',
+        icon: 'shield-outline',
         link: '/admin/roles',
       },
       {
         title: 'Settings',
-        icon: 'award-outline',
+        icon: 'options-2-outline',
         link: '/admin/settings',
       },
       {
         title: 'DataStates',
-        icon: 'award-outline',
+        icon: 'layers-outline',
         link: '/admin/data-state',
       },
     ],

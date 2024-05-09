@@ -25,6 +25,10 @@ export class WorkCalendarManagementService {
         return this.http.post<ReturnResult<WorkCalendarDetailModel>>(`${this.baseUrl}/SaveWorkCalendarDetail`, model);
     }
 
+    deleteWorkCalendarDetail(id: number): Observable<ReturnResult<boolean>> {
+        return this.http.post<ReturnResult<boolean>>(`${this.baseUrl}/DeleteWorkCalendarDetail`, {workCalendarDetailId: id});
+    }
+
     // exportAttendanceReport(model: AttendanceReportExportModel): Observable<ReturnResult<AttendanceModel[]>> {
     //     return this.http.post<ReturnResult<AttendanceModel[]>>(`${this.baseUrl}/ExportAttendanceReport`, model);
     // }

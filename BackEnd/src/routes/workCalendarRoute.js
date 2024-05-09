@@ -8,5 +8,6 @@ router.route('/SaveWorkCalendar').post(workCalendarController.saveWorkCalendar);
 router.route('/SaveWorkCalendarDetail').post(workCalendarController.saveWorkCalendarDetail);
 router.route('/GetWorkCalendarByUserId').post(workCalendarController.getWorkCalendarByUserId);
 router.route('/RemoveWorkCalendarDetails').post(workCalendarController.removeWorkCalendarDetails);
+router.route('/DeleteWorkCalendarDetail').post(workCalendarController.deleteWorkCalendarDetail);
 
 export default router;
