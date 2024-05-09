@@ -9,7 +9,7 @@ import { NotificationType } from '../models/enums/notificationType.js';
 const dbContext = await db;
 
 const notificationJobs = CronJob.from({
-    cronTime: '0 */5 * * * *',
+    cronTime: '0 * * * * *',
     onTick: async function () {
         // Auto create work calendar in the first day of the month '0 0 1 * * *'
         await generateNotification();
@@ -112,8 +112,10 @@ async function generateNotification() {
             // && punched in but haven't punched out in the afternoon
             if (moment().isBetween(startDate, endSendNotiTimeMorning)) {
                 if (listEmpIds.length != 0) {
-                    validUserIds = [...new Set(listEmpIds.filter(x => x.Attendances?.length === 0).map(x => x.userId))];
+                    const removeUserIds = [...new Set(listEmpIds.filter(x => x.Attendances?.length === 0).map(x => x.userId))];
+                    validUserIds = validUserIds.filter( ( el ) => !removeUserIds.includes( el ) );
                 } else validUserIds = [...new Set(validUserIds)]
+                console.log(validUserIds);
             }
             else validUserIds = [...new Set(listEmpIds.filter(x => x.Attendances?.length > 0).map(x => x.userId))];
             if (validUserIds?.length <= 0) {
