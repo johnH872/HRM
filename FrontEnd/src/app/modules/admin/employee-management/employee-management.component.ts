@@ -206,6 +206,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
       }
     });
     dialogRef.afterClosed().subscribe(dialogRes => {
+      if(!dialogRes) return;
       this.employeeService.deleteEmployees(deleteIds).subscribe(res => {
         if (res.result) {
           this.messageService.add({
