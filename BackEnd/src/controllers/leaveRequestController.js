@@ -53,7 +53,8 @@ class LeaveRequestController {
                     numberOfHour: model.numberOfHour,
                     status: model.status,
                     note: model.note,
-                    reason: model.reason
+                    reason: model.reason,
+                    reasonRejected: model.reasonRejected
                 });
                 if (saveLeaveRequest) {
                     result.result = saveLeaveRequest;
@@ -78,7 +79,8 @@ class LeaveRequestController {
                         numberOfHour: model.numberOfHour ?? existLeaveRequest.numberOfHour,
                         status: model.status ?? existLeaveRequest.status,
                         note: model.note ?? existLeaveRequest.note,
-                        reason: model.reason ?? existLeaveRequest.reason
+                        reason: model.reason ?? existLeaveRequest.reason,
+                        reasonRejected: model.reasonRejected ?? existLeaveRequest.reasonRejected
                     }, {
                         where: {
                             leaveRequestId: model.leaveRequestId

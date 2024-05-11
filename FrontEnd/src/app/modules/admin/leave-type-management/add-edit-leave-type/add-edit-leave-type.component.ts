@@ -40,7 +40,7 @@ export class AddEditLeaveTypeComponent implements OnInit, OnDestroy {
     this.leaveTypeModel = data?.model ?? new LeaveTypeModel();
     this.authService.onTokenChange().subscribe((token: NbAuthJWTToken) => {
       if (token.isValid()) {
-        this.user = token.getPayload();
+        this.user = token.getPayload().user;
       }
     });
   }

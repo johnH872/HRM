@@ -133,7 +133,7 @@
 <ng-template #workCalendar let-data="data">
   <ng-container *ngIf="data">
     <div class="p-fluid p-grid p-formgrid p-md-1">
-      <div class="p-field p-col-12">
+      <div class="p-field p-col-12" [ngClass]="{disabledNoOfCasesDiv: !(user?.userId === data?.userId || user?.userId === data?.User?.ownerId)}">
         <div class="p-inputgroup">
           <p-dropdown [options]="lstWorkType" [(ngModel)]="data.workingType" optionLabel="dataStateName" optionValue="dataStateId"
             (onChange)="editWorkType($event, data)">
@@ -149,7 +149,7 @@
           <i class="pi pi-plus-circle"
             style="align-items: center; display: flex;"
             [matMenuTriggerFor]="addEditWorkCalendarDetail"
-            [matMenuTriggerData]="{ id: data?.workCalendarId, model: null }"></i>
+            [matMenuTriggerData]="{ data: data, model: null }"></i>
         </div>
       </div>
     </div>
@@ -158,13 +158,20 @@
 
 <ng-template #workCalendarDetail let-data="data">
   <div style="max-height: 64px; min-height: 64px; overflow: auto;">
-    <p-listbox [options]="data?.WorkCalendarDetails">
+    <p-listbox *ngIf="data?.WorkCalendarDetails?.length > 0" [options]="data?.WorkCalendarDetails">
       <ng-template let-item pTemplate="item">
         <div [ngStyle]="{'background-color': item?.codeColor}"
-          style="color: white;"
+          style="color: white; font-size: 12px; min-width: 130px;"
           [matMenuTriggerFor]="addEditWorkCalendarDetail"
-          [matMenuTriggerData]="{ id: data?.workCalendarId, model: item }">
-          <span style="">{{item?.from}} - {{item?.to}}</span><br>
+          [matMenuTriggerData]="{ data: data, model: item }">
+          <div fxLayout="row" fxLayoutAlign="space-between center" >
+            <div fxFlex="80">
+              {{item?.from}} - {{item?.to}}
+            </div>
+            <div fxFlex="20">
+              <i class="pi pi-eye" *ngIf="item?.isReviewed"></i>
+            </div>
+          </div>
           <span>{{item?.description}}</span>
         </div>
       </ng-template>
@@ -173,9 +180,9 @@
 </ng-template>
 
 <mat-menu #addEditWorkCalendarDetail="matMenu" xPosition="after">
-  <ng-template matMenuContent let-id="id" let-model="model">
+  <ng-template matMenuContent let-data="data" let-model="model">
     <div (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
-      <app-add-edit-work-calendar-detail [id]="id" [model]="model" (onRefresh)="callDataSource()"></app-add-edit-work-calendar-detail>
+      <app-add-edit-work-calendar-detail [data]="data" [model]="model" (onRefresh)="callDataSource()"></app-add-edit-work-calendar-detail>
     </div>
   </ng-template>
 </mat-menu>

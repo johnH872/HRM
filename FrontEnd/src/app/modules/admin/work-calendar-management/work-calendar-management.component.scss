@@ -29,7 +29,7 @@
   }
   
   .custom-font {
-    font-size: 14px;
+    font-size: 12px !important;
   }
   
   .custom-group-header-font {
@@ -182,4 +182,8 @@
       }
     }
     
+  }
+
+  .disabledNoOfCasesDiv {
+    pointer-events: none !important;
   }

@@ -30,33 +30,10 @@ export class LeaveRequestModel {
     @prop()
     @required()
     reason: string;
+    @prop()
+    reasonRejected: string | null;
+
     timeZone: number;
-
-    ownerId: string;
-    extendData: string;
-}
-
-export class LeaveBonusModel {
-    @prop()
-    leaveRequestId: number;
-    @prop()
-    lstProfileId: string[];
-    @prop()
-    leaveDateFrom: Date | string | null;
-    @prop()
-    leaveDateTo: Date | string | null;
-    @prop()
-    session: string;
-    @prop()
-    @numeric({ acceptValue: NumericValueType.PositiveNumber, allowDecimal: true, message: 'Only numberic is allowed' })
-    numberOfHour: number = 0;
-    @prop()
-    note: string;
-    @prop()
-    @required()
-    title: string;
-    timeZone: number;
-
     ownerId: string;
     extendData: string;
 }

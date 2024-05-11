@@ -94,7 +94,7 @@ export class WorkCalendarManagementComponent implements OnInit {
     } as FilterConfig;
     this.authService.onTokenChange().subscribe((token: NbAuthJWTToken) => {
       if (token.isValid()) {
-        this.user = token.getPayload();
+        this.user = token.getPayload().user;
       }
     });
     this.configFilterRole = {
@@ -291,7 +291,7 @@ export class WorkCalendarManagementComponent implements OnInit {
   async getMyEmployeeAttendance(event: boolean) {
     this.isMyEmployee = event;
     if (event) {
-      var resultOwner = await this.userService.getOwnersByEmployeeId(this.user?.user?.userId).toPromise();
+      var resultOwner = await this.userService.getOwnersByEmployeeId(this.user?.userId).toPromise();
       if (resultOwner.result) {
         this.listOwners = resultOwner.result.map(item => item.userId);
         if (this.listOwners.length <= 0) {

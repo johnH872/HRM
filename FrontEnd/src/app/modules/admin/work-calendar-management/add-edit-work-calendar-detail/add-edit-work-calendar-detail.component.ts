@@ -19,7 +19,7 @@ import moment from 'moment';
   styleUrls: ['./add-edit-work-calendar-detail.component.scss']
 })
 export class AddEditWorkCalendarDetailComponent implements OnInit, OnDestroy {
-  @Input() id: any;
+  @Input() data: any;
   @Input() model: any;
   @Output() onRefresh = new EventEmitter<any>();
 
@@ -70,7 +70,7 @@ export class AddEditWorkCalendarDetailComponent implements OnInit, OnDestroy {
     if (this.frmData?.valid) {
       this.isLoading = !this.isLoading;
       const model: WorkCalendarDetailModel = Object.assign({}, this.frmData.value);
-      model.workCalendarId = this.id ?? this.model.workCalendarId;
+      model.workCalendarId = this.data?.workCalendarId ?? this.model.workCalendarId;
       model.from = moment(model.from).format('HH:mm') === 'Invalid date' ? model.from : moment(model.from).format('HH:mm');
       model.to = moment(model.to).format('HH:mm') === 'Invalid date' ? model.to : moment(model.to).format('HH:mm');
       this.workCalendarService.saveWorkCalendarDetail(model).subscribe(resp => {
@@ -87,6 +87,24 @@ export class AddEditWorkCalendarDetailComponent implements OnInit, OnDestroy {
         this.isLoading = !this.isLoading;
       });
     }
+  }
+
+  reviewData() {
+    const model: WorkCalendarDetailModel = this.model;
+    model.isReviewed = true;
+    this.workCalendarService.saveWorkCalendarDetail(model).subscribe(resp => {
+      if (resp.result) {
+        this.messageService.add({
+          key: 'toast1', severity: 'success', summary: 'Success',
+          detail: `Reviewed work calendar detail successfully`, life: 2000
+        });
+        this.onRefresh.emit(resp);
+      } else {
+        this.toast.danger(resp.message, 'Failure');
+      }
+    }).add(() => {
+      this.isLoading = !this.isLoading;
+    });
   }
 
   deleteData() {

@@ -228,7 +228,8 @@ class WorkCalendarController {
                     from: model.from,
                     to: model.to,
                     description: model.description,
-                    codeColor: model.codeColor
+                    codeColor: model.codeColor,
+                    isReviewed: model.isReviewed
                 });
                 if (saveWorkCalendarDetail) {
                     result.result = saveWorkCalendarDetail;
@@ -248,7 +249,8 @@ class WorkCalendarController {
                         from: model.from ?? existWorkCalendarDetail.from,
                         to: model.to ?? existWorkCalendarDetail.to,
                         description: model.description ?? existWorkCalendarDetail.description,
-                        codeColor: model.codeColor ?? existWorkCalendarDetail.codeColor
+                        codeColor: model.codeColor ?? existWorkCalendarDetail.codeColor,
+                        isReviewed: model.isReviewed ?? existWorkCalendarDetail.isReviewed,
                     }, {
                         where: {
                             workCalendarDetailId: model.workCalendarDetailId

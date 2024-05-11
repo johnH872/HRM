@@ -54,6 +54,9 @@ export default (sequelize, DataTypes) => {
     reason: {
       type: DataTypes.STRING
     },
+    reasonRejected: {
+      type: DataTypes.STRING
+    },
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE

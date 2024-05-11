@@ -83,7 +83,7 @@ export class ReportScheduleManagementComponent implements OnInit {
     } as FilterConfig;
     this.authService.onTokenChange().subscribe((token: NbAuthJWTToken) => {
       if (token.isValid()) {
-        this.user = token.getPayload();
+        this.user = token.getPayload().user;
       }
     });
     this.configFilterRole = {
@@ -285,7 +285,7 @@ export class ReportScheduleManagementComponent implements OnInit {
   async getMyEmployeeAttendance(event: boolean) {
     this.isMyEmployee = event;
     if (event) {
-      var resultOwner = await this.userService.getOwnersByEmployeeId(this.user?.nameid).toPromise();
+      var resultOwner = await this.userService.getOwnersByEmployeeId(this.user?.userId).toPromise();
       if (resultOwner.result) {
         this.listOwners = resultOwner.result.map(item => item.userId);
         this.reportScheduleModel.listRoles = [];

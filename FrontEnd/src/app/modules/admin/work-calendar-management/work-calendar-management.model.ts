@@ -29,6 +29,8 @@ export class WorkCalendarDetailModel {
     description: string | null;
     @prop()
     codeColor: string | null;
+    @prop()
+    isReviewed: boolean;
 }
 
 export class DataFilterWorkCalendar {

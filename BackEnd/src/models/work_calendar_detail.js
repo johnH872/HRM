@@ -37,6 +37,9 @@ export default (sequelize, DataTypes) => {
     codeColor: {
       type: DataTypes.STRING
     },
+    isReviewed: {
+      type: DataTypes.BOOLEAN
+    },
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE

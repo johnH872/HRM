@@ -34,6 +34,7 @@ import { SettingManagementComponent } from './setting-management/setting-managem
 import { AddEditSettingComponent } from './setting-management/add-edit-setting/add-edit-setting.component';
 import { WorkCalendarManagementComponent } from './work-calendar-management/work-calendar-management.component';
 import { AddEditWorkCalendarDetailComponent } from './work-calendar-management/add-edit-work-calendar-detail/add-edit-work-calendar-detail.component';
+import { DialogGetReasonRejectedComponent } from './leave-request-management/dialog-get-reason-rejected/dialog-get-reason-rejected.component';
 
 
 @NgModule({
@@ -66,7 +67,8 @@ import { AddEditWorkCalendarDetailComponent } from './work-calendar-management/a
     SettingManagementComponent,
     AddEditSettingComponent,
     WorkCalendarManagementComponent,
-    AddEditWorkCalendarDetailComponent
+    AddEditWorkCalendarDetailComponent,
+    DialogGetReasonRejectedComponent
   ],
   imports: [
     ThemeModule,

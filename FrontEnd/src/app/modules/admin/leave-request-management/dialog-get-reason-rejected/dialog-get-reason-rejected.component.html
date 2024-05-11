@@ -1,0 +1,14 @@
+
+
+<h1 mat-dialog-title>Reason Rejected</h1>
+<div mat-dialog-content>
+    <textarea [(ngModel)]="reasonRejected"></textarea>
+</div>
+<div mat-dialog-actions>
+    <p-button
+      label="Cancel" icon="pi pi-times" (click)="cancelOpinion()"
+      styleClass="p-button-sm p-button-rounded p-button-outlined p-button-danger"></p-button>
+    <p-button style="padding-left: 20px;"
+      label="Save" icon="pi pi-save" (click)="submitOpinion()"
+      styleClass="p-button-sm p-button-rounded p-button-outlined p-button-success"></p-button>
+</div>

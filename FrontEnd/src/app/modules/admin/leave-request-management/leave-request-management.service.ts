@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { LeaveBonusModel, LeaveRequestModel } from "./leave-request-management.model";
+import { LeaveRequestModel } from "./leave-request-management.model";
 import { HttpClient } from "@angular/common/http";
 import { timeout } from "rxjs/operators";
 import { environment } from "src/enviroments/enviroment";
@@ -44,12 +44,6 @@ export class LeaveRequestManagementService {
         const offset = new Date().getTimezoneOffset();
         model.timeZone = offset / - 60;
         return this.http.post<ReturnResult<LeaveRequestModel>>(`${this.baseUrl}/SaveLeaveRequest`, model);
-    }
-
-    saveLeaveBonus(model: LeaveBonusModel): Observable<ReturnResult<boolean>> {
-        const offset = new Date().getTimezoneOffset();
-        model.timeZone = offset / - 60;
-        return this.http.post<ReturnResult<boolean>>(`${this.baseUrl}/SaveLeaveBonus`, model);
     }
 
     deleteLeaveRequest(id: string): Observable<ReturnResult<boolean>> {

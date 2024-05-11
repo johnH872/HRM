@@ -11,6 +11,7 @@ import { Table } from 'primeng/table';
 import { DatastateService } from '../datastate-management/datastate.service';
 import { DataStateModel } from '../datastate-management/data-state.model';
 import { NbToastrService } from '@nebular/theme';
+import { DialogGetReasonRejectedComponent } from './dialog-get-reason-rejected/dialog-get-reason-rejected.component';
 
 @Component({
   selector: 'app-leave-request-management',
@@ -144,13 +145,35 @@ export class LeaveRequestManagementComponent implements OnInit, OnDestroy {
   saveStatusInline(statusChange, row) {
     if (statusChange && row) {
       row.status = statusChange?.value;
-      this.leaveRequestService.saveLeaveRequest(row).pipe(takeUntil(this.destroy$)).subscribe(resp => {
-        if (resp.result) {
-          this.toast.success(`Change status successfully`, 'Success');
-        }
-      }).add(() => {
-        this.refreshData()
-      });
+      if (row.status === this.lstLeaveRequestState.find(item => item.dataStateName === 'REJECTED').dataStateId) {
+        const dialogRef = this.dialog.open(DialogGetReasonRejectedComponent, {
+          backdropClass: 'custom-backdrop',
+          hasBackdrop: true,
+        });
+  
+        dialogRef.afterClosed().subscribe(response => {
+          if (response) {
+            row.reasonRejected = response;
+            this.leaveRequestService.saveLeaveRequest(row).pipe(takeUntil(this.destroy$)).subscribe(resp => {
+              if (resp.result) {
+                this.toast.success(`Change status successfully`, 'Success');
+              }
+            }).add(() => {
+              this.refreshData();
+            });
+          } else {
+            this.refreshData();
+          }
+        });
+      } else {
+        this.leaveRequestService.saveLeaveRequest(row).pipe(takeUntil(this.destroy$)).subscribe(resp => {
+          if (resp.result) {
+            this.toast.success(`Change status successfully`, 'Success');
+          }
+        }).add(() => {
+          this.refreshData();
+        });
+      }
     }
   }
 }
