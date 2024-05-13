@@ -10,7 +10,7 @@ var storage2 = multer.diskStorage({
       cb(null, './assets/images')
   },
   filename: function (req, file, cb) {
-      cb(null, file.originalname)
+      cb(null, `${generateRandomString(5)}_${new Date().valueOf()}.png`)
   }
 });
 

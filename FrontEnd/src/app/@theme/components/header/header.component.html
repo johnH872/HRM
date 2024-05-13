@@ -12,8 +12,8 @@
 <div class="header-container">
   <nb-actions size="small">
     <nb-action class="user-action">
-      <nb-user size="medium" [name]="userLoggedIn?.user?.firstName + ' ' + userLoggedIn?.user?.middleName + ' ' + userLoggedIn?.user?.lastName"
-      [onlyPicture]="userPictureOnly" [nbContextMenu]="userMenu" [picture]="userLoggedIn?.user?.avatarUrl"></nb-user>
+      <nb-user size="medium" [name]="userDetail?.firstName + ' ' + userDetail?.middleName + ' ' + userDetail?.lastName"
+      [onlyPicture]="userPictureOnly" [nbContextMenu]="userMenu" [picture]="userDetail?.avatarUrl"></nb-user>
     </nb-action>
   </nb-actions>
 </div>

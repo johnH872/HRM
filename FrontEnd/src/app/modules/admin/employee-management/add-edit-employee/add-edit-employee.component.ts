@@ -17,6 +17,7 @@ import { DatastateService } from '../../datastate-management/datastate.service';
 import { FilterConfig } from 'src/app/modules/shared/components/dropdown-filter/filter-config';
 import { FilterType } from 'src/app/modules/shared/enum/filter-type.enum';
 import { MessageService } from 'primeng/api';
+import { TrainEmployeeService } from '../train-employee/train-employee.service';
 
 @Component({
   selector: 'app-add-edit-employee',
@@ -59,6 +60,7 @@ export class AddEditEmployeeComponent implements OnInit, OnDestroy {
     private roleService: RoleManagementService,
     private dataStateService: DatastateService,
     private messageService: MessageService,
+    private trainService: TrainEmployeeService
   ) {
     this.action = data?.action;
     this.employeeModel = data?.model ?? new EmployeeModel();
@@ -103,6 +105,7 @@ export class AddEditEmployeeComponent implements OnInit, OnDestroy {
       if(!this.isAdmin) {
         this.frmEmployee.get('roleId').disable();
         this.frmEmployee.get('dateStartContract').disable();
+        this.frmEmployee.get('ownerId').disable();
       }
     }
   }
@@ -191,6 +194,26 @@ export class AddEditEmployeeComponent implements OnInit, OnDestroy {
       this.frmEmployee?.get('nationality')?.setValue(e.value);
       let selectedIndex = this.countriesData.findIndex(x => x.name.toLowerCase() === e.value.toLowerCase());
       if (selectedIndex != -1) this.selectedCountry = this.countriesData[selectedIndex];
+    }
+  }
+  
+  async onChangeAvatar(event: any) {
+    if(this.isLoading) return;
+    const file = event.target.files[0] as File;
+    this.isLoading = true;
+    var res = await lastValueFrom(this.trainService.uploadImage(this.employeeModel.userId, file));
+    this.isLoading = false;
+    if(res.result) {
+      this.messageService.add({
+        key: 'toast1', severity: 'success', summary: 'Success',
+        detail: `Save employee successfully`, life: 2000
+      });
+      this.dialModalRef.close(true);
+    } else {
+      this.messageService.add({
+        key: 'toast1', severity: 'error', summary: 'Failed',
+        detail: `Upload image failed`, life: 2000
+      });
     }
   }
 }

@@ -1,5 +1,4 @@
 <div class="card">
-  <!-- <p-toast></p-toast> -->
   <p-toolbar styleClass="mb-4 gap-2">
     <ng-template pTemplate="left">
       <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-button-sm mr-2"
@@ -10,9 +9,6 @@
     </ng-template>
 
     <ng-template pTemplate="right">
-      <!-- <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import"
-              class="mr-2 inline-block"></p-fileUpload>
-            <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button> -->
       <button pButton label="Clear" class="p-button-outlined p-button-sm" icon="pi pi-filter-slash"
         (click)="clear(table)"></button>
       <button pButton label="Refresh" class="p-button-outlined p-button-sm" icon="pi pi-refresh"
@@ -31,8 +27,6 @@
         </th>
         <th pSortableColumn="reason" style="min-width:150px">
           Reason
-          <!-- <p-columnFilter type="text" field="reason" display="menu"></p-columnFilter> -->
-          <!-- <p-sortIcon field="reason"></p-sortIcon> -->
         </th>
         <th pSortableColumn="employee.displayName" style="min-width:150px">
           Employee
@@ -48,37 +42,28 @@
               </p-dropdown>
             </ng-template>
           </p-columnFilter>
-          <!-- <p-sortIcon field="status"></p-sortIcon> -->
         </th>
         <th pSortableColumn="leaveEntitlement" style="min-width:150px">
           Leave Entitlement
           <p-columnFilter type="text" field="leaveEntitlement" display="menu"></p-columnFilter>
-          <!-- <p-sortIcon field="leaveEntitlement"></p-sortIcon> -->
         </th>
         <th pSortableColumn="leaveDateFrom" style="min-width:150px">
           Leave Date From
           <p-columnFilter type="date" field="leaveDateFrom" display="menu"></p-columnFilter>
-          <!-- <p-sortIcon field="leaveDateFrom"></p-sortIcon> -->
         </th>
         <th pSortableColumn="leaveDateTo" style="min-width:150px">
           Leave Date To
           <p-columnFilter type="date" field="leaveDateTo" display="menu"></p-columnFilter>
-          <!-- <p-sortIcon field="leaveDateTo"></p-sortIcon> -->
         </th>
         <th pSortableColumn="session" style="min-width:150px">
           Session
-          <!-- <p-columnFilter type="text" field="session" display="menu"></p-columnFilter> -->
-          <!-- <p-sortIcon field="session"></p-sortIcon> -->
         </th>
         <th pSortableColumn="numberOfHour" style="min-width:150px">
           Number Of Hour
           <p-columnFilter type="numeric" field="numberOfHour" display="menu"></p-columnFilter>
-          <!-- <p-sortIcon field="numberOfHour"></p-sortIcon> -->
         </th>
         <th pSortableColumn="note" style="min-width:150px">
           Note
-          <!-- <p-columnFilter type="text" field="note" display="menu"></p-columnFilter> -->
-          <!-- <p-sortIcon field="note"></p-sortIcon> -->
         </th>
         <th style="min-width:150px">
         </th>
@@ -90,7 +75,7 @@
           <p-tableCheckbox [value]="leaveRequest"></p-tableCheckbox>
         </td>
         <td>{{ leaveRequest?.reason }}</td>
-        <td>
+        <td (click)="openEmployeeDetail(leaveRequest.User)" >
           <nb-user class="custom-nb-user-small" size="small" [name]="(leaveRequest?.User?.firstName || '') + ' '  + (leaveRequest?.User?.middleName || '') + ' ' +
           (leaveRequest?.User?.lastName||'')" title="Engineer" [showTitle]="false"
             [picture]=" leaveRequest?.User?.avatarUrl"></nb-user>
@@ -116,11 +101,6 @@
 </div>
 
 <ng-template #status let-row="row">
-  <!-- <div class="badge badge-pill" [style.background-color]="handleDisplayStatus(row.status, true)">
-    <div style="color: white; ">
-      {{handleDisplayStatus(row.status)}}
-    </div>
-  </div> -->
   <mat-select [(ngModel)]="row.status" matTooltip="Click to edit" (selectionChange)="saveStatusInline($event, row)">
     <mat-select-trigger>
       <div class="badge badge-pill" [style.background-color]="handleDisplayStatus(row.status, true)">
@@ -137,22 +117,4 @@
       </div>
     </mat-option>
   </mat-select>
-  <!-- <p-dropdown class="p-inputtext-sm" [options]="lstLeaveRequestState"
-    [(ngModel)]="row.status" optionLabel="dataStateName" optionValue="dataStateId"
-    placeholder="Status">
-    <ng-template pTemplate="selectedItem">
-      <div class="badge badge-pill" [style.background-color]="handleDisplayStatus(row.status, true)">
-        <div style="color: white; ">
-          {{handleDisplayStatus(row.status)}}
-        </div>
-      </div>
-    </ng-template>
-    <ng-template let-leaveEntitlement pTemplate="item">
-      <div class="badge badge-pill" [style.background-color]="leaveEntitlement?.colorCode">
-        <div style="color: white; ">
-          {{leaveEntitlement?.dataStateName}}
-        </div>
-      </div>
-    </ng-template>
-  </p-dropdown> -->
 </ng-template>

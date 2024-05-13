@@ -12,6 +12,7 @@ import { DatastateService } from '../datastate-management/datastate.service';
 import { DataStateModel } from '../datastate-management/data-state.model';
 import { NbToastrService } from '@nebular/theme';
 import { DialogGetReasonRejectedComponent } from './dialog-get-reason-rejected/dialog-get-reason-rejected.component';
+import { EmployeeDetailDialogComponent } from '../employee-management/employee-detail-dialog/employee-detail-dialog.component';
 
 @Component({
   selector: 'app-leave-request-management',
@@ -100,7 +101,7 @@ export class LeaveRequestManagementComponent implements OnInit, OnDestroy {
   }
 
   prev() {
-      this.first = this.first - this.rows;
+    this.first = this.first - this.rows;
   }
 
   async reset() {
@@ -109,8 +110,8 @@ export class LeaveRequestManagementComponent implements OnInit, OnDestroy {
   }
 
   pageChange(event) {
-      this.first = event.first;
-      this.rows = event.rows;
+    this.first = event.first;
+    this.rows = event.rows;
   }
 
   clear(table: Table) {
@@ -118,7 +119,7 @@ export class LeaveRequestManagementComponent implements OnInit, OnDestroy {
   }
 
   deleteLeaveRequest(model: LeaveRequestModel) {
-    
+
   }
 
   deleteSelectedRequest() {
@@ -150,7 +151,7 @@ export class LeaveRequestManagementComponent implements OnInit, OnDestroy {
           backdropClass: 'custom-backdrop',
           hasBackdrop: true,
         });
-  
+
         dialogRef.afterClosed().subscribe(response => {
           if (response) {
             row.reasonRejected = response;
@@ -175,5 +176,22 @@ export class LeaveRequestManagementComponent implements OnInit, OnDestroy {
         });
       }
     }
+  }
+
+  openEmployeeDetail(employee: EmployeeModel = null) {
+    this.dialog.open(EmployeeDetailDialogComponent , {
+      width: '90vw',
+      height: '90vh',
+      backdropClass: 'custom-backdrop',
+      hasBackdrop: true,
+      data: {
+        model: employee,
+        action: TblActionType.Edit
+      },
+    }).afterClosed().subscribe(closeRes => {
+      if (closeRes) {
+
+      }
+    });
   }
 }

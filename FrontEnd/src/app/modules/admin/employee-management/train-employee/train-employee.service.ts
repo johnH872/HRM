@@ -22,12 +22,9 @@ export class TrainEmployeeService {
     return this.http.post<ReturnResult<boolean>>(`${this.baseUrl}/TraningUserFace/${userId}`, formData);
   }
 
-  // uploadImage(userId: String, files: File[]): Observable<ReturnResult<boolean>> {
-  //   var formData: FormData = new FormData();
-  //   formData.append('image', files[0]);
-  //   console.log(files[0]);
-  //   // for (let i = 0; i < files.length; i++) {
-  //   // }
-  //   return this.http.post<ReturnResult<boolean>>(`${this.uploadImageUrl}/UploadProfileAvatar/${userId}`, formData);
-  // }
+  uploadImage(userId: String, file: File): Observable<ReturnResult<boolean>> {
+    var formData: FormData = new FormData();
+    formData.append('image', file);
+    return this.http.post<ReturnResult<boolean>>(`${this.uploadImageUrl}/UploadProfileAvatar/${userId}`, formData);
+  }
 }

@@ -10,25 +10,28 @@ class roleController {
     async uploadProfileAvatar(req, res, next) {
         var result = new ReturnResult();
         try {
-            const assetsPath = './assets';
-            const imagePath = path.join(assetsPath, '/images');
-            // call class Resize
-            const fileUpload = new Resize(imagePath);
-            if (!req.file) {
-                result.message = 'Please provide an image';
-                return res.status(401).json(result);
-            }
-            const fileName = await fileUpload.save(req.file.buffer);
-            const port = process.env.PORT || 3000;
-            var saveUrl = `http://localhost:${port}/assets/images/${fileName}`;
+            // const assetsPath = './assets';
+            // const imagePath = path.join(assetsPath, '/images');
+            // // call class Resize
+            // const fileUpload = new Resize(imagePath);
+            // if (!req.file) {
+            //     result.message = 'Please provide an image';
+            //     return res.status(401).json(result);
+            // }
+            // const fileName = await fileUpload.save(req.file.buffer);
+            // const port = process.env.PORT || 3000;
+            // var saveUrl = `http://localhost:${port}/assets/images/${fileName}`;
             // Upload to cloundinary
-            var imageUrl = await uploadImage(`${imagePath}/${fileName}`);
-            if(imageUrl) saveUrl = imageUrl;
+            var imagePath = req.file.path;
+            // Save image
+            const __dirname = path.resolve(path.dirname(''));
+            const uploadImagePath = path.join(__dirname, imagePath);
+            var imageUrl = await uploadImage(uploadImagePath);
 
             var employeeId = req.params.id;
             if (employeeId) {
                 await dbContext.User.update({
-                    avatarUrl: saveUrl
+                    avatarUrl: imageUrl
                 }, {
                     where: { userId: employeeId },
                 });

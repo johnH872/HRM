@@ -32,7 +32,6 @@ export const environment = {
     apiAttendanceManagement: apiUrl + '/AttendanceManagement',
     apiReportScheduleManagement: apiUrl + '/ReportScheduleManagement',
     apiWorkCalendarManagement: apiUrl + '/WorkCalendarManagement',
-
     SOCKET_ENDPOINT: 'http://localhost:5000/',
     FACE_MATCHER_MODEL_URL: 'https://res.cloudinary.com/dudtu2qef/raw/upload/v1712589621/traning_model/faceMatcher.json'
 }

@@ -18,7 +18,7 @@ export const AdminAuthGuardService: CanActivateFn = (
                     router.navigate([`/auth`], {
                         // queryParams: { returnUrl: state.url }
                     }).then(() => {
-                        toast.warning("You need to login!", "Warning");
+                        // toast.warning("You need to login!", "Warning");
                     });
                 }
                 return;

@@ -11,6 +11,13 @@
 <mat-divider></mat-divider>
 <mat-dialog-content class="mat-typography">
   <form [formGroup]="frmEmployee" class="container">
+    <div  class="custom-nb-user">
+      <label for="fileInput">
+        <nb-user [nbSpinner]="isLoading" size="large" [name]="employeeModel?.firstName + ' ' + employeeModel?.middleName + ' ' + employeeModel?.lastName"
+          [onlyPicture]="true" [picture]="employeeModel?.avatarUrl"></nb-user>
+          <input id="fileInput" type='file' (change)="onChangeAvatar($event)" accept="image/png, image/jpeg">
+      </label>
+    </div>
     <div class="row">
       <div *ngIf="action == 0" class="col-12 fs-14 p-md-1">
         <div class="alert alert-primary" role="alert" style="margin: unset;">

@@ -12,6 +12,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { MessageService } from 'primeng/api';
 import { EmployeeManagementService } from 'src/app/modules/admin/employee-management/employee-management.service';
 import { PunchInOutComponent } from 'src/app/modules/admin/attendance-managment/punch-in-out/punch-in-out.component';
+import { AddEditEmployeeComponent } from 'src/app/modules/admin/employee-management/add-edit-employee/add-edit-employee.component';
+import { TblActionType } from 'src/app/modules/shared/enum/tbl-action-type.enum';
+import { EmployeeModel } from 'src/app/modules/shared/models/employee.model';
 
 @Component({
   selector: 'ngx-header',
@@ -23,7 +26,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
   userPictureOnly: boolean = false;
   userLoggedIn: any;
-  userDetail: ProfileDetail;
+  userDetail: EmployeeModel;
   menuServiceObservable: Subscription = null;
   themes = [
     {
@@ -59,42 +62,47 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private tokenService: NbTokenService,
     private router: Router,
+    private employeeService: EmployeeManagementService
   ) {
     this.authService.onTokenChange().pipe(takeUntil(this.destroy$))
       .subscribe(async (token: NbAuthJWTToken) => {
         if (token.isValid()) {
           this.userLoggedIn = token.getPayload();
+          console.log(this.userLoggedIn)
+          this.userDetail = (await lastValueFrom(this.employeeService.getEmployeeById(this.userLoggedIn.user.userId))).result;
         }
       });
   }
 
-  async ngOnInit() {
-
-    this.menuServiceObservable = this.menuService.onItemClick().subscribe((event) => {
+  ngOnInit() {
+    this.menuServiceObservable = this.menuService.onItemClick().subscribe(async (event) => {
+      var model =  (await lastValueFrom(this.employeeService.getEmployeeById(this.userLoggedIn.user.userId))).result;
+      model.roleId = model.Roles.map(x => x.roleId);
       if (event.item['id'] === 'profile') {
-        // const dialogRef = this.dialog.open(ProfileDialogComponent, {
-        //   width: '600px',
-        //   height: '100vh',
-        //   backdropClass: 'custom-backdrop',
-        //   hasBackdrop: true,
-        //   data: {
-        //     isOwnProfile: true,
-        //     action: 'Edit',
-        //     model: this.userDetail
-        //   },
-        // });
+        const dialogRef = this.dialog.open(AddEditEmployeeComponent, {
+          width: '600px',
+          height: '100vh',
+          backdropClass: 'custom-backdrop',
+          hasBackdrop: true,
+          data: {
+            model,
+            action: TblActionType.Edit,
+            listEmployees: [],
+            isAdmin: false
+          },
+        });
 
-        // dialogRef.afterClosed().subscribe(async res => {
-        //   if (res) {
-        //     this.messageService.clear();
-        //     this.messageService.add({
-        //       key: 'toast1', severity: 'success', summary: 'Thành công',
-        //       detail: `Thay đổi thông tin cá nhân thành công!`, life: 2000
-        //     });
-        //     var response = await lastValueFrom(this.userService.getUserDetailByUserId(this.userLoggedIn.user.id));
-        //     if(response.result)this.userDetail = response.result;
-        //   }
-        // })
+        dialogRef.afterClosed().subscribe(async res => {
+          if (res) {
+            this.messageService.clear();
+            this.messageService.add({
+              key: 'toast1', severity: 'success', summary: 'Success',
+              detail: `Change personal infor successfully!`, life: 2000
+            });
+            var response = await lastValueFrom(this.employeeService.getEmployeeById(this.userLoggedIn.user.userId));
+            if(response.result) this.userDetail = response.result;
+          }
+        })
       }
       if (event.item['id'] === 'logout') {
         this.tokenService.clear();

@@ -18,6 +18,7 @@ import { EmployeeManagementService } from '../employee-management/employee-manag
 export class AttendanceManagmentComponent implements OnInit, OnDestroy {
   @Input() isOnlyCurrentUser: boolean = false;
   @Input() currentUser: EmployeeModel = null;
+  @Input() scrollHeight: String = '700px';
   private destroy$: Subject<void> = new Subject<void>();
   dataTable: AttendanceModel[];
   attendanceModel: AttendanceModel;

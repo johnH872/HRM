@@ -252,11 +252,18 @@ class employeeController {
         try {
             var employeeId = req.params.id;
             const employee = await dbContext.User.findByPk(employeeId, {
+                attributes: employeeValidReturnVariable,
                 include: [
                     {
                         model: dbContext.User,
                         as: 'manager',
                         attributes: employeeValidReturnVariable
+                    },
+                    {
+                        model: dbContext.Role,
+                        through: {
+                            attributes: ['roleId'],
+                        }
                     }
                 ],
             });
@@ -290,7 +297,8 @@ class employeeController {
             var employeeId = req.query.employeeId;
             const resp = await dbContext.User.findAll({
                 where: {
-                    ownerId: employeeId
+                    ownerId: employeeId,
+                    
                 }
             });
             if (resp) result.result = resp;

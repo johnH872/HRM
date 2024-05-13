@@ -103,21 +103,16 @@
           <p-tableCheckbox [value]="employee"></p-tableCheckbox>
         </td>
         <td>
-          <!-- <img [alt]="" [src]="employee?.avatarUrl" width="32" style="vertical-align: middle" />
-          <b (click)="openEmployeeDetail(employee)" style="cursor: pointer;">{{ employee?.displayName }}</b> -->
           <nb-user (click)="openEmployeeDetail(employee)" class="custom-nb-user-small" size="small" [name]=" employee?.displayName" title="Engineer" [showTitle]="false"
             [picture]="employee?.avatarUrl"></nb-user>
         </td>
         <td>{{ employee?.email }}</td>
-        <td *ngFor="let role of employee?.Roles">
-          {{ role?.displayName }}
+        <td >
+          {{employee.Roles | roles}}
         </td>
         <td>{{ employee?.phoneNumber }}</td>
         <td>{{ employee?.jobTitle }}</td>
         <td>
-          <!-- <img [alt]="" [src]="employee?.manager?.avatarUrl" width="32" style="vertical-align: middle" />
-          <b (click)="openEmployeeDetail(employee.manager)" style="cursor: pointer;">{{ employee?.manager.firstName }}
-            {{ employee?.manager.middleName }} {{ employee?.manager.lastName }}</b> -->
           <nb-user (click)="openEmployeeDetail(employee.manager)" class="custom-nb-user-small" size="small" [name]="(employee?.manager?.firstName || '') + ' '  + (employee?.manager?.middleName || '') + ' ' +
           (employee?.manager?.lastName||'')" title="Engineer" [showTitle]="false"
             [picture]="employee?.manager?.avatarUrl"></nb-user>
