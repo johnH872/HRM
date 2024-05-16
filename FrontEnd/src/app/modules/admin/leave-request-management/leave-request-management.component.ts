@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { LeaveRequestModel } from './leave-request-management.model';
 import { EmployeeModel } from '../../shared/models/employee.model';
@@ -20,6 +20,10 @@ import { EmployeeDetailDialogComponent } from '../employee-management/employee-d
   styleUrls: ['./leave-request-management.component.scss']
 })
 export class LeaveRequestManagementComponent implements OnInit, OnDestroy {
+  @Input() isOnlyCurrentUser: boolean = false;
+  @Input() currentUser: EmployeeModel = null;
+  @Input() scrollHeight: String = '700px';
+  @Input() isShowToolBar: boolean = true;
   private destroy$: Subject<void> = new Subject<void>();
   dataTable: LeaveRequestModel[];
   leaveRequestModel: LeaveRequestModel;
@@ -70,6 +74,7 @@ export class LeaveRequestManagementComponent implements OnInit, OnDestroy {
     var leaveRequestPagingResults = await this.leaveRequestService.getAllLeaveRequest().pipe(takeUntil(this.destroy$)).toPromise();
     if (leaveRequestPagingResults.result) {
       this.dataTable = leaveRequestPagingResults.result;
+      if(this.isOnlyCurrentUser) this.dataTable = this.dataTable.filter(x => x.userId == this.currentUser.userId);
     }
     this.loading = !this.loading;
   }

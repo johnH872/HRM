@@ -97,3 +97,19 @@
     font-size: 14px !important;
 }
 
+// custom-order-list
+::ng-deep.p-orderlist  {
+    .p-orderlist-controls {
+        padding: 5px;
+        .p-button {
+            padding: unset;
+            width: 30px;
+            height: 30px;
+        }
+    }
+
+    .p-orderlist-header {
+        padding: 10px;
+        font-size: 14px;
+    }
+}

@@ -38,9 +38,17 @@
     border-radius: 50% !important;
 }
 
-.avatar-xl {
-    height: 6rem;
-    width: 6rem;
+.custom-nb-user {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+}
+
+:host ::ng-deep .custom-nb-user .user-picture {
+    width: 6rem !important;
+    cursor: pointer;
+    height: 6rem !important;
 }
 
 .header-text {

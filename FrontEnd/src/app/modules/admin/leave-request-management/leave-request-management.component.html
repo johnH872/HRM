@@ -1,5 +1,5 @@
 <div class="card">
-  <p-toolbar styleClass="mb-4 gap-2">
+  <p-toolbar *ngIf="isShowToolBar" styleClass="mb-4 gap-2">
     <ng-template pTemplate="left">
       <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-button-sm mr-2"
         (click)="addEditLeaveRequest()"></button>
@@ -19,10 +19,10 @@
     [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }" (onPage)="pageChange($event)"
     scrollHeight="flex" [rowsPerPageOptions]="[10, 25, dataTable?.length]" [loading]="loading"
     [globalFilterFields]="['leaveTypeName']" editMode="row" [(selection)]="selectedLeaveRequests" [rowHover]="true"
-    [scrollable]="true" scrollHeight="700px" dataKey="leaveRequestId">
+    [scrollable]="true" [scrollHeight]="scrollHeight" dataKey="leaveRequestId">
     <ng-template pTemplate="header">
       <tr>
-        <th style="width: 4rem">
+        <th *ngIf="isShowToolBar" style="width: 4rem">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
         <th pSortableColumn="reason" style="min-width:150px">
@@ -71,11 +71,11 @@
     </ng-template>
     <ng-template pTemplate="body" let-leaveRequest let-editing="editing" let-ri="rowIndex">
       <tr [pEditableRow]="leaveRequest">
-        <td>
+        <td *ngIf="isShowToolBar">
           <p-tableCheckbox [value]="leaveRequest"></p-tableCheckbox>
         </td>
         <td>{{ leaveRequest?.reason }}</td>
-        <td (click)="openEmployeeDetail(leaveRequest.User)" >
+        <td (click)="openEmployeeDetail(leaveRequest.User)">
           <nb-user class="custom-nb-user-small" size="small" [name]="(leaveRequest?.User?.firstName || '') + ' '  + (leaveRequest?.User?.middleName || '') + ' ' +
           (leaveRequest?.User?.lastName||'')" title="Engineer" [showTitle]="false"
             [picture]=" leaveRequest?.User?.avatarUrl"></nb-user>

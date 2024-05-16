@@ -1,61 +1,166 @@
+<div fxLayout="row" class="main-container">
+    <!-- attendance reports and leave request of another employees -->
+    <div fxLayout="column" fxFlex="30" class="other-emp-container">
+        <!-- attendance reports -->
+        <div fxLayout="column" fxFlex="50">
+            <div class="card flex justify-content-center">
+                <p-orderList [value]="[]" [listStyle]="{ 'height': '42vh' }" header="Waiting Reports">
+                    <ng-template let-product pTemplate="item">
+                        <div class="flex align-items-center p-2 w-full flex-wrap">
+                            <div class="w-full text-center lg:w-auto lg:text-left">
+                                <img src="https://primefaces.org/cdn/primeng/images/demo/product/{{ product.image }}"
+                                    [alt]="product.name" class="mr-3 shadow-3 w-7rem mb-3 lg:w-5rem lg:mb-auto" />
+                            </div>
+                            <div class="flex-1">
+                                <h5 class="mb-2">{{ product.name }}</h5>
+                                <i class="pi pi-tag vertical-align-middle mr-2"></i>
+                                <span class="vertical-align-middle line-height-1">{{ product.category }}</span>
+                            </div>
+                            <div class="flex flex-column align-items-end">
+                                <h6 class="mb-2">{{ '$ ' + product.price }}</h6>
+                                <p-tag [value]="product.inventoryStatus"
+                                    [severity]="getSeverity(product.inventoryStatus)"></p-tag>
+                            </div>
+                        </div>
+                    </ng-template>
+                </p-orderList>
+            </div>
+        </div>
+        <!-- leave request -->
+        <div fxLayout="column" fxFlex="50">
+            <div class="card flex justify-content-center">
+                <p-orderList [value]="[]" [listStyle]="{ 'height': '42vh' }" header="Waiting Leave Requests">
+                    <ng-template let-product pTemplate="item">
+                        <div class="flex align-items-center p-2 w-full flex-wrap">
+                            <div class="w-full text-center lg:w-auto lg:text-left">
+                                <img src="https://primefaces.org/cdn/primeng/images/demo/product/{{ product.image }}"
+                                    [alt]="product.name" class="mr-3 shadow-3 w-7rem mb-3 lg:w-5rem lg:mb-auto" />
+                            </div>
+                            <div class="flex-1">
+                                <h5 class="mb-2">{{ product.name }}</h5>
+                                <i class="pi pi-tag vertical-align-middle mr-2"></i>
+                                <span class="vertical-align-middle line-height-1">{{ product.category }}</span>
+                            </div>
+                            <div class="flex flex-column align-items-end">
+                                <h6 class="mb-2">{{ '$ ' + product.price }}</h6>
+                                <p-tag [value]="product.inventoryStatus"
+                                    [severity]="getSeverity(product.inventoryStatus)"></p-tag>
+                            </div>
+                        </div>
+                    </ng-template>
+                </p-orderList>
+            </div>
+        </div>
+    </div>
+    <!-- Personal dasboard -->
+    <div fxLayout="column" fxFlex="70">
+        <div fxLayout="row" fxFlex="50" class="leave-attendance-container">
+            <div fxLayout="column" fxFlex="50" fxLayoutAlign="end center">
+                <span class="fs-14 fw-bold"
+                    style="width: 100%; text-align: center; height: 40px; line-height: 40px;">Leave request</span>
+                <app-leave-request-management [scrollHeight]="'calc(38vh - 40px)'" class="w-100"
+                    [isOnlyCurrentUser]="true" [currentUser]="userModel.user"
+                    [isShowToolBar]="false"></app-leave-request-management>
+            </div>
+            <!-- Attendance chart -->
+            <div fxLayout="column" fxFlex="50">
+                <div fxLayout="row" fxFlex="35" fxLayoutAlign="space-around center">
+                    <div fxLayout="column" fxLayoutAlign="center center">
+                        <circle-progress class="margin-circle" [percent]="usedAnnualLeavePercentage" [space]="-8"
+                            [radius]="40" [outerStrokeWidth]="8" [innerStrokeWidth]="8"
+                            [outerStrokeColor]="usedAnnualLeavePercentage >=67 && usedAnnualLeavePercentage <= 100 ? '#4CC790' : usedAnnualLeavePercentage >=33 && usedAnnualLeavePercentage <67 ? '#3c9ee5' : '#ff9f00'"
+                            [animation]="true" [animationDuration]="300" [titleFontSize]="'13px'"
+                            [title]="annualLeaveEntitlement ? ((annualLeaveEntitlement?.usableLeave - annualLeaveEntitlement?.usedLeave).toFixed(1) + '/' + annualLeaveEntitlement?.usableLeave.toFixed(1))  || 0 : '0/0'"
+                            [maxPercent]="100"></circle-progress>
+                        <span class="fs-13 header-text">Annual Leaves</span>
+                    </div>
 
-<div class="card">
-    <p-table
-        [value]="customers"
-        [lazy]="true"
-        dataKey="id"
-        [tableStyle]="{ 'min-width': '75rem' }"
-        [paginator]="true"
-        [rows]="10"
-        [globalFilterFields]="['name', 'country.name', 'company', 'representative.name']"
-    >
-        <ng-template pTemplate="header">
-            <tr>
-                <th style="width: 4rem"></th>
-                <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
-                <th pSortableColumn="country?.name">Country <p-sortIcon field="country?.name"></p-sortIcon></th>
-                <th pSortableColumn="company">Company <p-sortIcon field="company"></p-sortIcon></th>
-                <th pSortableColumn="representative?.name">Representative <p-sortIcon field="representative?.name"></p-sortIcon></th>
-            </tr>
-            <tr>
-                <th style="width: 4rem">
-                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                </th>
-                <th>
-                    <p-columnFilter type="text" field="name"></p-columnFilter>
-                </th>
-                <th>
-                    <p-columnFilter type="text" field="country.name"></p-columnFilter>
-                </th>
-                <th>
-                    <p-columnFilter type="text" field="company"></p-columnFilter>
-                </th>
-                <th>
-                    <p-columnFilter field="representative" matchMode="in" [showMenu]="false">
-                        <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                            <p-multiSelect [ngModel]="value" appendTo="body" [options]="representatives" placeholder="Any" (onChange)="filter($event.value)" optionLabel="name" [maxSelectedLabels]="1" [selectedItemsLabel]="'{0} items'">
-                                <ng-template let-option pTemplate="item">
-                                    <div class="inline-block vertical-align-middle">
-                                        <img [alt]="option.label" src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{ option.image }}" width="24" class="vertical-align-middle" />
-                                        <span class="ml-1 mt-1">{{ option.name }}</span>
-                                    </div>
-                                </ng-template>
-                            </p-multiSelect>
-                        </ng-template>
-                    </p-columnFilter>
-                </th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-customer>
-            <tr>
-                <td>
-                    <p-tableCheckbox [value]="customer"></p-tableCheckbox>
-                </td>
-                <td>{{ customer?.name }}</td>
-                <td>{{ customer?.country?.name }}</td>
-                <td>{{ customer?.company }}</td>
-                <td>{{ customer?.representative?.name }}</td>
-            </tr>
-        </ng-template>
-    </p-table>
+                    <div fxLayout="column" fxLayoutAlign="center center">
+                        <circle-progress class="margin-circle" [percent]="usedSeniorityLeavePercentage" [space]="-8"
+                            [radius]="40" [outerStrokeWidth]="8" [innerStrokeWidth]="8"
+                            [outerStrokeColor]="usedSeniorityLeavePercentage >=67 && usedSeniorityLeavePercentage <= 100 ? '#4CC790' : usedSeniorityLeavePercentage >=33 && usedSeniorityLeavePercentage <67 ? '#3c9ee5' : '#ff9f00'"
+                            [animation]="true" [animationDuration]="300" [titleFontSize]="'13px'"
+                            [title]="seniorityLeaveEntitlement ? ((seniorityLeaveEntitlement?.usableLeave - seniorityLeaveEntitlement?.usedLeave).toFixed(1) + '/' + seniorityLeaveEntitlement?.usableLeave.toFixed(1))  || 0 : '0/0'"
+                            [maxPercent]="100"></circle-progress>
+                        <span class="fs-13 header-text">Seniority Leaves</span>
+                    </div>
+
+                    <div fxLayout="column" fxLayoutAlign="center center">
+                        <circle-progress class="margin-circle" [percent]="usedTransferLeavePercentage" [space]="-8"
+                            [radius]="40" [outerStrokeWidth]="8" [innerStrokeWidth]="8"
+                            [outerStrokeColor]="usedTransferLeavePercentage >=67 && usedTransferLeavePercentage <= 100 ? '#4CC790' : usedTransferLeavePercentage >=33 && usedTransferLeavePercentage <67 ? '#3c9ee5' : '#ff9f00'"
+                            [animation]="true" [titleFontSize]="'13px'"
+                            [title]="transferLeaveEntitlement ? ((transferLeaveEntitlement?.usableLeave - transferLeaveEntitlement?.usedLeave).toFixed(1) + '/' + transferLeaveEntitlement?.usableLeave.toFixed(1))  || 0 : '0/0'"
+                            [animationDuration]="300" [maxPercent]="100"></circle-progress>
+                        <span class="fs-13 header-text">Transfer Leaves</span>
+                    </div>
+
+                    <div fxLayout="column" fxLayoutAlign="center center">
+                        <circle-progress class="margin-circle" [percent]="usedUnpaidLeavePercentage" [space]="-8"
+                            [radius]="40" [outerStrokeWidth]="8" [innerStrokeWidth]="8"
+                            [outerStrokeColor]="usedUnpaidLeavePercentage >=67 && usedUnpaidLeavePercentage <= 100 ? '#4CC790' : usedUnpaidLeavePercentage >=33 && usedUnpaidLeavePercentage <67 ? '#3c9ee5' : '#ff9f00'"
+                            [animation]="true" [animationDuration]="300" [titleFontSize]="'13px'"
+                            [title]="unpaidLeaveEntitlement ? ((unpaidLeaveEntitlement?.usableLeave - unpaidLeaveEntitlement?.usedLeave).toFixed(1) + '/' + unpaidLeaveEntitlement?.usableLeave.toFixed(1))  || 0 : '0/0'"
+                            [maxPercent]="100"></circle-progress>
+                        <span class="fs-13 header-text">Unpaid Leaves</span>
+                    </div>
+                </div>
+                <div fxLayout="row" fxFlex="20" fxLayoutAlign="end center">
+                    <!-- Time filter -->
+                    <div fxLayout="column" fxFlex="50">
+                        <div fxLayout="row" fxLayoutAlign="center start" class="mt-2">
+                            <button mat-raised-button style="background-color: #b45cea; color: white; font-size: 13px;"
+                                class="button-app-function" (click)="setupDataFilter('prev')">
+                                <mat-icon>arrow_back_ios</mat-icon>
+                            </button>
+                            <button mat-raised-button style="background-color: #b45cea; color: white; font-size: 13px;"
+                                class="button-app-function background-gradient" (click)="setupDataFilter('this')">
+                                This Week
+                            </button>
+                            <button mat-raised-button style="background-color: #b45cea; color: white; font-size: 13px;"
+                                class="button-app-function" (click)="setupDataFilter('next')">
+                                <mat-icon>arrow_forward_ios</mat-icon>
+                            </button>
+                        </div>
+                        <div fxLayout="row" fxLayoutAlign="center start" class="mt-2 fs-13 fw-bold">{{timeRangeDisplay}}
+                        </div>
+                    </div>
+                    <!-- Total -->
+                    <div fxLayout="row" fxFlex="50" class="total-container">
+                        <div fxLayout="column" class="p-2" fxLayoutAlign="space-between start">
+                            <div fxLayout="row">
+                                <p-button icon="pi pi-calendar" styleClass="p-button-sm mr-2"
+                                    class="custom-icon-button"></p-button>
+                                <span class="fs-13" style="line-height: 22px;"> <b>Required:</b> 48.00 hours </span>
+                            </div>
+                            <div fxLayout="row">
+                                <p-button icon="pi pi-check-circle" styleClass="p-button-sm mr-2 p-button-success"
+                                    class="custom-icon-button"></p-button>
+                                <span class="fs-13" style="line-height: 22px;"> <b>Worked:</b> 48.00 hours </span>
+                            </div>
+                            <div fxLayout="row">
+                                <p-button icon="pi pi-sign-out" styleClass="p-button-sm mr-2 p-button-warning"
+                                    class="custom-icon-button"></p-button>
+                                <span class="fs-13" style="line-height: 22px;"> <b>Leaves:</b> 48.00 hours </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Chart -->
+                <div fxLayout="row" fxFlex="45">
+                    <div fxFlex="100" echarts [options]="chartOption" [loading]="isLoadingChart"
+                        style="width: 100%; height: 200px; margin-top: 30px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div fxLayout="row" fxFlex="50">
+            <div fxLayout="column" fxFlex="50">
+
+            </div>
+            <div fxLayout="column" fxFlex="50">
+
+            </div>
+        </div>
+    </div>
 </div>

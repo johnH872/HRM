@@ -8,9 +8,9 @@
         <div class="header-card-container" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
             <div class="custom-card user-card" fxLayout="row" fxLayoutAlign="start center"
                 style="background-color: #F3F5F9;">
-                <img style="cursor: pointer; margin-right: 1rem;"
-                    [src]="'https://mdbcdn.b-cdn.net/img/new/avatars/2.webp'"
-                    class="rounded-circle avatar-xl img-thumbnail" alt="profile-image">
+                <nb-user size="large" class="custom-nb-user" color="#fff"
+                    [name]="employeeModel?.firstName + ' ' + employeeModel?.middleName + ' ' + employeeModel?.lastName"
+                    [onlyPicture]="true" [picture]="employeeModel?.avatarUrl"></nb-user>
                 <div fxLayout="column" fxLayoutAlign="center start">
                     <span class="fs-14 header-text">{{employeeModel?.firstName || ''}} {{employeeModel?.middleName ||
                         ''}} {{employeeModel?.lastName || ''}}</span>
@@ -18,10 +18,10 @@
                 </div>
             </div>
             <div fxLayout="column" fxLayoutAlign="center center">
-                <circle-progress class="margin-circle" [percent]="usedAnnualLeavePercentage" [space]="-8" [radius]="53"
+                <circle-progress class="margin-circle" [percent]="usedAnnualLeavePercentage" [space]="-8" [radius]="45"
                     [outerStrokeWidth]="8" [innerStrokeWidth]="8"
                     [outerStrokeColor]="usedAnnualLeavePercentage >=67 && usedAnnualLeavePercentage <= 100 ? '#4CC790' : usedAnnualLeavePercentage >=33 && usedAnnualLeavePercentage <67 ? '#3c9ee5' : '#ff9f00'"
-                    [animation]="true" [animationDuration]="300"
+                    [animation]="true" [animationDuration]="300" [titleFontSize]="'14px'"
                     [title]="annualLeaveEntitlement ? ((annualLeaveEntitlement?.usableLeave - annualLeaveEntitlement?.usedLeave).toFixed(1) + '/' + annualLeaveEntitlement?.usableLeave.toFixed(1))  || 0 : '0/0'"
                     [maxPercent]="100"></circle-progress>
                 <span class="fs-14 header-text">Annual Leaves</span>
@@ -29,9 +29,9 @@
 
             <div fxLayout="column" fxLayoutAlign="center center">
                 <circle-progress class="margin-circle" [percent]="usedSeniorityLeavePercentage" [space]="-8"
-                    [radius]="53" [outerStrokeWidth]="8" [innerStrokeWidth]="8"
+                    [radius]="45" [outerStrokeWidth]="8" [innerStrokeWidth]="8"
                     [outerStrokeColor]="usedSeniorityLeavePercentage >=67 && usedSeniorityLeavePercentage <= 100 ? '#4CC790' : usedSeniorityLeavePercentage >=33 && usedSeniorityLeavePercentage <67 ? '#3c9ee5' : '#ff9f00'"
-                    [animation]="true" [animationDuration]="300"
+                    [animation]="true" [animationDuration]="300" [titleFontSize]="'14px'"
                     [title]="seniorityLeaveEntitlement ? ((seniorityLeaveEntitlement?.usableLeave - seniorityLeaveEntitlement?.usedLeave).toFixed(1) + '/' + seniorityLeaveEntitlement?.usableLeave.toFixed(1))  || 0 : '0/0'"
                     [maxPercent]="100"></circle-progress>
                 <span class="fs-14 header-text">Seniority Leaves</span>
@@ -39,19 +39,19 @@
 
             <div fxLayout="column" fxLayoutAlign="center center">
                 <circle-progress class="margin-circle" [percent]="usedTransferLeavePercentage" [space]="-8"
-                    [radius]="53" [outerStrokeWidth]="8" [innerStrokeWidth]="8"
+                    [radius]="45" [outerStrokeWidth]="8" [innerStrokeWidth]="8"
                     [outerStrokeColor]="usedTransferLeavePercentage >=67 && usedTransferLeavePercentage <= 100 ? '#4CC790' : usedTransferLeavePercentage >=33 && usedTransferLeavePercentage <67 ? '#3c9ee5' : '#ff9f00'"
-                    [animation]="true"
+                    [animation]="true" [titleFontSize]="'14px'"
                     [title]="transferLeaveEntitlement ? ((transferLeaveEntitlement?.usableLeave - transferLeaveEntitlement?.usedLeave).toFixed(1) + '/' + transferLeaveEntitlement?.usableLeave.toFixed(1))  || 0 : '0/0'"
                     [animationDuration]="300" [maxPercent]="100"></circle-progress>
                 <span class="fs-14 header-text">Transfer Leaves</span>
             </div>
 
             <div fxLayout="column" fxLayoutAlign="center center">
-                <circle-progress class="margin-circle" [percent]="usedUnpaidLeavePercentage" [space]="-8" [radius]="50"
+                <circle-progress class="margin-circle" [percent]="usedUnpaidLeavePercentage" [space]="-8" [radius]="45"
                     [outerStrokeWidth]="8" [innerStrokeWidth]="8"
                     [outerStrokeColor]="usedUnpaidLeavePercentage >=67 && usedUnpaidLeavePercentage <= 100 ? '#4CC790' : usedUnpaidLeavePercentage >=33 && usedUnpaidLeavePercentage <67 ? '#3c9ee5' : '#ff9f00'"
-                    [animation]="true" [animationDuration]="300"
+                    [animation]="true" [animationDuration]="300" [titleFontSize]="'14px'"
                     [title]="unpaidLeaveEntitlement ? ((unpaidLeaveEntitlement?.usableLeave - unpaidLeaveEntitlement?.usedLeave).toFixed(1) + '/' + unpaidLeaveEntitlement?.usableLeave.toFixed(1))  || 0 : '0/0'"
                     [maxPercent]="100"></circle-progress>
                 <span class="fs-14 header-text">Unpaid Leaves</span>
@@ -109,18 +109,21 @@
                     <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
                         <div fxFlex="60" echarts [options]="chartOption" [loading]="isLoadingChart"
                             style="width: 700px; height: 250px; margin-top: 30px;"></div>
-                        <div  fxFlex="40" style="margin-bottom: 100px; text-align: center;">
+                        <div fxFlex="40" style="margin-bottom: 100px; text-align: center;">
                             <div class="fs-13" style="color: black;">{{timeRangeDisplay}}</div>
                             <div>
-                                <button mat-raised-button style="background-color: #b45cea; color: white; font-size: 13px;"
+                                <button mat-raised-button
+                                    style="background-color: #b45cea; color: white; font-size: 13px;"
                                     class="button-app-function" (click)="setupDataFilter('prev')">
                                     <mat-icon>arrow_back_ios</mat-icon>
                                 </button>
-                                <button mat-raised-button style="background-color: #b45cea; color: white; font-size: 13px;"
+                                <button mat-raised-button
+                                    style="background-color: #b45cea; color: white; font-size: 13px;"
                                     class="button-app-function background-gradient" (click)="setupDataFilter('this')">
                                     This Week
                                 </button>
-                                <button mat-raised-button style="background-color: #b45cea; color: white; font-size: 13px;"
+                                <button mat-raised-button
+                                    style="background-color: #b45cea; color: white; font-size: 13px;"
                                     class="button-app-function" (click)="setupDataFilter('next')">
                                     <mat-icon>arrow_forward_ios</mat-icon>
                                 </button>

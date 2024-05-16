@@ -9,7 +9,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
-import { NbAuthModule } from '@nebular/auth';
+import { NbAuthJWTToken, NbAuthModule } from '@nebular/auth';
 import { RxReactiveFormsModule } from '@rxweb/reactive-form-validators';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NbAlertModule, NbButtonGroupModule, NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbFormFieldModule, NbIconModule, NbInputModule, NbLayoutModule, NbMenuModule, NbRadioModule, NbSearchModule, NbSelectModule, NbSpinnerModule, NbTabsetModule, NbToggleModule, NbUserModule } from '@nebular/theme';
@@ -82,6 +82,7 @@ import { StepsModule } from 'primeng/steps';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { ColorPickerModule } from 'primeng/colorpicker';
 import { ListboxModule } from 'primeng/listbox';
+import { OrderListModule } from 'primeng/orderlist'
 
 const materialModules = [
   MatFormFieldModule,
@@ -165,6 +166,7 @@ const primengModules = [
   RadioButtonModule,
   ColorPickerModule,
   ListboxModule,
+  OrderListModule
 ]
 
 @NgModule({
@@ -253,6 +255,7 @@ const primengModules = [
     DateTimeFormatPipe,
     DateFormatPipe,
     NumberFormatPipe,
+    NbAuthJWTToken
   ]
 })
 export class SharedModule { }

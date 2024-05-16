@@ -1,192 +1,332 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MessageService } from 'primeng/api';
-import { Subject } from 'rxjs';
-import { NgxTableComponent } from '../../shared/components/ngx-table/ngx-table.component';
-import { PaymentService } from './payment.service';
+import { Component, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
+import { Subject, lastValueFrom, takeUntil } from 'rxjs';
+import { RangeDate } from '../../shared/models/dateRangeModel';
+import { EChartsOption } from 'echarts';
+import { AttendanceModel } from '../attendance-managment/attendance.model';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { PagingRangeDateFilter } from '../../shared/models/page';
+import dateFormat from "dateformat";
+import { AttendanceManagementService } from '../attendance-managment/attendance-management.service';
+import { NbAuthJWTToken, NbAuthService } from '@nebular/auth';
+import { LeaveTypeModel } from '../leave-type-management/leave-type-management.model';
+import { LeaveEntitlementManagamentService } from '../leave-entitlement-managament/leave-entitlement-management.service';
+import { LeaveType } from '../../shared/enum/leave-type.enum';
+import { LeaveEntitlementModel } from '../leave-entitlement-managament/leave-entitlement-management.model';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent {
-  customers = [];
-  columns = [];
-  // products!: Product[];
-  @ViewChild('ngxTable', { static: true }) ngxTable: NgxTableComponent;
-  @ViewChild('userCell', { static: true }) userCell: TemplateRef<any>;
-  @ViewChild('paymentTypeCell', { static: true }) paymentTypeCell: TemplateRef<any>;
-  @ViewChild('workCell', { static: true }) workCell: TemplateRef<any>;
+export class DashboardComponent implements OnDestroy {
+  userModel: any;
+  // e-charts data
+  order: number = 0;
+  rangeWeekDefault: RangeDate;
+  isApply = false;
+  chartOption: EChartsOption;
+  isLoadingChart: boolean = false;
+  listAttendanceWeeks: AttendanceModel[] = [];
+  listTypeOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  totalDurationWeekDisplay: string = '';
+  timeRangeDisplay: string = '';
+  frmDateRange = new FormGroup({
+    startDate: new FormControl('', [Validators.required]),
+    endDate: new FormControl('', [Validators.required])
+  });
+  pagingAttendanceRange = new PagingRangeDateFilter();
+  // Leave budget data
+  leaveTypes: LeaveTypeModel[] = [];
+  annualLeaveEntitlement: LeaveEntitlementModel;
+  seniorityLeaveEntitlement: LeaveEntitlementModel;
+  transferLeaveEntitlement: LeaveEntitlementModel;
+  unpaidLeaveEntitlement: LeaveEntitlementModel;
+  usedAnnualLeavePercentage: number = null;
+  usedSeniorityLeavePercentage: number = null;
+  usedUnpaidLeavePercentage: number = null;
+  usedTransferLeavePercentage: number = null;
+
   private destroy$: Subject<void> = new Subject<void>();
   constructor(
-    private paymentService: PaymentService,
-    private messageService: MessageService,
-    private dialog: MatDialog,
+    private attendanceService: AttendanceManagementService,
+    private authService: NbAuthService,
+    private nbAuthJwtToken: NbAuthJWTToken,
+    private leaveEntitlementService: LeaveEntitlementManagamentService
   ) {
-
+    this.authService.onTokenChange().pipe(takeUntil(this.destroy$))
+      .subscribe(async (token: NbAuthJWTToken) => {
+        if (token.isValid()) {
+          this.userModel = token.getPayload();
+        }
+      });
   }
 
   ngOnInit(): void {
-    this.columns = [
-      {
-        name: 'payerId',
-        prop: 'payerId',
-        cellTemplate: this.userCell
-      },
-      {
-        name: 'workId',
-        prop: 'workId',
-        cellTemplate: this.workCell,
-        cellClass: 'text-center'
-      },
-      {
-        name: 'amount',
-        prop: 'amount'
-      },
-      {
-        name: 'Type',
-        prop: 'paymentType',
-        cellTemplate: this.paymentTypeCell
-      },
-      {
-        name: 'createdAt',
-        prop: 'createdAt'
-      },
-      {
-        name: 'updatedAt',
-        prop: 'updatedAt'
-      },
-    ];
-    this.refreshData();
+    this.initData();
+  }
 
-    this.customers =  [
-        {
-          id: "1000",
-          code: "f230fh0g3",
-          name: "Bamboo Watch",
-          description: "Product Description",
-          image: "bamboo-watch.jpg",
-          "price": 65,
-          "category": "Accessories",
-          "quantity": 24,
-          "inventoryStatus": "INSTOCK",
-          "rating": 5
-        },
-        {
-          "id": "1001",
-          "code": "nvklal433",
-          "name": "Black Watch",
-          "description": "Product Description",
-          "image": "black-watch.jpg",
-          "price": 72,
-          "category": "Accessories",
-          "quantity": 61,
-          "inventoryStatus": "INSTOCK",
-          "rating": 4
-        },
-        {
-          "id": "1002",
-          "code": "zz21cz3c1",
-          "name": "Blue Band",
-          "description": "Product Description",
-          "image": "blue-band.jpg",
-          "price": 79,
-          "category": "Fitness",
-          "quantity": 2,
-          "inventoryStatus": "LOWSTOCK",
-          "rating": 3
-        },
-        {
-          "id": "1003",
-          "code": "244wgerg2",
-          "name": "Blue T-Shirt",
-          "description": "Product Description",
-          "image": "blue-t-shirt.jpg",
-          "price": 29,
-          "category": "Clothing",
-          "quantity": 25,
-          "inventoryStatus": "INSTOCK",
-          "rating": 5
-        },
-        {
-          "id": "1004",
-          "code": "h456wer53",
-          "name": "Bracelet",
-          "description": "Product Description",
-          "image": "bracelet.jpg",
-          "price": 15,
-          "category": "Accessories",
-          "quantity": 73,
-          "inventoryStatus": "INSTOCK",
-          "rating": 4
-        },
-        {
-          "id": "1005",
-          "code": "av2231fwg",
-          "name": "Brown Purse",
-          "description": "Product Description",
-          "image": "brown-purse.jpg",
-          "price": 120,
-          "category": "Accessories",
-          "quantity": 0,
-          "inventoryStatus": "OUTOFSTOCK",
-          "rating": 4
-        },
-        {
-          "id": "1006",
-          "code": "bib36pfvm",
-          "name": "Chakra Bracelet",
-          "description": "Product Description",
-          "image": "chakra-bracelet.jpg",
-          "price": 32,
-          "category": "Accessories",
-          "quantity": 5,
-          "inventoryStatus": "LOWSTOCK",
-          "rating": 3
-        },
-        {
-          "id": "1007",
-          "code": "mbvjkgip5",
-          "name": "Galaxy Earrings",
-          "description": "Product Description",
-          "image": "galaxy-earrings.jpg",
-          "price": 34,
-          "category": "Accessories",
-          "quantity": 23,
-          "inventoryStatus": "INSTOCK",
-          "rating": 5
-        },
-        {
-          "id": "1008",
-          "code": "vbb124btr",
-          "name": "Game Controller",
-          "description": "Product Description",
-          "image": "game-controller.jpg",
-          "price": 99,
-          "category": "Electronics",
-          "quantity": 2,
-          "inventoryStatus": "LOWSTOCK",
-          "rating": 4
-        },
-        {
-          "id": "1009",
-          "code": "cm230f032",
-          "name": "Gaming Set",
-          "description": "Product Description",
-          "image": "gaming-set.jpg",
-          "price": 299,
-          "category": "Electronics",
-          "quantity": 63,
-          "inventoryStatus": "INSTOCK",
-          "rating": 3
-        }
-      ]
+  ngOnDestroy(): void {
+    this.destroy$.complete();
+    this.destroy$.next();
   }
 
   refreshData(reset: boolean = false): void {
-    // this.paymentService.getAllPayment().subscribe(e => {
-    //   this.ngxTable.setData(e);
-    // })
+
+  }
+
+  async initData() {
+    this.leaveEntitlementService.getLeaveEntitlementByEmployeeId(this.userModel.user.userId).subscribe(res => {
+      if (res.result && res.result.length > 0) {
+        res.result.forEach(element => {
+          switch (element.leaveTypeId) {
+            case LeaveType.Annually:
+              this.annualLeaveEntitlement = element;
+              this.usedAnnualLeavePercentage = ((element.usableLeave - element.usedLeave) / element.usableLeave * 100);
+              break;
+            case LeaveType.Seniority:
+              this.seniorityLeaveEntitlement = element;
+              this.usedSeniorityLeavePercentage = ((element.usableLeave - element.usedLeave) / element.usableLeave * 100);
+              break;
+            case LeaveType.Transfer:
+              this.transferLeaveEntitlement = element;
+              this.usedTransferLeavePercentage = ((element.usableLeave - element.usedLeave) / element.usableLeave * 100);
+              break;
+            case LeaveType.UnPaid:
+              this.unpaidLeaveEntitlement = element;
+              this.usedUnpaidLeavePercentage = ((element.usableLeave - element.usedLeave) / element.usableLeave * 100);
+              break;
+          }
+        });
+      }
+    });
+
+    this.rangeWeekDefault = {
+      startDate: dateFormat(this.getStartOfWeek(), 'mm-dd-yyyy 0:00:00'),
+      endDate: dateFormat(this.getEndOfWeek(), 'mm-dd-yyyy 23:59:59')
+    } as RangeDate;
+    this.frmDateRange.setValue({ startDate: this.getStartOfWeek().toString(), endDate: this.getEndOfWeek().toString() });
+    await this.setupChart();
+  }
+
+  // Atttendance chart zone
+  async setupChart() {
+    // if(!this.nbAuthJwtToken.isValid()) return;
+    if(!this.userModel) this.userModel = this.nbAuthJwtToken.getPayload();
+
+    this.isLoadingChart = !this.isLoadingChart;
+    var listDurationWeeks = [];
+    var listWeeks = [];
+    if (this.frmDateRange.valid) {
+      this.timeRangeDisplay = this.getMonthName(this.frmDateRange.get('startDate')?.value) + ' '
+        + this.getDateName(this.frmDateRange.get('startDate')?.value) + ' - '
+        + this.getMonthName(this.frmDateRange.get('endDate')?.value) + ' '
+        + this.getDateName(this.frmDateRange.get('endDate')?.value);
+      var startDateValue = new Date(this.frmDateRange.get('startDate')?.value);
+      startDateValue.setHours(0, 0, 0);
+      var endDateValue = new Date(this.frmDateRange.get('endDate')?.value);
+      endDateValue.setHours(23, 59, 59);
+      var rangeWeek = {
+        startDate: startDateValue.toISOString(),
+        endDate: endDateValue.toISOString()
+      } as RangeDate;
+      this.pagingAttendanceRange.rangeDateValue = rangeWeek;
+      var respAttendanceWeek = await lastValueFrom(this.attendanceService.getAttendanceRange(this.userModel?.user?.userId, this.pagingAttendanceRange).pipe(takeUntil(this.destroy$)));
+      if (respAttendanceWeek.result && respAttendanceWeek.result.length > 0) {
+        this.listAttendanceWeeks = respAttendanceWeek.result;
+      }
+      const startDate = new Date(this.frmDateRange.get('startDate')?.value);
+      startDate.setHours(0, 0, 0, 0);
+      const endDate = new Date(this.frmDateRange.get('endDate')?.value);
+      endDate.setHours(0, 0, 0, 0);
+      const currentDate = new Date(startDate);
+      currentDate.setHours(0, 0, 0, 0);
+      while (currentDate <= endDate) {
+        var totalDuration = 0;
+        this.listAttendanceWeeks.map(item => {
+          var punchInDate = new Date(item.punchinDate);
+          if (punchInDate?.getDate() === currentDate?.getDate() && punchInDate?.getMonth() === currentDate?.getMonth()
+            && punchInDate?.getFullYear() === currentDate?.getFullYear()) {
+            totalDuration += item.duration;
+          }
+        })
+        listDurationWeeks.push(Number(totalDuration.toFixed(2)));
+        listWeeks.push(this.listTypeOfWeek[currentDate.getDay()]);
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+    }
+
+    var totalDurationWeek = 0;
+    listDurationWeeks.map(item => totalDurationWeek += item);
+    this.totalDurationWeekDisplay = Math.floor(totalDurationWeek) + 'h' + Math.round((totalDurationWeek % 1) * 60) + 'm';
+
+    const yMax = 25;
+    const dataShadow = [];
+
+    for (let i = 0; i < listDurationWeeks.length; i++) {
+      dataShadow.push(yMax);
+    }
+
+    this.chartOption = {
+      title: {
+        left: '15%',
+        subtext: 'Total duration: ' + this.totalDurationWeekDisplay,
+        textAlign: 'center',
+      },
+      // color: ['#8dc63f'],
+      xAxis: [
+        {
+          type: 'category',
+          data: listWeeks,
+          axisTick: {
+            alignWithLabel: true,
+          },
+        },
+      ],
+      yAxis: [
+        {
+          type: 'value',
+        },
+      ],
+      series: [
+        {
+          // For shadow
+          type: 'bar',
+          itemStyle: {
+            color: 'rgba(0,0,0,0.05)',
+          },
+          barGap: '-100%',
+          barCategoryGap: '40%',
+          barWidth: '20%',
+          data: dataShadow,
+          animation: false,
+        },
+        {
+          type: 'bar',
+          barWidth: '20%',
+          label: {
+            show: true,
+            position: 'top',
+            formatter: (params: any) => this.formatDurationEchart(params.value),
+          },
+          itemStyle: {
+            // normal: {
+            //   barBorderRadius: [5, 5, 0, 0]
+            // },
+          },
+          data: listDurationWeeks.map((duration) => ({
+            value: duration,
+            itemStyle: {
+              color: this.handleDisplayDurationEchart(duration),
+            },
+          })),
+        },
+      ],
+    };
+    this.isLoadingChart = !this.isLoadingChart;
+  }
+
+  async setupDataFilter(value) {
+    switch (value) {
+      case 'prev':
+        this.order -= 1;
+        break;
+      case 'next':
+        this.order += 1;
+        break;
+      case 'this':
+        this.order = 0;
+        break;
+    }
+    var startDateValue = new Date(this.rangeWeekDefault.startDate);
+    var endDateValue = new Date(this.rangeWeekDefault.endDate);
+    startDateValue.setDate(startDateValue.getDate() + this.order * 7);
+    endDateValue.setDate(endDateValue.getDate() + this.order * 7);
+    this.frmDateRange.setValue(
+      {
+        startDate: startDateValue.toString(),
+        endDate: endDateValue.toString()
+      }
+    );
+    await this.setupChart();
+  }
+
+  getStartOfWeek(): Date {
+    const currentDate = new Date();
+    const currentDayOfWeek = currentDate.getDay();
+    const startDayOfWeek = 1;
+
+    const diff = (currentDayOfWeek >= startDayOfWeek ? currentDayOfWeek - startDayOfWeek : 7 - startDayOfWeek + currentDayOfWeek);
+    const startWeek = new Date(currentDate);
+    startWeek.setDate(currentDate.getDate() - diff);
+
+    return startWeek;
+  }
+
+  getEndOfWeek(): Date {
+    const currentDate = new Date();
+    const currentDayOfWeek = currentDate.getDay();
+    const endDayOfWeek = 0;
+
+    const diff = (endDayOfWeek >= currentDayOfWeek ? endDayOfWeek - currentDayOfWeek : 7 - currentDayOfWeek + endDayOfWeek);
+    const endWeek = new Date(currentDate);
+    endWeek.setDate(currentDate.getDate() + diff);
+
+    return endWeek;
+  }
+
+  getDateName(date): string {
+    const value = new Date(date);
+    return value.getDate().toString();
+  }
+
+  getMonthName(date): string {
+    const monthNames = [
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
+    const value = new Date(date);
+    const monthIndex = value?.getMonth();
+    return monthNames[monthIndex];
+  }
+
+  formatDurationEchart(value: number): string {
+    if (value) {
+      return Math.floor(value) + 'h' + Math.round((value % 1) * 60) + 'm';
+    } else {
+      return '0';
+    }
+  }
+
+  handleDisplayDuration(attendance: AttendanceModel, isDisplayColor: boolean = false): string {
+    if (isDisplayColor) {
+      if (attendance?.punchoutDate) {
+        if (attendance?.duration < 9.0) return '#ff0009';
+        else if (attendance?.duration >= 10.0) return '#008080';
+        else return '#8dc63f';
+      } else return '#ffaa00';
+    }
+  }
+
+  handleDisplayDurationEchart(duration: number): string {
+    if (duration < 9.0) return '#ff0009';
+    else if (duration >= 10.0) return '#008080';
+    else return '#8dc63f';
+  }
+
+  rangeDateChange(event, value: boolean) {
+    if (value === true) {
+      if (event.value) {
+        const rangeDay = new RangeDate();
+        rangeDay.endDate = dateFormat(this.frmDateRange.value.endDate, 'mm-dd-yyyy 23:59:59');
+        rangeDay.startDate = dateFormat(this.frmDateRange.value.startDate, 'mm-dd-yyyy 0:00:00');
+        this.isApply = true;
+      }
+    } else this.isApply = false;
+  }
+
+  clearDate(event) {
+    event.stopPropagation();
+    this.frmDateRange.reset({ startDate: '', endDate: '' });
+    this.isApply = true;
   }
 }
