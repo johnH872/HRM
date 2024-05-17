@@ -5,6 +5,7 @@ import { environment } from 'src/enviroments/enviroment';
 import { EmployeeModel } from '../../shared/models/employee.model';
 import { User } from '../../shared/models/user.model';
 import { Observable } from 'rxjs';
+import { DashBoardData } from '../dashboard/dashboard-data.model';
 
 @Injectable({
   providedIn: 'root'
@@ -36,5 +37,9 @@ export class EmployeeManagementService {
 
   deleteEmployees(ids: String[]): Observable<ReturnResult<EmployeeModel[]>> {
     return this.http.post<ReturnResult<EmployeeModel[]>>(`${this.baseUrl}/DeleteEmployee`, ids);
+  }
+
+  getDashboardData(id: String): Observable<ReturnResult<DashBoardData>> {
+    return this.http.get<ReturnResult<DashBoardData>>(`${this.baseUrl}/GetDashboardData?employeeId=${id}`);
   }
 }

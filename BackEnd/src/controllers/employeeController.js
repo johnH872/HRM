@@ -6,6 +6,7 @@ import { PagedData } from "../models/DTO/pagedData.js";
 import { Op, Sequelize, where } from "sequelize";
 import { filterData, mappingPage, pagingData } from "../utils/pagingAndFiltering.js";
 import { employeeValidReturnVariable } from "../utils/helper.js";
+import { leaveRequestStatus } from "../models/enums/leaveRequestStatus.js";
 const dbContext = await db;
 class employeeController {
     async getAllEmployee(req, res, next) {
@@ -298,11 +299,65 @@ class employeeController {
             const resp = await dbContext.User.findAll({
                 where: {
                     ownerId: employeeId,
-                    
+
                 }
             });
             if (resp) result.result = resp;
             else result.message = "No such employee";
+        } catch (error) {
+            console.error(error);
+        }
+        return res.status(200).json(result);
+    }
+
+    async getDashboardData(req, res, next) {
+        var result = new ReturnResult;
+        try {
+            const { employeeId } = req.query;
+            var resData = {};
+
+            const waitingLeaveRequests = await dbContext.LeaveRequest.findAll({
+                include:
+                {
+                    model: dbContext.User,
+                    attributes: employeeValidReturnVariable,
+                    where: {
+                        ownerId: employeeId,
+                        [Op.not]: {
+                            userId: employeeId
+                        }
+                    }
+                },
+                where: {
+                    status: leaveRequestStatus.WAITING,
+                    
+                }
+            });
+
+            const manageEmployeeEmails = await dbContext.User.findAll({
+                where: {
+                    ownerId: employeeId,
+                    [Op.not]: {
+                        userId: employeeId
+                    }
+                },
+                attributes: [
+                    'email'
+                ]
+            });
+            var emails = manageEmployeeEmails.map(x => x.email);
+
+            const waitingReportAttendances = await dbContext.AttendanceReport.findAll({
+                where: {
+                    statusId: leaveRequestStatus.WAITING,
+                    email: emails
+                }
+            });
+
+            resData.waitingLeaveRequests = waitingLeaveRequests;
+            resData.waitingReportAttendances = waitingReportAttendances;
+
+            if (resData) result.result = resData;
         } catch (error) {
             console.error(error);
         }
