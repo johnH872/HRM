@@ -129,8 +129,8 @@ export class WorkCalendarManagementComponent implements OnInit {
     attendanceReportStatus == null ? this.listStatus.map(item => this.listStatusChoose?.push(item?.value)) : this.listStatusChoose = attendanceReportStatus?.split(',');
     const attendanceReportLeaveStatus = window.localStorage.getItem('attendanceReportLeaveStatus');
     attendanceReportLeaveStatus == null ? this.listStatusLeave.map(item => this.listStatusLeaveChoose?.push(item?.value)) : this.listStatusLeaveChoose = attendanceReportLeaveStatus?.split(',');
-    const attendanceReportRoleStatus = window.localStorage.getItem('attendanceReportRoleStatus');
-    attendanceReportRoleStatus == null ? this.listStatusRole.map(item => this.listStatusRoleChoose?.push(item?.value)) : (attendanceReportRoleStatus == '' ? this.listStatusRoleChoose = [] : this.listStatusRoleChoose = attendanceReportRoleStatus?.split(','));
+    const attendanceReportRoleStatus = window.localStorage.getItem('workCalendarRoleStatus');
+    attendanceReportRoleStatus != null ?? (attendanceReportRoleStatus == '' ? this.listStatusRoleChoose = [] : this.listStatusRoleChoose = attendanceReportRoleStatus?.split(','));
     await this.changeAttendanceReportMode();
     this.frmGroup = this.frmBuilder.formGroup(DataFilterWorkCalendar, this.dataFilterWorkCalendar);
   }
@@ -209,7 +209,7 @@ export class WorkCalendarManagementComponent implements OnInit {
     this.listStatusLeave.map(item => this.listStatusLeaveChoose?.push(item?.value));
     window.localStorage.setItem('attendanceReportLeaveStatus', `${this.listStatusLeaveChoose}`);
     // this.listStatusRole.map(item => this.listStatusRoleChoose?.push(item?.value));
-    window.localStorage.setItem('attendanceReportRoleStatus', `${this.listStatusRoleChoose}`);
+    window.localStorage.setItem('workCalendarRoleStatus', `${this.listStatusRoleChoose}`);
     this.dataFilterWorkCalendar.listStatus = this.listStatusChoose;
     this.dataFilterWorkCalendar.listStatusLeave = this.listStatusLeaveChoose;
     this.dataFilterWorkCalendar.listRoles = this.listStatusRoleChoose;
@@ -326,7 +326,7 @@ export class WorkCalendarManagementComponent implements OnInit {
   }
 
   async changeStatusRole(event: any) {
-    window.localStorage.setItem('attendanceReportRoleStatus', `${this.listStatusRoleChoose}`);
+    window.localStorage.setItem('workCalendarRoleStatus', `${this.listStatusRoleChoose}`);
     this.dataFilterWorkCalendar.listRoles = this.listStatusRoleChoose;
     this.frmGroup.get('listRoles').setValue(this.dataFilterWorkCalendar?.listRoles);
     await this.callDataSource();

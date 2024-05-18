@@ -114,7 +114,7 @@ export class ReportScheduleManagementComponent implements OnInit {
     const attendanceReportLeaveStatus = window.localStorage.getItem('attendanceReportLeaveStatus');
     attendanceReportLeaveStatus == null ? this.listStatusLeave.map(item => this.listStatusLeaveChoose?.push(item?.value)) : this.listStatusLeaveChoose = attendanceReportLeaveStatus?.split(',');
     const attendanceReportRoleStatus = window.localStorage.getItem('attendanceReportRoleStatus');
-    attendanceReportRoleStatus == null ? this.listStatusRole.map(item => this.listStatusRoleChoose?.push(item?.value)) : (attendanceReportRoleStatus == '' ? this.listStatusRoleChoose = [] : this.listStatusRoleChoose = attendanceReportRoleStatus?.split(','));
+    attendanceReportRoleStatus != null ?? (attendanceReportRoleStatus == '' ? this.listStatusRoleChoose = [] : this.listStatusRoleChoose = attendanceReportRoleStatus?.split(','));
     await this.changeAttendanceReportMode();
     this.frmGroup = this.frmBuilder.formGroup(ReportScheduleModel, this.reportScheduleModel);
   }
