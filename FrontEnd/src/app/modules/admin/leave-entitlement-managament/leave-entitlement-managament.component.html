@@ -2,9 +2,9 @@
   <!-- <p-toast></p-toast> -->
   <p-toolbar styleClass="mb-4 gap-2">
     <ng-template pTemplate="left">
-      <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-button-sm mr-2"
+      <button *ngIf="isAdmin" pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-button-sm mr-2"
         (click)="addEditLeaveEntitlement()"></button>
-      <button pButton pRipple [label]="Delete" icon="pi pi-trash" class="p-button-danger p-button-sm"
+      <button *ngIf="isAdmin" pButton pRipple [label]="Delete" icon="pi pi-trash" class="p-button-danger p-button-sm"
         (click)="deleteSelectedEntitlement()" [disabled]="!selectedLeaveEntitlements || !selectedLeaveEntitlements?.length"></button>
     </ng-template>
 
@@ -72,7 +72,7 @@
           <p-columnFilter type="text" field="effectedYear" display="menu"></p-columnFilter>
           <p-sortIcon field="effectedYear"></p-sortIcon>
         </th>
-        <th pSortableColumn="nationality" style="min-width:150px">
+        <th *ngIf="isAdmin" pSortableColumn="nationality" style="min-width:150px">
           <!-- Controlling -->
         </th>
       </tr>
@@ -94,7 +94,7 @@
         <td>{{ leaveEntitlement?.startDate | dateFormat }}</td>
         <td>{{ leaveEntitlement?.endDate | dateFormat }}</td>
         <td>{{ leaveEntitlement?.effectedYear }}</td>
-        <td>
+        <td *ngIf="isAdmin">
           <button pButton pRipple icon="pi pi-pencil" class="p-button-sm  p-button-success mr-2"
             (click)="addEditLeaveEntitlement(leaveEntitlement)"></button>
           <button pButton pRipple icon="pi pi-trash" class="p-button-sm p-button-warning"

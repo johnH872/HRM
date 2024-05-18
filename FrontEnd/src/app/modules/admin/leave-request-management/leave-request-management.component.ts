@@ -13,6 +13,7 @@ import { DataStateModel } from '../datastate-management/data-state.model';
 import { NbToastrService } from '@nebular/theme';
 import { DialogGetReasonRejectedComponent } from './dialog-get-reason-rejected/dialog-get-reason-rejected.component';
 import { EmployeeDetailDialogComponent } from '../employee-management/employee-detail-dialog/employee-detail-dialog.component';
+import { NbAuthJWTToken, NbAuthService } from '@nebular/auth';
 
 @Component({
   selector: 'app-leave-request-management',
@@ -20,6 +21,9 @@ import { EmployeeDetailDialogComponent } from '../employee-management/employee-d
   styleUrls: ['./leave-request-management.component.scss']
 })
 export class LeaveRequestManagementComponent implements OnInit, OnDestroy {
+  user: any;
+  isAdmin: boolean = false;
+
   @Input() isOnlyCurrentUser: boolean = false;
   @Input() currentUser: EmployeeModel = null;
   @Input() scrollHeight: String = '700px';
@@ -29,6 +33,7 @@ export class LeaveRequestManagementComponent implements OnInit, OnDestroy {
   leaveRequestModel: LeaveRequestModel;
   listEmployees: EmployeeModel[] = [];
   lstLeaveRequestState: DataStateModel[] = [];
+  lstLeaveRequestStateEmployee: DataStateModel[] = [];
 
   first = 0;
   rows = 10;
@@ -38,10 +43,18 @@ export class LeaveRequestManagementComponent implements OnInit, OnDestroy {
   constructor(
     private leaveRequestService: LeaveRequestManagementService,
     private employeeService: EmployeeManagementService,
+    private authService: NbAuthService,
     private dialog: MatDialog,
     private dataStateService: DatastateService,
     private toast: NbToastrService,
   ) {
+    this.authService.onTokenChange()
+      .subscribe((token: NbAuthJWTToken) => {
+        if (token.isValid()) {
+          this.user = token.getPayload()?.user;
+          if (this.user?.roles[0]?.roleName === 'admin') this.isAdmin = true;
+        }
+      });
     this.employeeService.getAllEmployee().pipe(takeUntil(this.destroy$)).subscribe(res => {
       if (res.result) {
         this.listEmployees = res.result;
@@ -54,6 +67,7 @@ export class LeaveRequestManagementComponent implements OnInit, OnDestroy {
     this.dataStateService.getDataStateByType("LEAVE_REQUEST").pipe(takeUntil(this.destroy$)).subscribe(resp => {
       if (resp.result) {
         this.lstLeaveRequestState = resp.result;
+        this.lstLeaveRequestStateEmployee = this.lstLeaveRequestState.filter(item => item.dataStateName === 'WAITING' || item.dataStateName === 'CANCELED');
       }
     });
   }
@@ -75,6 +89,8 @@ export class LeaveRequestManagementComponent implements OnInit, OnDestroy {
     if (leaveRequestPagingResults.result) {
       this.dataTable = leaveRequestPagingResults.result;
       if(this.isOnlyCurrentUser) this.dataTable = this.dataTable.filter(x => x.userId == this.currentUser.userId);
+      if (!this.isAdmin) 
+        this.dataTable = this.dataTable.filter(item => item.userId === this.user?.userId || item.User?.ownerId === this.user?.userId);
     }
     this.loading = !this.loading;
   }

@@ -30,6 +30,7 @@ export class AddEditLeaveRequestComponent implements OnInit, OnDestroy, AfterVie
 
   private destroy$: Subject<void> = new Subject<void>();
   currentUser;
+  isAdmin: boolean = false;
   isMyLeaveRequest: boolean = false;
   action: TblActionType;
   leaveRequestModel: LeaveRequestModel;
@@ -75,7 +76,10 @@ export class AddEditLeaveRequestComponent implements OnInit, OnDestroy, AfterVie
     this.authService.onTokenChange()
       .subscribe((token: NbAuthJWTToken) => {
         if (token.isValid()) {
-          this.currentUser = token.getPayload();
+          this.currentUser = token.getPayload()?.user;
+          if (this.currentUser?.roles[0]?.roleName === 'admin') this.isAdmin = true;
+          if (!this.isAdmin) 
+            this.listEmployees = this.listEmployees.filter(item => item.userId === this.currentUser?.userId || item.ownerId === this.currentUser?.userId);
         }
       });
     // this.permissionService.isGranted('view', 'accept-leave-request').subscribe(e => this.hasEditPermission = e);
@@ -109,13 +113,17 @@ export class AddEditLeaveRequestComponent implements OnInit, OnDestroy, AfterVie
           let fullName = `${employee.firstName} ${employee.middleName} ${employee.lastName}`;
           employee.displayName = fullName.trim() ? fullName : "Unknown";
         });
+        if (!this.isAdmin) 
+          this.listEmployees = this.listEmployees.filter(item => item.userId === this.currentUser?.userId || item.ownerId === this.currentUser?.userId);
       }
     }
+    this.frmLeaveRequest.get('status').disable();
+    this.frmLeaveRequest.get('numberOfHour').disable();
     if (this.action === TblActionType.Add) {
       this.defaultStartTime.setHours(8, 30, 0);
       this.defaultEndTime.setHours(17, 30, 0);
       this.statusDefault = LeaveRequestStatus.WAITING;
-      this.employeeService.getEmployeeById(this.currentUser?.nameid).pipe(takeUntil(this.destroy$)).subscribe(res => {
+      this.employeeService.getEmployeeById(this.currentUser?.userId).pipe(takeUntil(this.destroy$)).subscribe(res => {
         if (res.result) {
           this.getAssignee(res.result);
         }

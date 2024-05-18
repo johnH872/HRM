@@ -3,7 +3,7 @@
     <ng-template pTemplate="left">
       <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-button-sm mr-2"
         (click)="addEditLeaveRequest()"></button>
-      <button pButton pRipple [label]="Delete" icon="pi pi-trash" class=" p-button-sm p-button-danger"
+      <button *ngIf="isAdmin" pButton pRipple [label]="Delete" icon="pi pi-trash" class=" p-button-sm p-button-danger"
         (click)="deleteSelectedRequest()"
         [disabled]="!selectedLeaveRequests || !selectedLeaveRequests?.length"></button>
     </ng-template>
@@ -88,9 +88,9 @@
         <td>{{ leaveRequest?.numberOfHour }}</td>
         <td>{{ leaveRequest?.note }}</td>
         <td>
-          <button pButton pRipple icon="pi pi-pencil" class="p-button-sm p-button-success mr-2"
+          <button *ngIf="isAdmin || leaveRequest?.status === 1" pButton pRipple icon="pi pi-pencil" class="p-button-sm p-button-success mr-2"
             (click)="addEditLeaveRequest(leaveRequest)"></button>
-          <button pButton pRipple icon="pi pi-trash" class="p-button-sm p-button-warning"
+          <button *ngIf="isAdmin" pButton pRipple icon="pi pi-trash" class="p-button-sm p-button-warning"
             (click)="deleteLeaveRequest(leaveRequest)"></button>
         </td>
       </tr>
@@ -101,7 +101,8 @@
 </div>
 
 <ng-template #status let-row="row">
-  <mat-select [(ngModel)]="row.status" matTooltip="Click to edit" (selectionChange)="saveStatusInline($event, row)">
+  <mat-select [(ngModel)]="row.status" matTooltip="Click to edit" (selectionChange)="saveStatusInline($event, row)" 
+    [disabled]="!isAdmin && row.status !== 1">
     <mat-select-trigger>
       <div class="badge badge-pill" [style.background-color]="handleDisplayStatus(row.status, true)">
         <div style="color: white; ">
@@ -109,12 +110,23 @@
         </div>
       </div>
     </mat-select-trigger>
-    <mat-option *ngFor="let item of lstLeaveRequestState" [value]="item?.dataStateId">
-      <div class="badge badge-pill" [style.background-color]="item?.colorCode">
-        <div style="color: white; ">
-          {{item?.dataStateName}}
+    <ng-container *ngIf="isAdmin || user?.userId === row?.User?.ownerId">
+      <mat-option *ngFor="let item of lstLeaveRequestState" [value]="item?.dataStateId">
+        <div class="badge badge-pill" [style.background-color]="item?.colorCode">
+          <div style="color: white; ">
+            {{item?.dataStateName}}
+          </div>
         </div>
-      </div>
-    </mat-option>
+      </mat-option>
+    </ng-container>
+    <ng-container *ngIf="user?.userId === row.userId && !isAdmin">
+      <mat-option *ngFor="let item of lstLeaveRequestStateEmployee" [value]="item?.dataStateId">
+        <div class="badge badge-pill" [style.background-color]="item?.colorCode">
+          <div style="color: white; ">
+            {{item?.dataStateName}}
+          </div>
+        </div>
+      </mat-option>
+    </ng-container>
   </mat-select>
 </ng-template>

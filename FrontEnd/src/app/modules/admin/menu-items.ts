@@ -1,6 +1,6 @@
 import { NbMenuItem } from '@nebular/theme';
 
-export const MENU_ITEMS: NbMenuItem[] = [
+export const MENU_ITEMS_ADMIN: NbMenuItem[] = [
   {
     title: 'Dashboard',
     icon: 'pie-chart-outline',
@@ -83,6 +83,52 @@ export const MENU_ITEMS: NbMenuItem[] = [
         title: 'DataStates',
         icon: 'layers-outline',
         link: '/admin/data-state',
+      },
+    ],
+  },
+];
+
+export const MENU_ITEMS_EMPLOYEE: NbMenuItem[] = [
+  {
+    title: 'Dashboard',
+    icon: 'pie-chart-outline',
+    link: '/admin/dashboard',
+    home: true,
+  },
+  {
+    title: 'FEATURES',
+    icon: 'bookmark-outline',
+    children: [
+      {
+        title: 'Employees',
+        icon: 'person-outline',
+        link: '/admin/employee',
+      },
+      {
+        title: 'Leave',
+        icon: 'briefcase-outline',
+        children: [
+          {
+            title: 'Leave Request',
+            icon: 'umbrella-outline',
+            link: '/admin/leave-request',
+          },
+          {
+            title: 'Leave Entitlement',
+            icon: 'link-2-outline',
+            link: '/admin/leave-entitlement',
+          },
+        ],
+      },
+      {
+        title: 'Work Calendar',
+        icon: 'calendar-outline',
+        link: '/admin/work-calendar',
+      },
+      {
+        title: 'Report Schedule',
+        icon: 'pantone-outline',
+        link: '/admin/report-schedule',
       },
     ],
   },

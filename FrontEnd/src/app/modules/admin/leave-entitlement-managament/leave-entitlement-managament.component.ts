@@ -8,6 +8,7 @@ import { TblActionType } from '../../shared/enum/tbl-action-type.enum';
 import { Table } from 'primeng/table';
 import { EmployeeManagementService } from '../employee-management/employee-management.service';
 import { EmployeeModel } from '../../shared/models/employee.model';
+import { NbAuthJWTToken, NbAuthService } from '@nebular/auth';
 
 @Component({
   selector: 'app-leave-entitlement-managament',
@@ -15,6 +16,8 @@ import { EmployeeModel } from '../../shared/models/employee.model';
   styleUrls: ['./leave-entitlement-managament.component.scss']
 })
 export class LeaveEntitlementManagamentComponent implements OnInit, OnDestroy {
+  currentUser: any;
+  isAdmin: boolean = false;
   private destroy$: Subject<void> = new Subject<void>();
   dataTable: LeaveEntitlementModel[];
   leaveEntitlementModel: LeaveEntitlementModel;
@@ -28,8 +31,16 @@ export class LeaveEntitlementManagamentComponent implements OnInit, OnDestroy {
   constructor(
     private leaveEntitlementService: LeaveEntitlementManagamentService,
     private employeeService: EmployeeManagementService,
+    private authService: NbAuthService,
     private dialog: MatDialog,
   ) {
+    this.authService.onTokenChange()
+      .subscribe((token: NbAuthJWTToken) => {
+        if (token.isValid()) {
+          this.currentUser = token.getPayload()?.user;
+          if (this.currentUser?.roles[0]?.roleName === 'admin') this.isAdmin = true;
+        }
+      });
     this.employeeService.getAllEmployee().pipe(takeUntil(this.destroy$)).subscribe(res => {
       if (res.result) {
         this.listEmployees = res.result;

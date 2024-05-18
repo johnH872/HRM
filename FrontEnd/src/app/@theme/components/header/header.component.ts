@@ -67,16 +67,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.authService.onTokenChange().pipe(takeUntil(this.destroy$))
       .subscribe(async (token: NbAuthJWTToken) => {
         if (token.isValid()) {
-          this.userLoggedIn = token.getPayload();
-          console.log(this.userLoggedIn)
-          this.userDetail = (await lastValueFrom(this.employeeService.getEmployeeById(this.userLoggedIn.user.userId))).result;
+          this.userLoggedIn = token.getPayload()?.user;
+          this.userDetail = (await lastValueFrom(this.employeeService.getEmployeeById(this.userLoggedIn?.userId))).result;
         }
       });
   }
 
   ngOnInit() {
     this.menuServiceObservable = this.menuService.onItemClick().subscribe(async (event) => {
-      var model =  (await lastValueFrom(this.employeeService.getEmployeeById(this.userLoggedIn.user.userId))).result;
+      var model =  (await lastValueFrom(this.employeeService.getEmployeeById(this.userLoggedIn?.userId))).result;
       model.roleId = model.Roles.map(x => x.roleId);
       if (event.item['id'] === 'profile') {
         const dialogRef = this.dialog.open(AddEditEmployeeComponent, {
@@ -99,7 +98,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
               key: 'toast1', severity: 'success', summary: 'Success',
               detail: `Change personal infor successfully!`, life: 2000
             });
-            var response = await lastValueFrom(this.employeeService.getEmployeeById(this.userLoggedIn.user.userId));
+            var response = await lastValueFrom(this.employeeService.getEmployeeById(this.userLoggedIn?.userId));
             if(response.result) this.userDetail = response.result;
           }
         })
