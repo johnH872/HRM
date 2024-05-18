@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import type { EChartsOption } from 'echarts';
 import { PaymentService } from '../payment.service';
-import { PaymentHistory } from '../payment-history.model';
+// import { PaymentHistory } from '../dashboard-data.model';
 import { NbAuthJWTToken, NbAuthService } from '@nebular/auth';
 import { Subject, takeUntil } from 'rxjs';
 

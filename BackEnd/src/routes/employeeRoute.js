@@ -10,5 +10,6 @@ router.route('/SaveEmployee').post(employeeController.saveEmployee);
 router.route('/getEmployeeById/:id').get(employeeController.getEmployeeById);
 router.route('/DeleteEmployee').post(employeeController.deleteEmployee);
 router.route('/GetOwnersByEmployeeId').get(employeeController.getOwnersByEmployeeId);
+router.route('/GetDashboardData').get(employeeController.getDashboardData);
 
 export default router;

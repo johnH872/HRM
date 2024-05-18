@@ -12,6 +12,10 @@ import { LeaveTypeModel } from '../leave-type-management/leave-type-management.m
 import { LeaveEntitlementManagamentService } from '../leave-entitlement-managament/leave-entitlement-management.service';
 import { LeaveType } from '../../shared/enum/leave-type.enum';
 import { LeaveEntitlementModel } from '../leave-entitlement-managament/leave-entitlement-management.model';
+import { EmployeeManagementService } from '../employee-management/employee-management.service';
+import { LeaveRequestModel } from '../leave-request-management/leave-request-management.model';
+import { ReportAttendanceModel } from '../../face-recog/punch-in-out-webcam/report-attendance-dialog/report-attendance.model';
+import { DashBoardData } from './dashboard-data.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -45,24 +49,30 @@ export class DashboardComponent implements OnDestroy {
   usedSeniorityLeavePercentage: number = null;
   usedUnpaidLeavePercentage: number = null;
   usedTransferLeavePercentage: number = null;
+  //Order list data
+  dashboardData: DashBoardData = new DashBoardData;
+  isLoadingDashboard: boolean = false;
 
   private destroy$: Subject<void> = new Subject<void>();
   constructor(
     private attendanceService: AttendanceManagementService,
     private authService: NbAuthService,
     private nbAuthJwtToken: NbAuthJWTToken,
-    private leaveEntitlementService: LeaveEntitlementManagamentService
+    private leaveEntitlementService: LeaveEntitlementManagamentService,
+    private employeeService: EmployeeManagementService
   ) {
     this.authService.onTokenChange().pipe(takeUntil(this.destroy$))
       .subscribe(async (token: NbAuthJWTToken) => {
         if (token.isValid()) {
-          this.userModel = token.getPayload();
+          this.userModel = token.getPayload().user;
         }
       });
   }
 
   ngOnInit(): void {
-    this.initData();
+    if(!this.userModel) this.userModel = this.nbAuthJwtToken.getPayload().user;
+    this.initChartData();
+    this.initListData();
   }
 
   ngOnDestroy(): void {
@@ -74,8 +84,18 @@ export class DashboardComponent implements OnDestroy {
 
   }
 
-  async initData() {
-    this.leaveEntitlementService.getLeaveEntitlementByEmployeeId(this.userModel.user.userId).subscribe(res => {
+  initListData() {
+    this.isLoadingDashboard = true;
+    this.employeeService.getDashboardData(this.userModel.userId).subscribe(res => {
+      if(res.result) {
+        this.dashboardData = res.result;
+        console.log(this.dashboardData)
+      }
+    })
+  }
+
+  async initChartData() {
+    this.leaveEntitlementService.getLeaveEntitlementByEmployeeId(this.userModel.userId).subscribe(res => {
       if (res.result && res.result.length > 0) {
         res.result.forEach(element => {
           switch (element.leaveTypeId) {
@@ -110,9 +130,6 @@ export class DashboardComponent implements OnDestroy {
 
   // Atttendance chart zone
   async setupChart() {
-    // if(!this.nbAuthJwtToken.isValid()) return;
-    if(!this.userModel) this.userModel = this.nbAuthJwtToken.getPayload();
-
     this.isLoadingChart = !this.isLoadingChart;
     var listDurationWeeks = [];
     var listWeeks = [];

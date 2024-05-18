@@ -136,7 +136,6 @@ class LeaveRequestController {
         try {
             var employeeId = req.params.id;
             var {start, end} = req.body;
-            console.log(start)
             const lstRequest = await dbContext.LeaveRequest.findAll({
                 include: [
                     {
@@ -160,7 +159,6 @@ class LeaveRequestController {
         }
         return res.status(200).json(result);
     }
-
 }
 
 async function handleLeaveEntitlementForLeaveRequest(userId, leaveEntitlementId) {
