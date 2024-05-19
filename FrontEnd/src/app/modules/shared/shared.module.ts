@@ -83,6 +83,11 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { ColorPickerModule } from 'primeng/colorpicker';
 import { ListboxModule } from 'primeng/listbox';
 import { OrderListModule } from 'primeng/orderlist'
+import { TagModule } from 'primeng/tag';
+import { BadgeModule } from 'primeng/badge';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { DividerModule } from 'primeng/divider';
 
 const materialModules = [
   MatFormFieldModule,
@@ -166,7 +171,12 @@ const primengModules = [
   RadioButtonModule,
   ColorPickerModule,
   ListboxModule,
-  OrderListModule
+  OrderListModule,
+  TagModule,
+  BadgeModule,
+  OverlayPanelModule,
+  ConfirmPopupModule,
+  DividerModule
 ]
 
 @NgModule({

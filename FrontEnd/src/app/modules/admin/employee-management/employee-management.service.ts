@@ -39,7 +39,7 @@ export class EmployeeManagementService {
     return this.http.post<ReturnResult<EmployeeModel[]>>(`${this.baseUrl}/DeleteEmployee`, ids);
   }
 
-  getDashboardData(id: String): Observable<ReturnResult<DashBoardData>> {
-    return this.http.get<ReturnResult<DashBoardData>>(`${this.baseUrl}/GetDashboardData?employeeId=${id}`);
+  getDashboardData(id: String, email: String): Observable<ReturnResult<DashBoardData>> {
+    return this.http.get<ReturnResult<DashBoardData>>(`${this.baseUrl}/GetDashboardData?employeeId=${id}&myEmail=${email}`);
   }
 }

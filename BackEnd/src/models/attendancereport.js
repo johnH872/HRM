@@ -12,6 +12,10 @@ export default (sequelize, DataTypes) => {
         foreignKey: 'statusId',
         as: 'status'
       });
+      AttendanceReport.belongsTo(models.User, {
+        foreignKey: 'email',
+        targetKey: 'email'
+      });
     }
   }
   AttendanceReport.init({

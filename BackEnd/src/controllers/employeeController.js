@@ -313,49 +313,111 @@ class employeeController {
     async getDashboardData(req, res, next) {
         var result = new ReturnResult;
         try {
-            const { employeeId } = req.query;
-            var resData = {};
+            const date = new Date(), y = date.getFullYear(), m = date.getMonth();
+            const firstDayOfMonth = new Date(y, m, 0);
+            const lastDayOfMonth = new Date(y, m + 1, 0);
+            const { employeeId, myEmail } = req.query;
 
-            const waitingLeaveRequests = await dbContext.LeaveRequest.findAll({
-                include:
-                {
-                    model: dbContext.User,
-                    attributes: employeeValidReturnVariable,
-                    where: {
-                        ownerId: employeeId,
-                        [Op.not]: {
-                            userId: employeeId
-                        }
-                    }
-                },
+            const users = await dbContext.User.findAll({
                 where: {
-                    status: leaveRequestStatus.WAITING,
-                    
-                }
-            });
-
-            const manageEmployeeEmails = await dbContext.User.findAll({
-                where: {
-                    ownerId: employeeId,
-                    [Op.not]: {
-                        userId: employeeId
-                    }
+                    ownerId: employeeId
                 },
                 attributes: [
                     'email'
                 ]
             });
-            var emails = manageEmployeeEmails.map(x => x.email);
+            const emails = users.map(x => x.email);
 
-            const waitingReportAttendances = await dbContext.AttendanceReport.findAll({
+            const leaveRequests = await dbContext.LeaveRequest.findAll({
+                include: [
+                    {
+                        model: dbContext.User,
+                        attributes: employeeValidReturnVariable,
+                        where: {
+                            ownerId: employeeId,
+                        },
+                    },
+                    {
+                        model: dbContext.DataState
+                    }
+                ],
+                where: {
+                    status: leaveRequestStatus.WAITING,
+                }
+            });
+
+
+            const attendanceReports = await dbContext.AttendanceReport.findAll({
+                include: [
+                    {
+                        model: dbContext.User,
+                        attributes: employeeValidReturnVariable,
+                    },
+                    {
+                        model: dbContext.DataState,
+                        as: 'status'
+                    }
+                ],
                 where: {
                     statusId: leaveRequestStatus.WAITING,
                     email: emails
                 }
             });
 
-            resData.waitingLeaveRequests = waitingLeaveRequests;
-            resData.waitingReportAttendances = waitingReportAttendances;
+            const myWorkingDetail = await dbContext.WorkCalendarDetail.findAll({
+                include:
+                {
+                    model: dbContext.WorkCalendar,
+                    attributes: ['userId'],
+                    where: {
+                        userId: employeeId,
+                    }
+                },
+            });
+
+            const requiredWorkingHours = await dbContext.WorkCalendar.sum('workingHour', {
+                where: {
+                    userId: employeeId,
+                    workingDate: {
+                        [Op.between]: [firstDayOfMonth, lastDayOfMonth]
+                    }
+                }
+            });
+            const workedHourData = await dbContext.Attendance.findAll({
+                raw: true,
+                attributes: [
+                    [Sequelize.literal(`ROUND(TIMESTAMPDIFF(SECOND,punchinDate, punchoutDate)/3600, 2)`), 'workedHours']
+                ],
+                where: {
+                    [Op.not]: { punchinDate: null },
+                    [Op.not]: { punchoutDate: null },
+                    punchinDate: {
+                        [Op.between]: [firstDayOfMonth, lastDayOfMonth]
+                    }
+                }
+            });
+
+            const leaveHours = await dbContext.LeaveRequest.sum('numberOfHour', {
+                where: { userId: employeeId }
+            })
+
+            const workedHours = workedHourData.reduce((accumulator, data) => accumulator + Number(data.workedHours), 0.0);
+
+            const waitingLeaveRequests = leaveRequests.filter(x => x.userId != employeeId);
+            const waitingAttendanceReports = attendanceReports.filter(x => x.email != myEmail);
+            const myLeaveRequest = leaveRequests.filter(x => x.userId == employeeId);
+            const myAttendanceReports = attendanceReports.filter(x => x.email == myEmail);
+
+            const resData = {
+                waitingLeaveRequests,
+                waitingAttendanceReports,
+                myLeaveRequest,
+                myAttendanceReports,
+                myWorkingDetail,
+                requiredWorkingHours,
+                workedHours,
+                leaveHours
+            }
 
             if (resData) result.result = resData;
         } catch (error) {

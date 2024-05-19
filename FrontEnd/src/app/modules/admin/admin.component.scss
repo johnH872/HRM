@@ -22,6 +22,10 @@
     font-size: 12px;
 }
 
+::ng-deep.fs-10 {
+    font-size: 10px;
+}
+
 ::ng-deep.fw-500 {
     font-weight: 500;
 }
@@ -97,10 +101,65 @@
     font-size: 14px !important;
 }
 
+::ng-deep nb-user .user-picture {
+    border: solid 1px #1654bb;
+}
+
+// notifications
+
+
+::ng-deep.notification-container {
+    min-width: 300px;
+
+    .p-divider-horizontal {
+        margin: unset;
+    }
+
+    .notification-body {
+        max-height: 40vh;
+        overflow: auto;
+    }
+
+    .notification-card {
+        padding: 0 10px 5px 10px;
+    }
+
+    .notification-header {
+        padding: 10px;
+        background: #f8f9fa;
+        color: #343a40;
+    }
+
+    .noti-date {
+        color: #6c757d;
+    }
+
+    .noti-done-icon {
+        width: 10px;
+        height: 10px;
+        transform: translate(-22%, 20%);
+    }
+
+    .noti-mark-read {
+        color: #1a65e6;
+    }
+}
+
+::ng-deep.p-overlaypanel {
+    z-index: 9999 !important;
+    padding: unset;
+
+    .p-overlaypanel-content {
+        padding: unset;
+    }
+}
+
 // custom-order-list
-::ng-deep.p-orderlist  {
+
+::ng-deep.p-orderlist {
     .p-orderlist-controls {
         padding: 5px;
+
         .p-button {
             padding: unset;
             width: 30px;
@@ -111,5 +170,13 @@
     .p-orderlist-header {
         padding: 10px;
         font-size: 14px;
+    }
+
+    .p-orderlist-list {
+        padding: unset;
+
+        .p-orderlist-item {
+            padding: 0.5rem;
+        }
     }
 }

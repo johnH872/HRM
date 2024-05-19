@@ -41,10 +41,12 @@
             <p-button (onClick)="closeDialog()" styleClass="p-button-sm p-button-secondary" label="Cancel"></p-button>
             <p-button *ngIf="action === actionTypes.Add" [loading]="isLoading" (onClick)="onSendReport()"
                 icon="pi pi-send" styleClass="p-button-sm p-button-info" label="Submit"></p-button>
-            <p-button *ngIf="action === actionTypes.Edit && reportAttendanceModel.status.dataStateId === 1"
+            <p-button
+                *ngIf="action === actionTypes.Edit && reportAttendanceModel.status.dataStateId === 1 && currentUser?.email != reportAttendanceModel?.email"
                 [loading]="isLoading" (onClick)="onSaveAttendanceReport(false)" icon="pi pi-times-circle"
                 styleClass="p-button-sm p-button-warning p-button-info" label="Reject"></p-button>
-            <p-button *ngIf="action === actionTypes.Edit && reportAttendanceModel.status.dataStateId === 1"
+            <p-button
+                *ngIf="action === actionTypes.Edit && reportAttendanceModel.status.dataStateId === 1 && currentUser?.email != reportAttendanceModel?.email"
                 [loading]="isLoading" (onClick)="onSaveAttendanceReport(true)" icon="pi pi-check-circle"
                 styleClass="p-button-sm p-button-success p-button-info" label="Approve"></p-button>
         </div>

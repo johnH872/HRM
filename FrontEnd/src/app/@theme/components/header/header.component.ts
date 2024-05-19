@@ -15,6 +15,8 @@ import { PunchInOutComponent } from 'src/app/modules/admin/attendance-managment/
 import { AddEditEmployeeComponent } from 'src/app/modules/admin/employee-management/add-edit-employee/add-edit-employee.component';
 import { TblActionType } from 'src/app/modules/shared/enum/tbl-action-type.enum';
 import { EmployeeModel } from 'src/app/modules/shared/models/employee.model';
+import { NotificationService } from './notification.service';
+import { NotificationModel } from './notification.model';
 
 @Component({
   selector: 'ngx-header',
@@ -28,6 +30,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   userLoggedIn: any;
   userDetail: EmployeeModel;
   menuServiceObservable: Subscription = null;
+  notifications: NotificationModel[] = [];
   themes = [
     {
       value: 'default',
@@ -62,13 +65,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private tokenService: NbTokenService,
     private router: Router,
-    private employeeService: EmployeeManagementService
+    private employeeService: EmployeeManagementService,
+    private notificationService: NotificationService
   ) {
     this.authService.onTokenChange().pipe(takeUntil(this.destroy$))
       .subscribe(async (token: NbAuthJWTToken) => {
         if (token.isValid()) {
           this.userLoggedIn = token.getPayload()?.user;
-          this.userDetail = (await lastValueFrom(this.employeeService.getEmployeeById(this.userLoggedIn?.userId))).result;
+          this.userDetail = (await lastValueFrom(this.employeeService.getEmployeeById(this.userLoggedIn.userId))).result;
+          this.notifications =  (await lastValueFrom(this.notificationService.GetAllNotification(this.userLoggedIn.userId))).result;
         }
       });
   }

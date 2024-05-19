@@ -29,9 +29,8 @@ class NotificationController {
         var result = new ReturnResult();
         try {
             result.result = false;
-            const notificationId = req.params.notiId;
-            const userId = req.params.userId;
-            var isMarkAll = userId ? true : false;
+            const { notificationId, userId } = req.params;
+            var isMarkAll = !notificationId ? true : false;
             var whereClause = isMarkAll ? { userId } : { notificationId };
             const notifications = await dbContext.Notification.update(
                 {

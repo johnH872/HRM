@@ -13,6 +13,7 @@ export default (sequelize, DataTypes) => {
       User.belongsTo(User, { foreignKey: 'ownerId', as: 'manager' }); 
       User.hasMany(models.WorkCalendar, { foreignKey: 'userId' }); 
       User.hasMany(models.Attendance, { foreignKey: 'userId' }); 
+      User.hasMany(models.AttendanceReport, { foreignKey: 'email', sourceKey: 'email' }); 
     }
   }
   User.init({

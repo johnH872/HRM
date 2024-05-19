@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { RxFormBuilder } from '@rxweb/reactive-form-validators';
@@ -7,13 +7,15 @@ import { AttendanceManagementService } from 'src/app/modules/admin/attendance-ma
 import { ReportAttendanceModel } from './report-attendance.model';
 import { TblActionType } from 'src/app/modules/shared/enum/tbl-action-type.enum';
 import { LeaveRequestStatus } from 'src/app/modules/shared/enum/leave-request-status.enum';
+import { NbAuthJWTToken, NbAuthService } from '@nebular/auth';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-report-attendance-dialog',
   templateUrl: './report-attendance-dialog.component.html',
   styleUrls: ['./report-attendance-dialog.component.scss']
 })
-export class ReportAttendanceDialogComponent implements OnInit {
+export class ReportAttendanceDialogComponent implements OnInit, OnDestroy {
   blobImage: Blob = null;
   captureImg: any;
   windowWith: number = 0;
@@ -25,12 +27,16 @@ export class ReportAttendanceDialogComponent implements OnInit {
   punchTypes: any[];
   action: TblActionType;
   actionTypes = TblActionType;
+  currentUser: any;
+  private destroy$: Subject<void> = new Subject<void>();
   constructor(
     public dialModalRef: MatDialogRef<ReportAttendanceDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private attendanceService: AttendanceManagementService,
     private messageService: MessageService,
     private frmBuilder: RxFormBuilder,
+    private jwtToken: NbAuthJWTToken,
+    private authService: NbAuthService
   ) {
     if (data.blobImage) this.blobImage = data.blobImage;
     if (data.captureImg) this.captureImg = data.captureImg;
@@ -42,18 +48,29 @@ export class ReportAttendanceDialogComponent implements OnInit {
       { name: 'Punch in', code: 'PUNCHIN' },
       { name: 'Punch out', code: 'PUNCHOUT' },
     ];
+    this.authService.onTokenChange().pipe(takeUntil(this.destroy$))
+      .subscribe(async (token: NbAuthJWTToken) => {
+        if (token.isValid()) {
+          this.currentUser = token.getPayload().user;
+        }
+      });
+  }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   ngOnInit(): void {
-    if(this.action === TblActionType.Add) {
+    if (!this.currentUser) this.currentUser = this.jwtToken.getPayload();
+    if (this.action === TblActionType.Add) {
       this.reportAttendanceModel.type = this.punchTypes[0].code;
       this.imageFile = new File([this.blobImage], `report-${new Date().valueOf()}.png`, { type: 'image/jpg' });
     } else {
       this.reportAttendanceModel = this.data.model;
     }
     this.frmReport = this.frmBuilder.formGroup(ReportAttendanceModel, this.reportAttendanceModel);
-    if(this.action === TblActionType.Edit) this.frmReport.disable();
+    if (this.action === TblActionType.Edit) this.frmReport.disable();
   }
 
   closeDialog() {
@@ -80,11 +97,11 @@ export class ReportAttendanceDialogComponent implements OnInit {
     this.reportAttendanceModel.statusId = isApprove ? LeaveRequestStatus.APPROVED : LeaveRequestStatus.REJECTED;
     this.attendanceService.saveAttendanceReport(this.reportAttendanceModel).subscribe(res => {
       if (res.result) {
-        this.dialModalRef.close({isApprove});
+        this.dialModalRef.close({ isApprove });
       } else {
         this.dialModalRef.close(false);
       }
-     
+
     });
   }
 }

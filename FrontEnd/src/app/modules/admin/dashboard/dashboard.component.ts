@@ -13,9 +13,17 @@ import { LeaveEntitlementManagamentService } from '../leave-entitlement-managame
 import { LeaveType } from '../../shared/enum/leave-type.enum';
 import { LeaveEntitlementModel } from '../leave-entitlement-managament/leave-entitlement-management.model';
 import { EmployeeManagementService } from '../employee-management/employee-management.service';
-import { LeaveRequestModel } from '../leave-request-management/leave-request-management.model';
 import { ReportAttendanceModel } from '../../face-recog/punch-in-out-webcam/report-attendance-dialog/report-attendance.model';
 import { DashBoardData } from './dashboard-data.model';
+import { LeaveRequestStatus } from '../../shared/enum/leave-request-status.enum';
+import { MessageService } from 'primeng/api';
+import { MatDialog } from '@angular/material/dialog';
+import { ReportAttendanceDialogComponent } from '../../face-recog/punch-in-out-webcam/report-attendance-dialog/report-attendance-dialog.component';
+import { TblActionType } from '../../shared/enum/tbl-action-type.enum';
+import { AddEditLeaveRequestComponent } from '../leave-request-management/add-edit-leave-request/add-edit-leave-request.component';
+import { LeaveRequestModel } from '../leave-request-management/leave-request-management.model';
+import { DialogGetReasonRejectedComponent } from '../leave-request-management/dialog-get-reason-rejected/dialog-get-reason-rejected.component';
+import { LeaveRequestManagementService } from '../leave-request-management/leave-request-management.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -52,6 +60,8 @@ export class DashboardComponent implements OnDestroy {
   //Order list data
   dashboardData: DashBoardData = new DashBoardData;
   isLoadingDashboard: boolean = false;
+  firstDayOfMonth: Date = new Date();
+  lastDayOfMonth: Date = new Date();
 
   private destroy$: Subject<void> = new Subject<void>();
   constructor(
@@ -59,7 +69,10 @@ export class DashboardComponent implements OnDestroy {
     private authService: NbAuthService,
     private nbAuthJwtToken: NbAuthJWTToken,
     private leaveEntitlementService: LeaveEntitlementManagamentService,
-    private employeeService: EmployeeManagementService
+    private employeeService: EmployeeManagementService,
+    private leaveRequestService: LeaveRequestManagementService,
+    private messageService: MessageService,
+    private dialog: MatDialog
   ) {
     this.authService.onTokenChange().pipe(takeUntil(this.destroy$))
       .subscribe(async (token: NbAuthJWTToken) => {
@@ -67,12 +80,18 @@ export class DashboardComponent implements OnDestroy {
           this.userModel = token.getPayload().user;
         }
       });
+
+    var date = new Date(), y = date.getFullYear(), m = date.getMonth();
+    this.firstDayOfMonth = new Date(y, m, 1);
+    this.lastDayOfMonth = new Date(y, m + 1, 0, 23, 59, 59);
   }
 
   ngOnInit(): void {
-    if(!this.userModel) this.userModel = this.nbAuthJwtToken.getPayload().user;
+
+    if (!this.userModel) this.userModel = this.nbAuthJwtToken.getPayload().user;
     this.initChartData();
     this.initListData();
+
   }
 
   ngOnDestroy(): void {
@@ -80,16 +99,17 @@ export class DashboardComponent implements OnDestroy {
     this.destroy$.next();
   }
 
-  refreshData(reset: boolean = false): void {
-
+  refreshData() {
+    this.initListData();
   }
 
   initListData() {
     this.isLoadingDashboard = true;
-    this.employeeService.getDashboardData(this.userModel.userId).subscribe(res => {
-      if(res.result) {
+    this.employeeService.getDashboardData(this.userModel.userId, this.userModel.email).subscribe(res => {
+      if (res.result) {
         this.dashboardData = res.result;
-        console.log(this.dashboardData)
+        this.isLoadingDashboard = false;
+
       }
     })
   }
@@ -135,9 +155,11 @@ export class DashboardComponent implements OnDestroy {
     var listWeeks = [];
     if (this.frmDateRange.valid) {
       this.timeRangeDisplay = this.getMonthName(this.frmDateRange.get('startDate')?.value) + ' '
-        + this.getDateName(this.frmDateRange.get('startDate')?.value) + ' - '
+        + this.getDateName(this.frmDateRange.get('startDate')?.value)
+        + `, ${this.getYearName(this.frmDateRange.get('endDate')?.value)}` + ' - '
         + this.getMonthName(this.frmDateRange.get('endDate')?.value) + ' '
-        + this.getDateName(this.frmDateRange.get('endDate')?.value);
+        + this.getDateName(this.frmDateRange.get('endDate')?.value)
+        + `, ${this.getYearName(this.frmDateRange.get('endDate')?.value)}`;
       var startDateValue = new Date(this.frmDateRange.get('startDate')?.value);
       startDateValue.setHours(0, 0, 0);
       var endDateValue = new Date(this.frmDateRange.get('endDate')?.value);
@@ -147,7 +169,7 @@ export class DashboardComponent implements OnDestroy {
         endDate: endDateValue.toISOString()
       } as RangeDate;
       this.pagingAttendanceRange.rangeDateValue = rangeWeek;
-      var respAttendanceWeek = await lastValueFrom(this.attendanceService.getAttendanceRange(this.userModel?.user?.userId, this.pagingAttendanceRange).pipe(takeUntil(this.destroy$)));
+      var respAttendanceWeek = await lastValueFrom(this.attendanceService.getAttendanceRange(this.userModel?.userId, this.pagingAttendanceRange).pipe(takeUntil(this.destroy$)));
       if (respAttendanceWeek.result && respAttendanceWeek.result.length > 0) {
         this.listAttendanceWeeks = respAttendanceWeek.result;
       }
@@ -296,6 +318,11 @@ export class DashboardComponent implements OnDestroy {
     return value.getDate().toString();
   }
 
+  getYearName(date): string {
+    const value = new Date(date);
+    return value.getFullYear().toString();
+  }
+
   getMonthName(date): string {
     const monthNames = [
       "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -345,5 +372,108 @@ export class DashboardComponent implements OnDestroy {
     event.stopPropagation();
     this.frmDateRange.reset({ startDate: '', endDate: '' });
     this.isApply = true;
+  }
+
+  saveAttendanceReport(isApprove: boolean, attendanceReport: ReportAttendanceModel) {
+    this.isLoadingDashboard = true;
+    attendanceReport.statusId = isApprove ? LeaveRequestStatus.APPROVED : LeaveRequestStatus.REJECTED;
+    this.attendanceService.saveAttendanceReport(attendanceReport, this.userModel.userId).subscribe(res => {
+      if (res.result) {
+        this.messageService.add({
+          key: 'toast1', severity: 'success', summary: 'Success',
+          detail: `${isApprove ? 'Approved' : 'Rejected'} successfully!`, life: 2000
+        });
+        this.refreshData();
+      } else {
+        this.messageService.add({
+          key: 'toast1', severity: 'warn', summary: 'Warning',
+          detail: `Failed!`, life: 2000
+        });
+      }
+    });
+  }
+
+  openReportDialog(attendanceReport: ReportAttendanceModel) {
+    const attendanceRef = this.dialog.open(ReportAttendanceDialogComponent, {
+      width: 'auto',
+      height: 'auto',
+      backdropClass: 'custom-backdrop',
+      hasBackdrop: true,
+      autoFocus: false,
+      data: {
+        captureImg: attendanceReport.imageUrl,
+        model: attendanceReport,
+        action: TblActionType.Edit,
+      }
+    });
+    attendanceRef.afterClosed().subscribe(response => {
+      if (response) {
+        this.messageService.add({
+          key: 'toast1', severity: 'success', summary: 'Success',
+          detail: `${response.isApprove ? 'Approved' : 'Rejected'} successfully!`, life: 2000
+        });
+        this.refreshData();
+      }
+    })
+  }
+
+  async openLeaveDialog(model: LeaveRequestModel = null) {
+    const attendanceRef = this.dialog.open(AddEditLeaveRequestComponent, {
+      disableClose: true,
+      height: '100%',
+      width: '600px',
+      autoFocus: false,
+      backdropClass: 'custom-backdrop',
+      hasBackdrop: true,
+      data: {
+        model: model,
+        listEmployees: [],
+        action: model === null ? TblActionType.Add : TblActionType.Edit,
+      }
+    });
+    attendanceRef.afterClosed().subscribe(async response => {
+      if (response) {
+        this.refreshData();
+      }
+    });
+  }
+
+  saveLeaveRequest(isApprove: boolean = false, leaveModel: LeaveRequestModel) {
+    this.isLoadingDashboard = true;
+    leaveModel.status = isApprove ? LeaveRequestStatus.APPROVED : LeaveRequestStatus.REJECTED;
+    if (!isApprove) {
+      const dialogRef = this.dialog.open(DialogGetReasonRejectedComponent, {
+        backdropClass: 'custom-backdrop',
+        hasBackdrop: true,
+      });
+
+      dialogRef.afterClosed().subscribe(response => {
+        if (response) {
+          this.leaveRequestService.saveLeaveRequest(leaveModel).subscribe(resp => {
+            if (resp.result) {
+              this.messageService.add({
+                key: 'toast1', severity: 'success', summary: 'Success',
+                detail: `${isApprove ? 'Approved' : 'Rejected'} successfully!`, life: 2000
+              });
+            }
+          }).add(() => {
+            this.refreshData();
+          });
+        } else {
+          this.refreshData();
+        }
+      });
+    } else {
+      this.leaveRequestService.saveLeaveRequest(leaveModel).subscribe(resp => {
+        if (resp.result) {
+          this.messageService.add({
+            key: 'toast1', severity: 'success', summary: 'Success',
+            detail: `${isApprove ? 'Approved' : 'Rejected'} successfully!`, life: 2000
+          });
+        }
+      }).add(() => {
+        this.refreshData();
+      });
+    }
   }
 }
