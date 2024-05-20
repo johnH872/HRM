@@ -118,16 +118,19 @@
     .notification-body {
         max-height: 40vh;
         overflow: auto;
+        padding-top: 5px;
     }
 
     .notification-card {
-        padding: 0 10px 5px 10px;
+        padding: 0 10px 0 10px;
+        cursor: pointer;
     }
 
     .notification-header {
         padding: 10px;
         background: #f8f9fa;
         color: #343a40;
+        box-shadow: 0 1px 10px 0 #ccc;
     }
 
     .noti-date {
@@ -142,6 +145,11 @@
 
     .noti-mark-read {
         color: #1a65e6;
+        cursor: pointer;
+    }
+
+    .unread-noti {
+        background: #f7f9fe;
     }
 }
 
@@ -180,3 +188,14 @@
         }
     }
 }
+
+// tooltip
+// ::ng-deep .mdc-tooltip {
+//     z-index: 10002 !important;
+
+// }
+
+// ::ng-deep .mdc-tooltip--shown {
+//     z-index: 10002 !important;
+
+// }

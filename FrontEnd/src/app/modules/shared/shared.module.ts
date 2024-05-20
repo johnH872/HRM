@@ -88,6 +88,7 @@ import { BadgeModule } from 'primeng/badge';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { DividerModule } from 'primeng/divider';
+import { TooltipModule } from 'primeng/tooltip';
 
 const materialModules = [
   MatFormFieldModule,
@@ -176,7 +177,8 @@ const primengModules = [
   BadgeModule,
   OverlayPanelModule,
   ConfirmPopupModule,
-  DividerModule
+  DividerModule,
+  TooltipModule
 ]
 
 @NgModule({

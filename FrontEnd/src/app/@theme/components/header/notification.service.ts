@@ -23,7 +23,10 @@ export class NotificationService {
   }
 
   markRead(userId: String, notificationId: String = ''): Observable<ReturnResult<NotificationModel[]>> {
-    return this.http.post<ReturnResult<NotificationModel[]>>(`${this.baseUrl}/saveFCMToken/${userId}/${notificationId}`, {});
+    return this.http.post<ReturnResult<NotificationModel[]>>(`${this.baseUrl}/markRead/${userId}/${notificationId}`, {});
   }
 
+  public getFirebaseConfig(): Observable<any> {
+    return this.http.get("./assets/firebaseconfig.json");
+  }
 }

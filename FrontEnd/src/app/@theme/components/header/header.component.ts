@@ -1,22 +1,22 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NbMediaBreakpointsService, NbMenuService, NbSidebarService, NbThemeService } from '@nebular/theme';
 
-import { UserData } from '../../../@core/data/users';
 import { LayoutService } from '../../../@core/utils';
 import { map, takeUntil } from 'rxjs/operators';
 import { lastValueFrom, Subject, Subscription } from 'rxjs';
 import { NbAuthJWTToken, NbAuthService, NbTokenService } from '@nebular/auth';
 import { Router } from '@angular/router';
-import { ProfileDetail } from 'src/app/modules/shared/models/user.model';
 import { MatDialog } from '@angular/material/dialog';
 import { MessageService } from 'primeng/api';
 import { EmployeeManagementService } from 'src/app/modules/admin/employee-management/employee-management.service';
-import { PunchInOutComponent } from 'src/app/modules/admin/attendance-managment/punch-in-out/punch-in-out.component';
 import { AddEditEmployeeComponent } from 'src/app/modules/admin/employee-management/add-edit-employee/add-edit-employee.component';
 import { TblActionType } from 'src/app/modules/shared/enum/tbl-action-type.enum';
 import { EmployeeModel } from 'src/app/modules/shared/models/employee.model';
 import { NotificationService } from './notification.service';
 import { NotificationModel } from './notification.model';
+import { initializeApp } from "firebase/app";
+import { getMessaging } from "firebase/messaging/sw";
+import { getToken } from '@firebase/messaging/dist/src/api';
 
 @Component({
   selector: 'ngx-header',
@@ -24,13 +24,16 @@ import { NotificationModel } from './notification.model';
   templateUrl: './header.component.html',
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-
   private destroy$: Subject<void> = new Subject<void>();
   userPictureOnly: boolean = false;
   userLoggedIn: any;
   userDetail: EmployeeModel;
   menuServiceObservable: Subscription = null;
   notifications: NotificationModel[] = [];
+  totalUnreadNoti: number = 0;
+  firebaseConfig: any;
+  firebaseApp: any;
+  firebaseMessaging: any;
   themes = [
     {
       value: 'default',
@@ -73,14 +76,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
         if (token.isValid()) {
           this.userLoggedIn = token.getPayload()?.user;
           this.userDetail = (await lastValueFrom(this.employeeService.getEmployeeById(this.userLoggedIn.userId))).result;
-          this.notifications =  (await lastValueFrom(this.notificationService.GetAllNotification(this.userLoggedIn.userId))).result;
         }
       });
   }
 
   ngOnInit() {
+    this.initFirebaseCloud();
+    this.initData();
     this.menuServiceObservable = this.menuService.onItemClick().subscribe(async (event) => {
-      var model =  (await lastValueFrom(this.employeeService.getEmployeeById(this.userLoggedIn?.userId))).result;
+      var model = (await lastValueFrom(this.employeeService.getEmployeeById(this.userLoggedIn?.userId))).result;
       model.roleId = model.Roles.map(x => x.roleId);
       if (event.item['id'] === 'profile') {
         const dialogRef = this.dialog.open(AddEditEmployeeComponent, {
@@ -104,7 +108,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
               detail: `Change personal infor successfully!`, life: 2000
             });
             var response = await lastValueFrom(this.employeeService.getEmployeeById(this.userLoggedIn?.userId));
-            if(response.result) this.userDetail = response.result;
+            if (response.result) this.userDetail = response.result;
           }
         })
       }
@@ -131,6 +135,26 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .subscribe(themeName => this.currentTheme = themeName);
   }
 
+  async initData() {
+    this.notifications = (await lastValueFrom(this.notificationService.GetAllNotification(this.userLoggedIn.userId))).result;
+    if (this.notifications?.length > 0) this.totalUnreadNoti = this.notifications.filter(x => !x.isRead).length;
+  }
+
+  async initFirebaseCloud() {
+    // this.firebaseConfig = (await lastValueFrom(this.notificationService.getFirebaseConfig()));
+    // this.firebaseApp = initializeApp(this.firebaseConfig);
+    // this.firebaseMessaging = getMessaging(this.firebaseApp);
+    // getToken(this.firebaseMessaging, { vapidKey: "BIshw6XB_GQsrX_MMQsB-BToFf9LiFiklZDs1ddRXiO0nYLX7OA7kPCcZUL3TpizBBGGm9w_WTKpG3b07jyxVvA" }).then((currentToken) => {
+    //   if (currentToken) {
+    //     this.notificationService.saveFCMToken(this.userLoggedIn.userId, currentToken);
+    //   } else {
+    //     console.log('No registration token available. Request permission to generate one.');
+    //   }
+    // }).catch((err) => {
+    //   console.log('An error occurred while retrieving token. ', err);
+    // });
+  }
+
   ngOnDestroy() {
     if (this.menuServiceObservable != null) {
       this.menuServiceObservable.unsubscribe();
@@ -153,5 +177,27 @@ export class HeaderComponent implements OnInit, OnDestroy {
   navigateHome() {
     this.menuService.navigateHome();
     return false;
+  }
+
+  markAllNotifications() {
+    this.notificationService.markRead(this.userDetail.userId).subscribe(res => {
+      if (res.result) {
+        this.messageService.add({
+          key: 'toast1', severity: 'success', summary: 'Success',
+          detail: `Mark all as read successfully!`, life: 2000
+        });
+        this.initData()
+      }
+    });
+  }
+
+  navigateUrl(noti: NotificationModel) {
+    if (!noti.isRead) this.notificationService.markRead(this.userDetail.userId, noti.notificationId).subscribe(res => {
+      if (res.result) this.notificationService.GetAllNotification(this.userLoggedIn.userId).subscribe(res => {
+        this.initData()
+      })
+    });
+
+    if (noti.redirectUrl) this.router.navigateByUrl(noti.redirectUrl as string);
   }
 }

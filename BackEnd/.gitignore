@@ -44,6 +44,7 @@ jspm_packages/
 assets/images
 assets/labeled_images
 assets/attendance_img
+assets/firebaseconfig
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/

@@ -75,12 +75,13 @@
     cursor: pointer;
 
     ::ng-deep.p-badge {
-      font-size: 10px;
-      min-width: 1rem;
-      width: 1rem;
-      height: 1rem;
-      line-height: 1rem;
-      transform: translate(-20%, 20%);
+      font-size: 9px;
+      min-width: 18px;
+      width: 18px;
+      height: 18px;
+      line-height: 18px;
+      transform: translate(-6%, 7%);
+      padding: unset;
     }
   }
 }

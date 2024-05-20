@@ -9,7 +9,7 @@ import { NotificationType } from '../models/enums/notificationType.js';
 const dbContext = await db;
 
 const notificationJobs = CronJob.from({
-    cronTime: '0 * * * * *',
+    cronTime: '0 */5 * * * *',
     onTick: async function () {
         // Auto create work calendar in the first day of the month '0 0 1 * * *'
         await generateNotification();
@@ -142,7 +142,6 @@ async function generateNotification() {
                 return;
             }
             fcmTokens = [...new Set(fcmTokens)];
-            console.log(fcmTokens);
             const message = {
                 notification: {
                     title: notiTile,
