@@ -17,6 +17,7 @@ import { NotificationModel } from './notification.model';
 import { initializeApp } from "firebase/app";
 import { getMessaging } from "firebase/messaging/sw";
 import { getToken } from '@firebase/messaging/dist/src/api';
+import { SocketService } from 'src/app/socket.service';
 
 @Component({
   selector: 'ngx-header',
@@ -69,7 +70,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private tokenService: NbTokenService,
     private router: Router,
     private employeeService: EmployeeManagementService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private socketService: SocketService
   ) {
     this.authService.onTokenChange().pipe(takeUntil(this.destroy$))
       .subscribe(async (token: NbAuthJWTToken) => {
@@ -83,6 +85,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.initFirebaseCloud();
     this.initData();
+    this.initSocket()
     this.menuServiceObservable = this.menuService.onItemClick().subscribe(async (event) => {
       var model = (await lastValueFrom(this.employeeService.getEmployeeById(this.userLoggedIn?.userId))).result;
       model.roleId = model.Roles.map(x => x.roleId);
@@ -140,6 +143,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (this.notifications?.length > 0) this.totalUnreadNoti = this.notifications.filter(x => !x.isRead).length;
   }
 
+  initSocket() {
+    this.socketService.setupSocketConnection();
+    // Save facematcher data
+    this.socketService.socket.on('NOTIFICATION', (data: any) => {
+      if(data?.userIds?.includes(this.userLoggedIn.userId)) this.initData();
+    });
+  }
+
   async initFirebaseCloud() {
     // this.firebaseConfig = (await lastValueFrom(this.notificationService.getFirebaseConfig()));
     // this.firebaseApp = initializeApp(this.firebaseConfig);
@@ -161,6 +172,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
     this.destroy$.next();
     this.destroy$.complete();
+    this.socketService.disconnect();
   }
 
   changeTheme(themeName: string) {

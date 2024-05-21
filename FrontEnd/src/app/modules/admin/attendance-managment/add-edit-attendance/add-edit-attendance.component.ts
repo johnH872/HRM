@@ -8,7 +8,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { EmployeeManagementService } from '../../employee-management/employee-management.service';
 import { RxFormBuilder } from '@rxweb/reactive-form-validators';
 import { NbAuthJWTToken, NbAuthService } from '@nebular/auth';
-import { NbToastrService } from '@nebular/theme';
+import { NbGlobalLogicalPosition, NbToastrService } from '@nebular/theme';
 import { NbAccessChecker } from '@nebular/security';
 import { AttendanceManagementService } from '../attendance-management.service';
 import { ConfirmModalComponent } from 'src/app/modules/shared/components/confirm-modal/confirm-modal.component';
@@ -137,7 +137,7 @@ export class AddEditAttendanceComponent implements OnInit, OnDestroy, AfterViewI
       model.attendanceId = model.attendanceId ? model.attendanceId : 0;
       this.attendanceService.saveAttendance(model).pipe(takeUntil(this.destroy$)).subscribe(resp => {
         if (resp.result) {
-          this.toast.success(`Save leave request successfully`, 'Success');
+          this.toast.success(`Save leave request successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END});
           this.dialModalRef.close(resp.result);
         }
       }).add(() => {

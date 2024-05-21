@@ -11,7 +11,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { EmployeeManagementService } from '../../employee-management/employee-management.service';
 import { RxFormBuilder } from '@rxweb/reactive-form-validators';
 import { NbAuthJWTToken, NbAuthService } from '@nebular/auth';
-import { NbToastrService } from '@nebular/theme';
+import { NbGlobalLogicalPosition, NbToastrService } from '@nebular/theme';
 import { DatastateService } from '../../datastate-management/datastate.service';
 import { LeaveRequestManagementService } from '../leave-request-management.service';
 import { LeaveEntitlementManagamentService } from '../../leave-entitlement-managament/leave-entitlement-management.service';
@@ -182,7 +182,7 @@ export class AddEditLeaveRequestComponent implements OnInit, OnDestroy, AfterVie
       model.leaveRequestId = model.leaveRequestId ? model.leaveRequestId : 0;
       this.leaveRequestService.saveLeaveRequest(model).pipe(takeUntil(this.destroy$)).subscribe(resp => {
         if (resp.result) {
-          this.toast.success(`Save leave request successfully`, 'Success');
+          this.toast.success(`Save leave request successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END});
           this.dialModalRef.close(resp.result);
         }
       }).add(() => {
@@ -281,7 +281,7 @@ export class AddEditLeaveRequestComponent implements OnInit, OnDestroy, AfterVie
       row.status = statusChange;
       this.leaveRequestService.saveLeaveRequest(row).pipe(takeUntil(this.destroy$)).subscribe(resp => {
         if (resp.result) {
-          this.toast.success(`Change status successfully`, 'Success');
+          this.toast.success(`Change status successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END});
           this.dialModalRef.close(resp.result);
         }
       });

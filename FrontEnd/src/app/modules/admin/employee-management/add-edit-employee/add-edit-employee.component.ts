@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { NbAuthJWTToken, NbAuthService } from '@nebular/auth';
-import { NbToastrService } from '@nebular/theme';
+import { NbGlobalLogicalPosition, NbToastrService } from '@nebular/theme';
 import { RxFormBuilder } from '@rxweb/reactive-form-validators';
 import { Subject, lastValueFrom, map, takeUntil } from 'rxjs';
 import { QuillConfiguration } from 'src/app/modules/shared/components/rich-inline-edit/rich-inline-edit.component';
@@ -173,7 +173,7 @@ export class AddEditEmployeeComponent implements OnInit, OnDestroy {
           });
           this.dialModalRef.close(resp.result);
         } else {
-          this.toast.danger(resp.message, 'Failure');
+          this.toast.danger(resp.message, 'Failure', {position: NbGlobalLogicalPosition.BOTTOM_END});
         }
       }).add(() => {
         this.isLoading = !this.isLoading;

@@ -16,7 +16,7 @@ import { DataFilterWorkCalendar, WorkCalendarDetailModel } from './work-calendar
 import { WorkCalendarManagementService } from './work-calendar-management.service';
 import { DataStateModel } from '../datastate-management/data-state.model';
 import { DatastateService } from '../datastate-management/datastate.service';
-import { NbToastrService } from '@nebular/theme';
+import { NbGlobalLogicalPosition, NbToastrService } from '@nebular/theme';
 import { MatDialog } from '@angular/material/dialog';
 import { AddEditWorkCalendarDetailComponent } from './add-edit-work-calendar-detail/add-edit-work-calendar-detail.component';
 import { TblActionType } from '../../shared/enum/tbl-action-type.enum';
@@ -355,7 +355,7 @@ export class WorkCalendarManagementComponent implements OnInit {
       model.workingType = value.value;
       var resp = await this.workCalendarService.saveWorkCalendar(model).toPromise();
       if (resp.result) {
-        this.toast.success(`Save working type successfully`, 'Success');
+        this.toast.success(`Save working type successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END});
         await this.callDataSource();
       }
     }
@@ -368,7 +368,7 @@ export class WorkCalendarManagementComponent implements OnInit {
         model.workingHour = value.value;
         var resp = await this.workCalendarService.saveWorkCalendar(model).toPromise();
         if (resp.result) {
-          this.toast.success(`Save working hours successfully`, 'Success');
+          this.toast.success(`Save working hours successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END});
           await this.callDataSource();
         }
       }

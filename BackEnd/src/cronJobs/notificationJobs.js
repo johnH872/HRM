@@ -6,6 +6,7 @@ import { getMessaging } from 'firebase-admin/messaging';
 import localRedis from '../utils/redis.js';
 import { Op } from 'sequelize';
 import { NotificationType } from '../models/enums/notificationType.js';
+import { socketIO } from '../app.js';
 const dbContext = await db;
 
 const notificationJobs = CronJob.from({
@@ -66,7 +67,6 @@ async function generateNotification() {
                 return;
             };
             validUserIds = Object.keys(fcmTokenCache);
-            console.log(fcmTokenCache, 'Hoang');
             // Only send notification for employees connected to the system for the 1st time 
             // && working days has been applied.
             // && haven't punch in or out yet
@@ -113,7 +113,7 @@ async function generateNotification() {
             if (moment().isBetween(startDate, endSendNotiTimeMorning)) {
                 if (listEmpIds.length != 0) {
                     const removeUserIds = [...new Set(listEmpIds.filter(x => x.Attendances?.length === 0).map(x => x.userId))];
-                    validUserIds = validUserIds.filter( ( el ) => !removeUserIds.includes( el ) );
+                    validUserIds = validUserIds.filter((el) => !removeUserIds.includes(el));
                 } else validUserIds = [...new Set(validUserIds)]
                 console.log(validUserIds);
             }
@@ -133,10 +133,19 @@ async function generateNotification() {
                     content: notiContent,
                     redirectUrl: '/attendances'
                 });
+
+
             }
 
             // create notifications
             await dbContext.Notification.bulkCreate(notificationModels);
+            // send socket for web
+            socketIO.emit(process.env.NOTIFICATION, {
+                type: 'NOTIFICATION',
+                notificationType: NotificationType.ATTENDANCE_REMINDER,
+                userIds: validUserIds
+            });
+
             if (fcmTokens.length <= 0) {
                 console.log('------------- END: no tokens ------------------');
                 return;

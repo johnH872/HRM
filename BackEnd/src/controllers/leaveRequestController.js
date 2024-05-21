@@ -4,6 +4,8 @@ import { leaveRequestStatus } from '../models/enums/leaveRequestStatus.js';
 const dbContext = await db;
 import moment from "moment/moment.js";
 import { Op } from "sequelize";
+import { sendNotification } from "../utils/notification.js";
+import { NotificationType } from "../models/enums/notificationType.js";
 
 class LeaveRequestController {
     async getAllLeaveRequest(req, res, next) {
@@ -29,7 +31,7 @@ class LeaveRequestController {
             });
             returnResult.result = leaveRequestPaging;
             res.status(200).json(returnResult);
-        } catch(error) {
+        } catch (error) {
             res.status(400).json(error);
             console.log(error)
         }
@@ -59,6 +61,13 @@ class LeaveRequestController {
                 if (saveLeaveRequest) {
                     result.result = saveLeaveRequest;
                     await handleLeaveEntitlementForLeaveRequest(saveLeaveRequest.userId, saveLeaveRequest.leaveEntitlementId);
+                    const userModel = await dbContext.User.findByPk(model.userId);
+                    sendNotification(
+                        'Leave request', `${userModel.firstName || ''} ${userModel.middleName || ''} ${userModel.lastName || ''} submitted a leave request.`,
+                        '/admin/leave-request',
+                        NotificationType.LEAVE_REQUEST,
+                        userModel.ownerId
+                    );
                 } else {
                     result.message = "Cannot save leave request";
                 }
@@ -94,7 +103,15 @@ class LeaveRequestController {
                                 leaveRequestId: model.leaveRequestId
                             }
                         });
-                        await handleLeaveEntitlementForLeaveRequest(result?.result?.userId, result?.result?.leaveEntitlementId);
+                        handleLeaveEntitlementForLeaveRequest(result?.result?.userId, result?.result?.leaveEntitlementId);
+                        if(existLeaveRequest.status != model.status && (model.status == leaveRequestStatus.REJECTED || model.status == leaveRequestStatus.APPROVED)) {
+                            sendNotification(
+                                'Leave request', `Leave on ${moment(model.leaveDateFrom).format('MMMM DD, YYYY')} has been ${model.status == leaveRequestStatus.APPROVED ? 'approved' : 'rejected'}.`,
+                                '/admin/leave-request',
+                                NotificationType.LEAVE_REQUEST,
+                                model.userId
+                            );
+                        }
                     } else {
                         result.message = 'Can not save Leave Request';
                     }
@@ -103,7 +120,7 @@ class LeaveRequestController {
                 }
             }
             return res.status(200).json(result);
-        } catch(error) {
+        } catch (error) {
             res.status(400).json(error);
             console.log(error);
         }
@@ -123,9 +140,9 @@ class LeaveRequestController {
                     userId: employeeId,
                 }
             });
-            if(lstRequest) result.result = lstRequest;
+            if (lstRequest) result.result = lstRequest;
             else result.message = "Employee not have any Leave Request";
-        } catch(error) {
+        } catch (error) {
             console.error(error);
         }
         return res.status(200).json(result);
@@ -135,7 +152,7 @@ class LeaveRequestController {
         var result = new ReturnResult;
         try {
             var employeeId = req.params.id;
-            var {start, end} = req.body;
+            var { start, end } = req.body;
             const lstRequest = await dbContext.LeaveRequest.findAll({
                 include: [
                     {
@@ -144,17 +161,17 @@ class LeaveRequestController {
                 ],
                 where: {
                     userId: employeeId,
-                    leaveDateFrom:  {
-                        [Op.gte]:  new Date(start),
+                    leaveDateFrom: {
+                        [Op.gte]: new Date(start),
                     },
                     leaveDateTo: {
                         [Op.lte]: new Date(end)
                     }
                 }
             });
-            if(lstRequest) result.result = lstRequest;
+            if (lstRequest) result.result = lstRequest;
             else result.message = "Employee not have any Leave Request";
-        } catch(error) {
+        } catch (error) {
             console.error(error);
         }
         return res.status(200).json(result);
@@ -162,12 +179,12 @@ class LeaveRequestController {
 }
 
 async function handleLeaveEntitlementForLeaveRequest(userId, leaveEntitlementId) {
-    const totalNumberOfHoursUsed = await dbContext.LeaveRequest.sum('numberOfHour', { 
-        where: { 
+    const totalNumberOfHoursUsed = await dbContext.LeaveRequest.sum('numberOfHour', {
+        where: {
             userId: userId,
             leaveEntitlementId: leaveEntitlementId,
             status: leaveRequestStatus.APPROVED,
-        } 
+        }
     });
 
     const existLeaveEntitlement = await dbContext.LeaveEntitlement.findOne({
@@ -220,7 +237,7 @@ async function calculateWorkingHour(startDate, endDate, timeZone = 7) {
                 estEndDate.setDate(estEndDate.getDate() + 1);
                 estEndDate.setHours(0);
                 estEndDate.setMinutes(30);
-                
+
                 if (endDate.getTime() <= estEndDate.getTime()) estEndDate = endDate;
                 workingHour += await calculateWorkingHourInDay(startDate, estEndDate);
                 startDate.setDate(startDate.getDate() + 1);

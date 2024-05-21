@@ -7,11 +7,11 @@ import { EmployeeModel } from 'src/app/modules/shared/models/employee.model';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { RxFormBuilder } from '@rxweb/reactive-form-validators';
 import { NbAuthJWTToken, NbAuthService } from '@nebular/auth';
-import { NbToastrService } from '@nebular/theme';
+import { NbGlobalLogicalPosition, NbToastrService } from '@nebular/theme';
 import { DatastateService } from '../../datastate-management/datastate.service';
 import { MessageService } from 'primeng/api';
 import { WorkCalendarManagementService } from '../work-calendar-management.service';
-import moment from 'moment';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-add-edit-work-calendar-detail',
@@ -81,7 +81,7 @@ export class AddEditWorkCalendarDetailComponent implements OnInit, OnDestroy {
           });
           this.onRefresh.emit(resp);
         } else {
-          this.toast.danger(resp.message, 'Failure');
+          this.toast.danger(resp.message, 'Failure', {position: NbGlobalLogicalPosition.BOTTOM_END});
         }
       }).add(() => {
         this.isLoading = !this.isLoading;
@@ -100,7 +100,7 @@ export class AddEditWorkCalendarDetailComponent implements OnInit, OnDestroy {
         });
         this.onRefresh.emit(resp);
       } else {
-        this.toast.danger(resp.message, 'Failure');
+        this.toast.danger(resp.message, 'Failure', {position: NbGlobalLogicalPosition.BOTTOM_END});
       }
     }).add(() => {
       this.isLoading = !this.isLoading;
@@ -116,7 +116,7 @@ export class AddEditWorkCalendarDetailComponent implements OnInit, OnDestroy {
         });
         this.onRefresh.emit(resp);
       } else {
-        this.toast.danger(resp.message, 'Failure');
+        this.toast.danger(resp.message, 'Failure', {position: NbGlobalLogicalPosition.BOTTOM_END});
       }
     }).add(() => {
       this.isLoading = !this.isLoading;

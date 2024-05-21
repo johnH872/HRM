@@ -7,7 +7,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { SettingManagementService } from '../setting-management.service';
 import { RxFormBuilder } from '@rxweb/reactive-form-validators';
 import { NbAuthJWTToken, NbAuthService } from '@nebular/auth';
-import { NbToastrService } from '@nebular/theme';
+import { NbGlobalLogicalPosition, NbToastrService } from '@nebular/theme';
 import { NbAccessChecker } from '@nebular/security';
 import { ConfirmModalComponent } from 'src/app/modules/shared/components/confirm-modal/confirm-modal.component';
 
@@ -107,7 +107,7 @@ export class AddEditSettingComponent implements OnInit, OnDestroy, AfterViewInit
       model.oldSetting = this.oldSettingModel;
       this.settingService.saveSetting(model).pipe(takeUntil(this.destroy$)).subscribe(resp => {
         if (resp.result) {
-          this.toast.success(`Save setting successfully`, 'Success');
+          this.toast.success(`Save setting successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END});
           this.dialModalRef.close(resp.result);
         }
       }).add(() => {

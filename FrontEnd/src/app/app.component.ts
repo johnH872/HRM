@@ -3,6 +3,7 @@ import { ReactiveFormConfig } from '@rxweb/reactive-form-validators';
 // import Redis from 'ioredis';
 import { HttpClient } from '@angular/common/http';
 import { SocketService } from './socket.service';
+import { NbAuthJWTToken, NbAuthService } from '@nebular/auth';
 
 @Component({
   selector: 'app-root',
@@ -14,12 +15,9 @@ export class AppComponent implements OnInit {
   socket: any;
   message: string = '';
   messages: string[] = [];
-
   constructor(
-    private socketService: SocketService,
-    private httpClient: HttpClient
   ) {
-
+   
   }
 
   ngOnInit(): void {
@@ -58,15 +56,5 @@ export class AppComponent implements OnInit {
         numberic: 'Only numeric is allowed',
       }
     });
-
-    // this.socketService.setupSocketConnection();
-    // // Save facematcher data
-    // this.socketService.socket.on('message', (data: any) => {
-    //   console.log('data');
-    // });
   }
-
-  // ngOnDestroy(): void {
-  //   this.socketService.disconnect();
-  // }
 }

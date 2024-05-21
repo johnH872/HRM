@@ -10,7 +10,7 @@ import { TblActionType } from '../../shared/enum/tbl-action-type.enum';
 import { Table } from 'primeng/table';
 import { DatastateService } from '../datastate-management/datastate.service';
 import { DataStateModel } from '../datastate-management/data-state.model';
-import { NbToastrService } from '@nebular/theme';
+import { NbGlobalLogicalPosition, NbToastrService } from '@nebular/theme';
 import { DialogGetReasonRejectedComponent } from './dialog-get-reason-rejected/dialog-get-reason-rejected.component';
 import { EmployeeDetailDialogComponent } from '../employee-management/employee-detail-dialog/employee-detail-dialog.component';
 import { NbAuthJWTToken, NbAuthService } from '@nebular/auth';
@@ -178,7 +178,7 @@ export class LeaveRequestManagementComponent implements OnInit, OnDestroy {
             row.reasonRejected = response;
             this.leaveRequestService.saveLeaveRequest(row).pipe(takeUntil(this.destroy$)).subscribe(resp => {
               if (resp.result) {
-                this.toast.success(`Change status successfully`, 'Success');
+                this.toast.success(`Change status successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END});
               }
             }).add(() => {
               this.refreshData();
@@ -190,7 +190,7 @@ export class LeaveRequestManagementComponent implements OnInit, OnDestroy {
       } else {
         this.leaveRequestService.saveLeaveRequest(row).pipe(takeUntil(this.destroy$)).subscribe(resp => {
           if (resp.result) {
-            this.toast.success(`Change status successfully`, 'Success');
+            this.toast.success(`Change status successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END});
           }
         }).add(() => {
           this.refreshData();

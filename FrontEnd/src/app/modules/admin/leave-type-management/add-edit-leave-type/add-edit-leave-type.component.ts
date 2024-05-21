@@ -6,7 +6,7 @@ import { FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { RxFormBuilder } from '@rxweb/reactive-form-validators';
 import { NbAuthJWTToken, NbAuthService } from '@nebular/auth';
-import { NbToastrService } from '@nebular/theme';
+import { NbGlobalLogicalPosition, NbToastrService } from '@nebular/theme';
 import { LeaveTypeManagementService } from '../leave-type-management.service';
 import { DatastateService } from '../../datastate-management/datastate.service';
 
@@ -82,10 +82,10 @@ export class AddEditLeaveTypeComponent implements OnInit, OnDestroy {
 
       this.leaveTypeService.saveLeaveType(model).subscribe(resp => {
         if (resp.result) {
-          this.toast.success(`Save leave type successfully`, 'Success');
+          this.toast.success(`Save leave type successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END});
           this.dialModalRef.close(resp.result);
         } else {
-          this.toast.danger(resp.message, 'Failure');
+          this.toast.danger(resp.message, 'Failure', {position: NbGlobalLogicalPosition.BOTTOM_END});
         }
       }).add(() => {
         this.isLoading = !this.isLoading;

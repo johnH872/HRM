@@ -9,7 +9,7 @@ import { environment } from 'src/enviroments/enviroment';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { RxFormBuilder } from '@rxweb/reactive-form-validators';
 import { EmployeeManagementService } from '../../employee-management/employee-management.service';
-import { NbToastrService } from '@nebular/theme';
+import { NbGlobalLogicalPosition, NbToastrService } from '@nebular/theme';
 import { LeaveEntitlementManagamentService } from '../leave-entitlement-management.service';
 import { LeaveTypeManagementService } from '../../leave-type-management/leave-type-management.service';
 import { ConfirmModalComponent } from 'src/app/modules/shared/components/confirm-modal/confirm-modal.component';
@@ -203,18 +203,18 @@ export class AddEditLeaveEntitlementComponent implements OnInit, OnDestroy, Afte
       this.leaveEntitlementService.saveLeaveEntitlement(model).pipe(takeUntil(this.destroy$)).subscribe(resp => {
         if (resp.result) {
           if (resp.result.leaveTypeId === LeaveType.Annually) {
-            this.toast.success(`Save leave entitlement successfully`, 'Success');
+            this.toast.success(`Save leave entitlement successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END});
             this.leaveEntitlementModel = resp.result;
             this.frmLeaveEntitlement.get('availableLeave').setValue(resp.result.availableLeave);
             this.frmLeaveEntitlement.get('usableLeave').setValue(resp.result.usableLeave);
             this.readonly = true;
             this.isChange = false;
           } else {
-            this.toast.success(`Save leave entitlement successfully`, 'Success');
+            this.toast.success(`Save leave entitlement successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END});
             this.dialModalRef.close(resp.result);
           }
         } else {
-          this.toast.danger(resp.message, 'Error');
+          this.toast.danger(resp.message, 'Error', {position: NbGlobalLogicalPosition.BOTTOM_END});
         }
       }).add(() => {
         this.isLoading = !this.isLoading;
