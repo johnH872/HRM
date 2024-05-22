@@ -62,12 +62,23 @@ class LeaveRequestController {
                     result.result = saveLeaveRequest;
                     await handleLeaveEntitlementForLeaveRequest(saveLeaveRequest.userId, saveLeaveRequest.leaveEntitlementId);
                     const userModel = await dbContext.User.findByPk(model.userId);
-                    sendNotification(
-                        'Leave request', `${userModel.firstName || ''} ${userModel.middleName || ''} ${userModel.lastName || ''} submitted a leave request.`,
-                        '/admin/leave-request',
-                        NotificationType.LEAVE_REQUEST,
-                        userModel.ownerId
-                    );
+                    if (model.userId === model.userAction) {
+                        sendNotification(
+                            'Leave request', `${userModel.firstName || ''} ${userModel.middleName || ''} ${userModel.lastName || ''} submitted a leave request.`,
+                            '/admin/leave-request',
+                            NotificationType.LEAVE_REQUEST,
+                            userModel.ownerId
+                        );
+                    } else {
+                        const ownerModel = await dbContext.User.findByPk(userModel.ownerId);
+                        sendNotification(
+                            'Leave request', `${ownerModel.firstName || ''} ${ownerModel.middleName || ''} ${ownerModel.lastName || ''} assign for you a leave request.`,
+                            '/admin/leave-request',
+                            NotificationType.LEAVE_REQUEST,
+                            userModel.userId
+                        );
+                    }
+                    
                 } else {
                     result.message = "Cannot save leave request";
                 }
