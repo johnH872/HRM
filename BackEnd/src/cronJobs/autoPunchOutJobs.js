@@ -19,7 +19,8 @@ async function handleAutoPunchOutJob() {
         SET punchoutDate = ADDTIME(STR_TO_DATE(CONCAT(DATE(punchinDate), '17:00:00'), '%Y-%m-%d %T'), '20:00:00.000000'),
             punchoutTime = UNIX_TIMESTAMP(ADDTIME(STR_TO_DATE(CONCAT(DATE(punchinDate), ' 17:00:00'), '%Y-%m-%d %T'), '27:00:00.000000'))*1000,
             punchoutOffset = -420,
-            punchoutNote = 'Auto punch out from the system'
+            punchoutNote = 'Auto punch out from the system',
+            punchOutImageUrl = 'https://static.vecteezy.com/system/resources/previews/010/886/508/original/self-service-checkout-cartoon-icon-vector.jpg'
         WHERE punchoutDate IS NULL`);
 
     } catch (err) {

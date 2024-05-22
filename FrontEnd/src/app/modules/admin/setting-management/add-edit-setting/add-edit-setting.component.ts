@@ -107,7 +107,7 @@ export class AddEditSettingComponent implements OnInit, OnDestroy, AfterViewInit
       model.oldSetting = this.oldSettingModel;
       this.settingService.saveSetting(model).pipe(takeUntil(this.destroy$)).subscribe(resp => {
         if (resp.result) {
-          this.toast.success(`Save setting successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END});
+          this.toast.success(`Save setting successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END, duration: 3000});
           this.dialModalRef.close(resp.result);
         }
       }).add(() => {

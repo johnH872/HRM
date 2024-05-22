@@ -10,6 +10,8 @@ import { uploadImage } from "../utils/cloundinary.js";
 import { leaveRequestStatus } from "../models/enums/leaveRequestStatus.js";
 import { socketIO } from "../app.js";
 import moment from "moment";
+import { NotificationType } from "../models/enums/notificationType.js";
+import { sendNotification } from "../utils/notification.js";
 const { Canvas, Image, ImageData } = canvas
 faceapi.env.monkeyPatch({ Canvas, Image, ImageData })
 class attendanceController {
@@ -18,21 +20,21 @@ class attendanceController {
         try {
             const attendancePaging = await dbContext.Attendance.findAll({
                 attributes: [
-                    'attendanceId', 
-                    'userId', 
-                    'punchinDate', 
-                    'punchinTime', 
-                    'punchinNote', 
-                    'punchinOffset', 
-                    'punchoutDate', 
-                    'punchoutTime', 
-                    'punchoutNote', 
-                    'punchoutOffset', 
+                    'attendanceId',
+                    'userId',
+                    'punchinDate',
+                    'punchinTime',
+                    'punchinNote',
+                    'punchinOffset',
+                    'punchoutDate',
+                    'punchoutTime',
+                    'punchoutNote',
+                    'punchoutOffset',
                     // 'punchInImageUrl', 
                     // 'punchOutImageUrl',
                     [
                         literal(
-                          `CASE 
+                            `CASE 
                               WHEN ${'Attendance.punchoutTime'} > ${'Attendance.punchinTime'} 
                                   THEN (${'Attendance.punchoutTime'} - ${'Attendance.punchinTime'}) / 3600000
                               ELSE 0
@@ -66,7 +68,7 @@ class attendanceController {
             });
             returnResult.result = attendancePaging;
             res.status(200).json(returnResult);
-        } catch(error) {
+        } catch (error) {
             res.status(400).json(error);
             console.log(error)
         }
@@ -136,7 +138,7 @@ class attendanceController {
                 }
             }
             return res.status(200).json(result);
-        } catch(error) {
+        } catch (error) {
             res.status(400).json(error);
             console.log(error);
         }
@@ -219,7 +221,7 @@ class attendanceController {
                     });
                 if (employeeAttendance) returnResult.result = true;
             }
-            if(returnResult.result) socketIO.emit(process.env.PUNCH_IN_OUT, {
+            if (returnResult.result) socketIO.emit(process.env.PUNCH_IN_OUT, {
                 type: isPunchIn ? 'PUNCHIN' : 'PUNCHOUT',
                 employeeId
             });
@@ -263,6 +265,17 @@ class attendanceController {
                 statusId: model.statusId,
                 imageUrl
             });
+
+            const userModel = await dbContext.User.findOne({ where: { email: model.email } });
+            if (userModel) {
+                sendNotification(
+                    'Attendance report', `${userModel.firstName || ''} ${userModel.middleName || ''} ${userModel.lastName || ''} submitted an attendance report.`,
+                    '/admin/attendance-report',
+                    NotificationType.ATTENDANCE_REPORT,
+                    userModel.ownerId
+                );
+            }
+
             if (attendanceReport) returnResult.result = true;
             res.status(200).json(returnResult);
         } catch (error) {
@@ -282,7 +295,7 @@ class attendanceController {
                 include:
                 {
                     model: dbContext.DataState,
-                    as:'status'
+                    as: 'status'
                 },
             });
             returnResult.result = attendanceReports;
@@ -311,8 +324,8 @@ class attendanceController {
             if (updatedRes) {
                 returnResult.result = true;
             }
-            if(oldStatusId == 1 && statusId == 2 && userId ) {
-                if(oldAttendanceReport.type === 'PUNCHIN') {
+            if (oldStatusId == 1 && statusId == 2 && userId) {
+                if (oldAttendanceReport.type === 'PUNCHIN') {
                     await dbContext.Attendance.create({
                         userId,
                         punchinDate: oldAttendanceReport.createdAt,
@@ -328,7 +341,7 @@ class attendanceController {
                     });
                 }
 
-                if(oldAttendanceReport.type === 'PUNCHOUT') {
+                if (oldAttendanceReport.type === 'PUNCHOUT') {
                     var startDate = moment(oldAttendanceReport.createdAt).utc().startOf('day');
                     var endDate = moment(oldAttendanceReport.createdAt).utc().endOf('day');
                     await dbContext.Attendance.update({
@@ -339,7 +352,7 @@ class attendanceController {
                         punchOutImageUrl: oldAttendanceReport.imageUrl,
                     }, {
                         where: {
-                            punchoutDate: null, 
+                            punchoutDate: null,
                             punchoutTime: null,
                             punchinDate: {
                                 [Op.between]: [startDate, endDate]
@@ -347,7 +360,17 @@ class attendanceController {
                         }
                     });
                 }
-            } 
+
+            }
+            const userModel = await dbContext.User.findOne({ where: { email: oldAttendanceReport.email } });
+            if (userModel) {
+                sendNotification(
+                    'Attendance report', `Your attendance report on at ${moment(oldAttendanceReport.createdAt).format('MMMM DD, YYYY HH:mm')} has been ${statusId == leaveRequestStatus.APPROVED ? 'approved' : 'rejected'}`,
+                    '/admin/attendance-report',
+                    NotificationType.ATTENDANCE_REPORT,
+                    userModel.ownerId
+                );
+            }
             res.status(200).json(returnResult);
         } catch (error) {
             res.status(400).json(error);
@@ -360,11 +383,11 @@ class attendanceController {
         try {
             returnResult.result = false;
             const removeIds = req.body;
-            if(removeIds?.length > 0) {
+            if (removeIds?.length > 0) {
                 const updatedRes = await dbContext.AttendanceReport.destroy({
                     where: {
                         attendanceReportId: removeIds
-                    }   
+                    }
                 });
                 if (updatedRes) {
                     returnResult.result = true;
@@ -392,21 +415,21 @@ class attendanceController {
                     ],
                 },
                 attributes: [
-                    'attendanceId', 
-                    'userId', 
-                    'punchinDate', 
-                    'punchinTime', 
-                    'punchinNote', 
-                    'punchinOffset', 
-                    'punchoutDate', 
-                    'punchoutTime', 
-                    'punchoutNote', 
-                    'punchoutOffset', 
+                    'attendanceId',
+                    'userId',
+                    'punchinDate',
+                    'punchinTime',
+                    'punchinNote',
+                    'punchinOffset',
+                    'punchoutDate',
+                    'punchoutTime',
+                    'punchoutNote',
+                    'punchoutOffset',
                     // 'punchInImageUrl', 
                     // 'punchOutImageUrl',
                     [
                         literal(
-                          `CASE 
+                            `CASE 
                               WHEN ${'Attendance.punchoutTime'} > ${'Attendance.punchinTime'} 
                                   THEN (${'Attendance.punchoutTime'} - ${'Attendance.punchinTime'}) / 3600000
                               ELSE 0
@@ -418,7 +441,7 @@ class attendanceController {
             });
             returnResult.result = result;
             res.status(200).json(returnResult);
-        } catch(error) {
+        } catch (error) {
             res.status(400).json(error);
             console.log(error)
         }

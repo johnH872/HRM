@@ -9,6 +9,14 @@ import { environment } from 'src/enviroments/enviroment';
 import { AlertCardComponent } from './alert-card/alert-card.component';
 import { ReportAttendanceDialogComponent } from './report-attendance-dialog/report-attendance-dialog.component';
 import { TblActionType } from '../../shared/enum/tbl-action-type.enum';
+import { WorkCalendarManagementService } from '../../admin/work-calendar-management/work-calendar-management.service';
+import * as moment from 'moment';
+import { LeaveRequestManagementService } from '../../admin/leave-request-management/leave-request-management.service';
+import { AttendanceManagementService } from '../../admin/attendance-managment/attendance-management.service';
+import { DateRangeModel } from '../../shared/models/dateRangeModel';
+import { LeaveRequestStatus } from '../../shared/enum/leave-request-status.enum';
+import { SettingManagementService } from '../../admin/setting-management/setting-management.service';
+import { WorkCalendarModel } from '../../admin/work-calendar-management/work-calendar-management.model';
 
 @Component({
   selector: 'app-punch-in-out-webcam',
@@ -36,8 +44,12 @@ export class PunchInOutWebcamComponent implements OnInit, OnDestroy {
   constructor(
     private elRef: ElementRef,
     private http: HttpClient,
+    private dialog: MatDialog,
     private employeeManagementService: EmployeeManagementService,
-    private dialog: MatDialog
+    private workCalendarService: WorkCalendarManagementService,
+    private leaveRequestService: LeaveRequestManagementService,
+    private attendanceService: AttendanceManagementService,
+    private settingService: SettingManagementService
   ) {
 
   }
@@ -104,11 +116,16 @@ export class PunchInOutWebcamComponent implements OnInit, OnDestroy {
             var existedCount = this.detectedMaps.get(bestMatch.label);
             ++existedCount;
             this.detectedMaps.set(bestMatch.label, existedCount);
-            if (existedCount == 5 && this.cancelClickCouting != 3) this.employeeManagementService.getEmployeeById(bestMatch?.label).subscribe(res => {
+            if (existedCount == 5 && this.cancelClickCouting != 3) this.employeeManagementService.getEmployeeById(bestMatch?.label).subscribe(async res => {
               this.canvas.style.display = 'none';
               this.canvas
                 .getContext("2d")
                 .drawImage(this.videoInput, 0, 0, window.innerWidth, window.innerHeight);
+
+              // Check condition includes:
+              // - not working time => no punch in
+              // - on leaving times => no punch in
+              var validAttendance = await this.checkAttendanceCondition(res.result.userId);
 
               this.canvas.toBlob((blob: any) => {
                 if (res.result) {
@@ -181,6 +198,60 @@ export class PunchInOutWebcamComponent implements OnInit, OnDestroy {
           // drawBox.draw(this.canvas);
         }
       }, 300);
+    });
+  }
+
+  async checkAttendanceCondition(userId: String): Promise<boolean> {
+    var result: boolean = false;
+    var isPunchIn: boolean = true;
+    try {
+      var startDate = moment().startOf('day').toDate();
+      var endDate = moment().endOf('day').toDate();
+      const workingdaysRes = await lastValueFrom(this.workCalendarService.getWorkCalendarByUserId(startDate, endDate, [userId]));
+      const leaveRequestRes = await lastValueFrom(this.leaveRequestService.getLeaveRequestByFilter(startDate, endDate, userId));
+      const attendanceResult = await lastValueFrom(this.attendanceService.getAttendanceByEmployeeId(userId as string, new DateRangeModel(startDate, endDate)));
+      var workingDay = new WorkCalendarModel();
+      var leaveRequests = [];
+      if (attendanceResult?.result?.length > 0) {
+        var firstRecord = attendanceResult.result[0];
+        isPunchIn = firstRecord.punchoutDate != null;
+      }
+      if (workingdaysRes?.result && workingdaysRes?.result.length > 0) {
+        workingDay = workingdaysRes.result[0];
+        leaveRequests = leaveRequestRes.result.filter(x => x.status == LeaveRequestStatus.APPROVED);
+      }
+      if (isPunchIn) {
+        // If punching in, only accept if:
+        // - There is a working day on the current date
+        // - Punching in is not between leave-from and leave-to times
+        if (workingDay && workingDay.workingHour > 0) result = true;
+        if (leaveRequests.length > 0) {
+          for (let leaveRequest of leaveRequests) {
+            if (moment().isBetween(moment(leaveRequest.leaveDateFrom), moment(leaveRequest.leaveDateTo))) result = false;
+          }
+        }
+      }
+
+      if(!result) this.openReminderPopup();
+    } catch (err) {
+      console.error(err);
+    }
+    return result;
+  }
+
+  openReminderPopup() {
+    this.isOpeningDialog = true;
+    this.dialog.open(AlertCardComponent, {
+      disableClose: true,
+      width: 'auto',
+      height: 'auto',
+      backdropClass: 'custom-backdrop',
+      hasBackdrop: true,
+      data: {
+        // model: res.result
+      }
+    }).afterClosed().subscribe(closeRes => {
+      this.isOpeningDialog = false;
     });
   }
 }

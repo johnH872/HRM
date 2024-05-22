@@ -355,7 +355,7 @@ export class WorkCalendarManagementComponent implements OnInit {
       model.workingType = value.value;
       var resp = await this.workCalendarService.saveWorkCalendar(model).toPromise();
       if (resp.result) {
-        this.toast.success(`Save working type successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END});
+        this.toast.success(`Save working type successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END, duration: 3000});
         await this.callDataSource();
       }
     }
@@ -368,7 +368,7 @@ export class WorkCalendarManagementComponent implements OnInit {
         model.workingHour = value.value;
         var resp = await this.workCalendarService.saveWorkCalendar(model).toPromise();
         if (resp.result) {
-          this.toast.success(`Save working hours successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END});
+          this.toast.success(`Save working hours successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END, duration: 3000});
           await this.callDataSource();
         }
       }

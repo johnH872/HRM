@@ -203,18 +203,18 @@ export class AddEditLeaveEntitlementComponent implements OnInit, OnDestroy, Afte
       this.leaveEntitlementService.saveLeaveEntitlement(model).pipe(takeUntil(this.destroy$)).subscribe(resp => {
         if (resp.result) {
           if (resp.result.leaveTypeId === LeaveType.Annually) {
-            this.toast.success(`Save leave entitlement successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END});
+            this.toast.success(`Save leave entitlement successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END, duration: 3000});
             this.leaveEntitlementModel = resp.result;
             this.frmLeaveEntitlement.get('availableLeave').setValue(resp.result.availableLeave);
             this.frmLeaveEntitlement.get('usableLeave').setValue(resp.result.usableLeave);
             this.readonly = true;
             this.isChange = false;
           } else {
-            this.toast.success(`Save leave entitlement successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END});
+            this.toast.success(`Save leave entitlement successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END, duration: 3000});
             this.dialModalRef.close(resp.result);
           }
         } else {
-          this.toast.danger(resp.message, 'Error', {position: NbGlobalLogicalPosition.BOTTOM_END});
+          this.toast.danger(resp.message, 'Error', {position: NbGlobalLogicalPosition.BOTTOM_END, duration: 3000});
         }
       }).add(() => {
         this.isLoading = !this.isLoading;

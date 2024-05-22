@@ -61,4 +61,8 @@ export class LeaveRequestManagementService {
     importLeaveRequest(formData: FormData): Observable<ReturnResult<any>> {
         return this.http.post<ReturnResult<any>>(`${this.baseUrl}/import`, formData).pipe(timeout(1200000));
     }
+
+    getLeaveRequestByFilter(from: Date, to: Date, userId: String): Observable<ReturnResult<LeaveRequestModel[]>> {
+        return this.http.post<ReturnResult<LeaveRequestModel[]>>(`${this.baseUrl}/getLeaveRequestByFilter/${userId}`, {from, to});
+    }
 }

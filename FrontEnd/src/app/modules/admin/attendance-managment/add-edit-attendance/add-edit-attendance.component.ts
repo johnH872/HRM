@@ -137,7 +137,7 @@ export class AddEditAttendanceComponent implements OnInit, OnDestroy, AfterViewI
       model.attendanceId = model.attendanceId ? model.attendanceId : 0;
       this.attendanceService.saveAttendance(model).pipe(takeUntil(this.destroy$)).subscribe(resp => {
         if (resp.result) {
-          this.toast.success(`Save leave request successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END});
+          this.toast.success(`Save leave request successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END, duration: 3000});
           this.dialModalRef.close(resp.result);
         }
       }).add(() => {

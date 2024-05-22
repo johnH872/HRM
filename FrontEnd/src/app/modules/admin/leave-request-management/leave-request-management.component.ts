@@ -178,7 +178,7 @@ export class LeaveRequestManagementComponent implements OnInit, OnDestroy {
             row.reasonRejected = response;
             this.leaveRequestService.saveLeaveRequest(row).pipe(takeUntil(this.destroy$)).subscribe(resp => {
               if (resp.result) {
-                this.toast.success(`Change status successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END});
+                this.toast.success(`Change status successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END, duration: 3000});
               }
             }).add(() => {
               this.refreshData();
@@ -190,7 +190,7 @@ export class LeaveRequestManagementComponent implements OnInit, OnDestroy {
       } else {
         this.leaveRequestService.saveLeaveRequest(row).pipe(takeUntil(this.destroy$)).subscribe(resp => {
           if (resp.result) {
-            this.toast.success(`Change status successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END});
+            this.toast.success(`Change status successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END, duration: 3000});
           }
         }).add(() => {
           this.refreshData();

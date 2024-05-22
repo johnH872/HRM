@@ -79,11 +79,11 @@ export const MENU_ITEMS_ADMIN: NbMenuItem[] = [
         icon: 'options-2-outline',
         link: '/admin/settings',
       },
-      {
-        title: 'DataStates',
-        icon: 'layers-outline',
-        link: '/admin/data-state',
-      },
+      // {
+      //   title: 'DataStates',
+      //   icon: 'layers-outline',
+      //   link: '/admin/data-state',
+      // },
     ],
   },
 ];

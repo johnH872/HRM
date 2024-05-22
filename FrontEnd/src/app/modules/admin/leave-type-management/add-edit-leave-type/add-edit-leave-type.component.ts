@@ -82,10 +82,10 @@ export class AddEditLeaveTypeComponent implements OnInit, OnDestroy {
 
       this.leaveTypeService.saveLeaveType(model).subscribe(resp => {
         if (resp.result) {
-          this.toast.success(`Save leave type successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END});
+          this.toast.success(`Save leave type successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END, duration: 3000});
           this.dialModalRef.close(resp.result);
         } else {
-          this.toast.danger(resp.message, 'Failure', {position: NbGlobalLogicalPosition.BOTTOM_END});
+          this.toast.danger(resp.message, 'Failure', {position: NbGlobalLogicalPosition.BOTTOM_END, duration: 3000});
         }
       }).add(() => {
         this.isLoading = !this.isLoading;

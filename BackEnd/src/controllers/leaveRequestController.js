@@ -162,11 +162,11 @@ class LeaveRequestController {
                 where: {
                     userId: employeeId,
                     leaveDateFrom: {
-                        [Op.gte]: new Date(start),
+                        [Op.between]: [new Date(start), new Date(end)]
                     },
-                    leaveDateTo: {
-                        [Op.lte]: new Date(end)
-                    }
+                    // leaveDateTo: {
+                    //     [Op.lte]: new Date(end)
+                    // }
                 }
             });
             if (lstRequest) result.result = lstRequest;

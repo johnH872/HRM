@@ -182,7 +182,7 @@ export class AddEditLeaveRequestComponent implements OnInit, OnDestroy, AfterVie
       model.leaveRequestId = model.leaveRequestId ? model.leaveRequestId : 0;
       this.leaveRequestService.saveLeaveRequest(model).pipe(takeUntil(this.destroy$)).subscribe(resp => {
         if (resp.result) {
-          this.toast.success(`Save leave request successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END});
+          this.toast.success(`Save leave request successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END, duration: 3000});
           this.dialModalRef.close(resp.result);
         }
       }).add(() => {
@@ -281,7 +281,7 @@ export class AddEditLeaveRequestComponent implements OnInit, OnDestroy, AfterVie
       row.status = statusChange;
       this.leaveRequestService.saveLeaveRequest(row).pipe(takeUntil(this.destroy$)).subscribe(resp => {
         if (resp.result) {
-          this.toast.success(`Change status successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END});
+          this.toast.success(`Change status successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END, duration: 3000});
           this.dialModalRef.close(resp.result);
         }
       });
