@@ -53,3 +53,16 @@ export class DateFormatPipe implements PipeTransform {
     }
   }
 }
+
+@Pipe({
+  name: 'dateTimeToTime'
+})
+export class DateTimeToTimePipe implements PipeTransform {
+  constructor(protected dateService: NbDateService<Date>) { }
+  transform(value: any, args?: any): any {
+    if (value != null && value.length > 0) {
+      return this.dateService.format(new Date(value), environment.formateHoursTime);
+    }
+  }
+
+}

@@ -36,6 +36,7 @@ import { WorkCalendarManagementComponent } from './work-calendar-management/work
 import { AddEditWorkCalendarDetailComponent } from './work-calendar-management/add-edit-work-calendar-detail/add-edit-work-calendar-detail.component';
 import { DialogGetReasonRejectedComponent } from './leave-request-management/dialog-get-reason-rejected/dialog-get-reason-rejected.component';
 import { RolesPipe } from './employee-management/roles.pipe';
+import { PopoverDetailScheduleCellComponent } from './report-schedule-management/popover-detail-schedule-cell/popover-detail-schedule-cell.component';
 
 
 @NgModule({
@@ -70,7 +71,8 @@ import { RolesPipe } from './employee-management/roles.pipe';
     WorkCalendarManagementComponent,
     AddEditWorkCalendarDetailComponent,
     DialogGetReasonRejectedComponent,
-    RolesPipe
+    RolesPipe,
+    PopoverDetailScheduleCellComponent
   ],
   imports: [
     ThemeModule,

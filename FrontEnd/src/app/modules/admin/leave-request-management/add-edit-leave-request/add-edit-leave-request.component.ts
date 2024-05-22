@@ -29,7 +29,7 @@ import { SettingManagementService } from '../../setting-management/setting-manag
 export class AddEditLeaveRequestComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private destroy$: Subject<void> = new Subject<void>();
-  currentUser;
+  currentUser: any;
   isAdmin: boolean = false;
   isMyLeaveRequest: boolean = false;
   action: TblActionType;
@@ -73,6 +73,7 @@ export class AddEditLeaveRequestComponent implements OnInit, OnDestroy, AfterVie
     this.action = data?.action ?? TblActionType.Add;
     this.leaveRequestModel = data?.model ?? new LeaveRequestModel();
     this.listEmployees = data?.listEmployees ?? [];
+    if (typeof this.leaveRequestModel.userId !== "string") this.leaveRequestModel.userId = this.leaveRequestModel?.User?.userId;
     this.authService.onTokenChange()
       .subscribe((token: NbAuthJWTToken) => {
         if (token.isValid()) {
@@ -133,6 +134,7 @@ export class AddEditLeaveRequestComponent implements OnInit, OnDestroy, AfterVie
       this.statusDefault = this.leaveRequestModel?.status;
       this.defaultStartTime = new Date(this.leaveRequestModel?.leaveDateFrom);
       this.defaultEndTime = new Date(this.leaveRequestModel?.leaveDateTo);
+      if (this.leaveRequestModel.status === LeaveRequestStatus.APPROVED) this.frmLeaveRequest.get('leaveEntitlementId').disable();
       if (this.leaveRequestModel?.User) {
         this.getAssignee(this.leaveRequestModel?.User);
       }
@@ -180,7 +182,7 @@ export class AddEditLeaveRequestComponent implements OnInit, OnDestroy, AfterVie
       const model: LeaveRequestModel = Object.assign({}, this.frmLeaveRequest.value);
       model.userId = this.employeeChosen?.userId;
       model.leaveRequestId = model.leaveRequestId ? model.leaveRequestId : 0;
-      this.leaveRequestService.saveLeaveRequest(model).pipe(takeUntil(this.destroy$)).subscribe(resp => {
+      this.leaveRequestService.saveLeaveRequest(model, this.currentUser?.userId).pipe(takeUntil(this.destroy$)).subscribe(resp => {
         if (resp.result) {
           this.toast.success(`Save leave request successfully`, 'Success', {position: NbGlobalLogicalPosition.BOTTOM_END, duration: 3000});
           this.dialModalRef.close(resp.result);

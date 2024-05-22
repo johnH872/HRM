@@ -1,0 +1,42 @@
+:host::ng-deep {
+    nb-card {
+        margin-bottom: 0;
+    }
+
+    nb-card,
+    nb-card-header {
+        border-radius: 10px 10px 0 0;
+        padding: 0;
+    }
+
+    nb-card-header {
+        background-color: #307abd;
+        text-align: center;
+        color: #e0e0e0;
+    }
+
+    nb-card-body {
+        background-color: #d8d8d8;
+        font-size: 10px;
+    }
+
+    nb-list-item {
+        max-height: 20px;
+        background-color: blanchedalmond;
+        border-radius: 10px;
+        margin: 5px 0;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+    }
+
+    nb-tabset .tab-link {
+        max-height: 48px;
+    }
+}
+
+.body-card{
+    max-height: 270px;
+    overflow-y: auto;
+    max-width: 400px;
+}

@@ -12,7 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { NbAuthJWTToken, NbAuthModule } from '@nebular/auth';
 import { RxReactiveFormsModule } from '@rxweb/reactive-form-validators';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NbAlertModule, NbButtonGroupModule, NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbFormFieldModule, NbIconModule, NbInputModule, NbLayoutModule, NbMenuModule, NbRadioModule, NbSearchModule, NbSelectModule, NbSpinnerModule, NbTabsetModule, NbToggleModule, NbUserModule } from '@nebular/theme';
+import { NbAlertModule, NbButtonGroupModule, NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbFormFieldModule, NbIconModule, NbInputModule, NbLayoutModule, NbMenuModule, NbRadioModule, NbSearchModule, NbSelectModule, NbSpinnerModule, NbTabsetModule, NbToggleModule, NbUserModule, NbListModule } from '@nebular/theme';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { MatSelectModule } from '@angular/material/select';
 import { HttpClientModule } from '@angular/common/http';
@@ -72,7 +72,7 @@ import { EmployeeSearchingComponent } from './components/employee-searching/empl
 import { NumberFormatPipe } from './pipes/number-format.pipe';
 import { HighlightTextSearchingPipe } from './pipes/highlight-text-searching.pipe';
 import { MatNativeDateModule } from '@angular/material/core';
-import { DateFormatPipe, DateTimeFormatPipe } from './pipes/date-time-format.pipe';
+import { DateFormatPipe, DateTimeFormatPipe, DateTimeToTimePipe } from './pipes/date-time-format.pipe';
 import {MatStepperModule} from '@angular/material/stepper';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { DateArrFormatPipe } from './pipes/date-arr-format.pipe';
@@ -136,6 +136,7 @@ const nebularModules = [
   NbFormFieldModule,
   NbToggleModule,
   NbUserModule,
+  NbListModule,
 ];
 
 const angularModules = [
@@ -198,6 +199,7 @@ const primengModules = [
     DateTimeFormatPipe,
     DateFormatPipe,
     DateArrFormatPipe,
+    DateTimeToTimePipe,
   ],
   imports: [
     CommonModule,
@@ -253,6 +255,7 @@ const primengModules = [
     DateTimeFormatPipe,
     DateFormatPipe,
     DateArrFormatPipe,
+    DateTimeToTimePipe,
   ],
   providers: [
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},
@@ -267,7 +270,8 @@ const primengModules = [
     DateTimeFormatPipe,
     DateFormatPipe,
     NumberFormatPipe,
-    NbAuthJWTToken
+    NbAuthJWTToken,
+    DateTimeToTimePipe,
   ]
 })
 export class SharedModule { }

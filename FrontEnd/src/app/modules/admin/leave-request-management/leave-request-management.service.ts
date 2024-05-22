@@ -40,10 +40,14 @@ export class LeaveRequestManagementService {
         return this.http.get<ReturnResult<LeaveRequestModel>>(`${this.baseUrl}/GetToDayLeaveRequestByProfileId?profileId=${profileId}`);
     }
 
-    saveLeaveRequest(model: LeaveRequestModel): Observable<ReturnResult<LeaveRequestModel>> {
+    saveLeaveRequest(model: LeaveRequestModel, userAction: string = ''): Observable<ReturnResult<LeaveRequestModel>> {
         const offset = new Date().getTimezoneOffset();
         model.timeZone = offset / - 60;
-        return this.http.post<ReturnResult<LeaveRequestModel>>(`${this.baseUrl}/SaveLeaveRequest`, model);
+        const updateModel = {
+            ...model,
+            userAction: userAction
+        }
+        return this.http.post<ReturnResult<LeaveRequestModel>>(`${this.baseUrl}/SaveLeaveRequest`, updateModel);
     }
 
     deleteLeaveRequest(id: string): Observable<ReturnResult<boolean>> {

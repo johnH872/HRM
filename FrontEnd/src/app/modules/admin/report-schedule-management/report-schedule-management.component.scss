@@ -158,3 +158,11 @@ td.mat-cell {
   background-color: #ff9393;
   color: white;
 }
+
+:host ::ng-deep .p-multiselect { 
+  max-height: 35px;
+  .p-multiselect-label {
+    max-width: 170px;
+    line-height: 1;
+  }
+}
