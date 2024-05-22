@@ -14,6 +14,8 @@ import { map } from 'rxjs';
 import { MatOption } from '@angular/material/core';
 import { Helper } from '../../shared/utility/Helper';
 import { RoleManagementService } from '../../shared/services/role-management.service';
+import { EmployeeModel } from '../../shared/models/employee.model';
+import { RoleModel } from '../../shared/models/role-model';
 
 @Component({
   selector: 'app-report-schedule-management',
@@ -25,6 +27,8 @@ export class ReportScheduleManagementComponent implements OnInit {
   @ViewChild('matSelectStatus') matSelectStatus: MatSelect;
 
   user;
+  listEmployees: EmployeeModel[];
+  listRoles: RoleModel[];
   frmGroup: FormGroup;
   timeMode = 'Week';
   viewMode = 'Both';
@@ -69,38 +73,49 @@ export class ReportScheduleManagementComponent implements OnInit {
     private authService: NbAuthService,
     private router: Router,
   ) { 
+    this.userService.getAllEmployee().subscribe(resp => {
+      if (resp.result) {
+        this.listEmployees = resp.result;
+        this.listEmployees.map(employee => employee.displayName = `${employee?.firstName} ${employee?.middleName} ${employee?.lastName}`);
+      } 
+    });
+    this.roleService.getRoles().subscribe(resp => {
+      if (resp.result) {
+        this.listRoles = resp.result;
+      }
+    });
     this.reportScheduleModel = new ReportScheduleModel();
-    this.configFilterEmployee = {
-      filterType: FilterType.DropDown,
-      filterValue: this.userService.getAllEmployee().pipe(map(x => {
-        if (x.result) {
-          return x.result.map(item => Object.assign({ text: `${item?.firstName} ${item?.lastName}`, value: item?.userId }));
-        } else return [];
-      })),
-      displayText: 'text',
-      displayValue: 'value',
-      firstLoad: true
-    } as FilterConfig;
+    // this.configFilterEmployee = {
+    //   filterType: FilterType.DropDown,
+    //   filterValue: this.userService.getAllEmployee().pipe(map(x => {
+    //     if (x.result) {
+    //       return x.result.map(item => Object.assign({ text: `${item?.firstName} ${item?.lastName}`, value: item?.userId }));
+    //     } else return [];
+    //   })),
+    //   displayText: 'text',
+    //   displayValue: 'value',
+    //   firstLoad: true
+    // } as FilterConfig;
     this.authService.onTokenChange().subscribe((token: NbAuthJWTToken) => {
       if (token.isValid()) {
         this.user = token.getPayload().user;
       }
     });
-    this.configFilterRole = {
-      filterType: FilterType.DropDown,
-      filterValue: this.roleService.getRoles().pipe(map(x => {
-        if (x.result) {
-          x.result.map(item => {
-            var indexRole = this.listStatusRole.findIndex(role => role.display === item.displayName);
-            if (indexRole > -1) this.listStatusRole[indexRole].value = item.roleId;
-          });
-          return x.result.map(item => Object.assign({ text: `${item?.displayName}`, value: item.roleId }));
-        } else return [];
-      })),
-      displayText: 'text',
-      displayValue: 'value',
-      firstLoad: true
-    } as FilterConfig;
+    // this.configFilterRole = {
+    //   filterType: FilterType.DropDown,
+    //   filterValue: this.roleService.getRoles().pipe(map(x => {
+    //     if (x.result) {
+    //       x.result.map(item => {
+    //         var indexRole = this.listStatusRole.findIndex(role => role.display === item.displayName);
+    //         if (indexRole > -1) this.listStatusRole[indexRole].value = item.roleId;
+    //       });
+    //       return x.result.map(item => Object.assign({ text: `${item?.displayName}`, value: item.roleId }));
+    //     } else return [];
+    //   })),
+    //   displayText: 'text',
+    //   displayValue: 'value',
+    //   firstLoad: true
+    // } as FilterConfig;
     this.userService.getAllEmployee();
   }
 
@@ -265,13 +280,13 @@ export class ReportScheduleManagementComponent implements OnInit {
 
   onFilterDropDownEmployee(event) {
     if (event) {
-      this.reportScheduleModel.listProfile = event;
+      this.reportScheduleModel.listProfile = event?.value;
     }
   }
 
   onFilterDropDownRole(event) {
     if (event) {
-      this.reportScheduleModel.listRoles = event;
+      this.reportScheduleModel.listRoles = event?.value;
       this.listStatusRoleChoose = [];
       this.reportScheduleModel?.listRoles?.map(role => {
         var index = this.listStatusRole.findIndex(item => item.value === role);

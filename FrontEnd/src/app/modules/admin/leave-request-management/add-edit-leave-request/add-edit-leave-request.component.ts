@@ -73,6 +73,7 @@ export class AddEditLeaveRequestComponent implements OnInit, OnDestroy, AfterVie
     this.action = data?.action ?? TblActionType.Add;
     this.leaveRequestModel = data?.model ?? new LeaveRequestModel();
     this.listEmployees = data?.listEmployees ?? [];
+    if (typeof this.leaveRequestModel.userId !== "string") this.leaveRequestModel.userId = this.leaveRequestModel?.User?.userId;
     this.authService.onTokenChange()
       .subscribe((token: NbAuthJWTToken) => {
         if (token.isValid()) {

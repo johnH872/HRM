@@ -182,6 +182,13 @@
       }
     }
     
+    .p-multiselect { 
+      max-height: 35px;
+      .p-multiselect-label {
+        max-width: 170px;
+        line-height: 1;
+      }
+    }
   }
 
   .disabledNoOfCasesDiv {

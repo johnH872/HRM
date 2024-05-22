@@ -54,15 +54,27 @@
         <form [formGroup]="frmGroup" class="form-function-filter">
           <div class="col-12" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="12px"
             style="height: 64px;">
-            <app-dropdown-filter class="dropdown-filter-function" [columnName]="'Choose role'"
+            <!-- <app-dropdown-filter class="dropdown-filter-function" [columnName]="'Choose role'"
               [filter]="configFilterRole" [value]="dataFilterWorkCalendar?.listRoles ?? null"
               (onFilter)="onFilterDropDownRole($event)">
-            </app-dropdown-filter>
+            </app-dropdown-filter> -->
 
-            <app-dropdown-filter class="dropdown-filter-function" [columnName]="'Choose employee'"
-              [filter]="configFilterEmployee" [value]="dataFilterWorkCalendar?.listProfile ?? null"
-              (onFilter)="onFilterDropDownEmployee($event)">
-            </app-dropdown-filter>
+            <p-multiSelect #multiSelectRoles (onChange)="onFilterDropDownRole($event)" class="p-inputtext-sm" [options]="listRoles"
+              optionValue="roleId" optionLabel="displayName" [filter]="true" filterBy="roleName,displayName"
+              placeholder="Choose Role">
+            </p-multiSelect>
+
+            <p-multiSelect (onChange)="onFilterDropDownEmployee($event)" class="p-inputtext-sm" [options]="listEmployees"
+              optionValue="userId" optionLabel="displayName" [filter]="true" filterBy="firstName,middleName,lastName,email"
+              placeholder="Choose Employee">
+              <ng-template let-employee pTemplate="item">
+                <div class="flex align-items-center gap-2 dropdown-items-with-img">
+                  <nb-user class="custom-nb-user-small" size="small"
+                    [name]="(employee?.firstName || '') + ' '  + (employee?.middleName || '') + ' ' + (employee?.lastName||'')"
+                    [title]="employee.email" [showTitle]="true" [picture]=" employee?.avatarUrl"></nb-user>
+                </div>
+              </ng-template>
+            </p-multiSelect>
 
             <mat-label style="font-size: 14px;">From date:</mat-label>
             <mat-form-field class="form-function-filter" appearance="fill">

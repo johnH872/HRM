@@ -1,0 +1,32 @@
+<nb-card class="body-card">
+  <nb-card-header>
+    <ng-container *ngIf="titleHeader == null">
+      No Title
+    </ng-container>
+    <ng-container *ngIf="titleHeader !== null">
+      {{ titleHeader }}
+    </ng-container>
+  </nb-card-header>
+  <nb-tabset>
+    <nb-tab tabTitle="Attendance">
+      <nb-list>
+        <nb-list-item *ngFor="let item of lstAttendanceDetails"
+          (click)="(isAdmin) ? openAttendanceDetail(item) : ''">
+          {{ item?.punchinDate ? (item?.punchinDate | dateTimeToTime) : '??:??:??' }} - {{ item?.punchoutDate ?
+          (item?.punchoutDate | dateTimeToTime) : '??:??:??' }} = {{ item?.duration }}h
+        </nb-list-item>
+      </nb-list>
+    </nb-tab>
+    <nb-tab tabTitle="Leave Request">
+      <nb-list>
+        <nb-list-item *ngFor="let item of lstLeaveRequestDetails"
+          (click)="(isAdmin) ? openLeaveRequestDetail(item) : ''">
+          <mat-icon style="margin-right: 0px !important;"
+            [ngStyle]="{'color': item?.leaveEntitlement?.leaveType?.isPaidSalary ? (item?.leaveEntitlement?.leaveTypeId === bonusTypeId ? '#00ced1' : '#3366cc') : '#996600'}">person_off</mat-icon>
+          {{ item?.leaveDateFrom | dateTimeToTime }} - {{ item?.leaveDateTo | dateTimeToTime }} = {{ item?.numberOfHour
+          }}h
+        </nb-list-item>
+      </nb-list>
+    </nb-tab>
+  </nb-tabset>
+</nb-card>

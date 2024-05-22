@@ -21,6 +21,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddEditWorkCalendarDetailComponent } from './add-edit-work-calendar-detail/add-edit-work-calendar-detail.component';
 import { TblActionType } from '../../shared/enum/tbl-action-type.enum';
 import { RoleManagementService } from '../../shared/services/role-management.service';
+import { EmployeeModel } from '../../shared/models/employee.model';
+import { RoleModel } from '../../shared/models/role-model';
 
 @Component({
   selector: 'app-work-calendar-management',
@@ -32,6 +34,8 @@ export class WorkCalendarManagementComponent implements OnInit {
   @ViewChild('matSelectStatus') matSelectStatus: MatSelect;
 
   user;
+  listEmployees: EmployeeModel[];
+  listRoles: RoleModel[];
   frmGroup: FormGroup;
   timeMode = 'Week';
   viewMode = 'Both';
@@ -80,39 +84,49 @@ export class WorkCalendarManagementComponent implements OnInit {
     private dataStateService: DatastateService,
     private dialog: MatDialog,
   ) { 
+    this.userService.getAllEmployee().subscribe(resp => {
+      if (resp.result) {
+        this.listEmployees = resp.result;
+        this.listEmployees.map(employee => employee.displayName = `${employee?.firstName} ${employee?.middleName} ${employee?.lastName}`);
+      } 
+    });
+    this.roleService.getRoles().subscribe(resp => {
+      if (resp.result) {
+        this.listRoles = resp.result;
+      }
+    });
     this.dataFilterWorkCalendar = new DataFilterWorkCalendar();
-    this.configFilterEmployee = {
-      filterType: FilterType.DropDown,
-      filterValue: this.userService.getAllEmployee().pipe(map(x => {
-        if (x.result) {
-          return x.result.map(item => Object.assign({ text: `${item?.firstName} ${item?.lastName}`, value: item?.userId }));
-        } else return [];
-      })),
-      displayText: 'text',
-      displayValue: 'value',
-      firstLoad: true
-    } as FilterConfig;
+    // this.configFilterEmployee = {
+    //   filterType: FilterType.DropDown,
+    //   filterValue: this.userService.getAllEmployee().pipe(map(x => {
+    //     if (x.result) {
+    //       return x.result.map(item => Object.assign({ text: `${item?.firstName} ${item?.lastName}`, value: item?.userId }));
+    //     } else return [];
+    //   })),
+    //   displayText: 'text',
+    //   displayValue: 'value',
+    //   firstLoad: true
+    // } as FilterConfig;
     this.authService.onTokenChange().subscribe((token: NbAuthJWTToken) => {
       if (token.isValid()) {
         this.user = token.getPayload().user;
       }
     });
-    this.configFilterRole = {
-      filterType: FilterType.DropDown,
-      filterValue: this.roleService.getRoles().pipe(map(x => {
-        if (x.result) {
-          x.result.map(item => {
-            var indexRole = this.listStatusRole.findIndex(role => role.display === item.displayName);
-            if (indexRole > -1) this.listStatusRole[indexRole].value = item.roleId;
-          });
-          return x.result.map(item => Object.assign({ text: `${item?.displayName}`, value: item.roleId }));
-        } else return [];
-      })),
-      displayText: 'text',
-      displayValue: 'value',
-      firstLoad: true
-    } as FilterConfig;
-    this.userService.getAllEmployee();
+    // this.configFilterRole = {
+    //   filterType: FilterType.DropDown,
+    //   filterValue: this.roleService.getRoles().pipe(map(x => {
+    //     if (x.result) {
+    //       x.result.map(item => {
+    //         var indexRole = this.listStatusRole.findIndex(role => role.display === item.displayName);
+    //         if (indexRole > -1) this.listStatusRole[indexRole].value = item.roleId;
+    //       });
+    //       return x.result.map(item => Object.assign({ text: `${item?.displayName}`, value: item.roleId }));
+    //     } else return [];
+    //   })),
+    //   displayText: 'text',
+    //   displayValue: 'value',
+    //   firstLoad: true
+    // } as FilterConfig;
     this.dataStateService.getDataStateByType('WORK_TYPE').subscribe(resp => {
       if (resp.result) {
         this.lstWorkType = resp.result;
@@ -271,13 +285,13 @@ export class WorkCalendarManagementComponent implements OnInit {
 
   onFilterDropDownEmployee(event) {
     if (event) {
-      this.dataFilterWorkCalendar.listProfile = event;
+      this.dataFilterWorkCalendar.listProfile = event?.value;
     }
   }
 
   onFilterDropDownRole(event) {
     if (event) {
-      this.dataFilterWorkCalendar.listRoles = event;
+      this.dataFilterWorkCalendar.listRoles = event?.value;
       this.listStatusRoleChoose = [];
       this.dataFilterWorkCalendar?.listRoles?.map(role => {
         var index = this.listStatusRole.findIndex(item => item.value === role);

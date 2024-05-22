@@ -48,6 +48,7 @@ export class AddEditAttendanceComponent implements OnInit, OnDestroy, AfterViewI
     this.action = data?.action ?? TblActionType.Add;
     this.attendanceModel = data?.model ?? new AttendanceModel();
     this.listEmployees = data?.listEmployees ?? [];
+    if (typeof this.attendanceModel.userId !== "string") this.attendanceModel.userId = this.attendanceModel?.User?.userId;
     this.authService.onTokenChange()
       .subscribe((token: NbAuthJWTToken) => {
         if (token.isValid()) {
