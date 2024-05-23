@@ -3,7 +3,7 @@ import db from '../models/index.js'
 import { leaveRequestStatus } from '../models/enums/leaveRequestStatus.js';
 const dbContext = await db;
 import moment from "moment/moment.js";
-import { Op } from "sequelize";
+import { Op, where, literal } from "sequelize";
 import { sendNotification } from "../utils/notification.js";
 import { NotificationType } from "../models/enums/notificationType.js";
 
@@ -122,6 +122,45 @@ class LeaveRequestController {
                                 NotificationType.LEAVE_REQUEST,
                                 model.userId
                             );
+                        }
+
+                        // handle working hours of work calendar
+                        if (model.status === leaveRequestStatus.APPROVED) {
+                            var startDate = new Date(result.result.leaveDateFrom);
+                            var endDate = new Date(result.result.leaveDateTo);
+                            var currentDate = startDate;
+                            while (currentDate.getTime() < endDate.getTime()) {
+                                const numberOfHours = await calculateWorkingHour(currentDate, endDate);
+                                if (numberOfHours > 8) {
+                                    const swappedDate = new Date(currentDate);
+                                    swappedDate.setHours(17);
+                                    swappedDate.setMinutes(30);
+                                    numberOfHours = await calculateWorkingHour(currentDate, swappedDate);
+                                }
+                                currentDate.setHours(0);
+                                var queryWorkCalendar = {
+                                    [Op.and]: [
+                                        literal(`DATE('${currentDate.toISOString()}') = DATE(${'WorkCalendar.workingDate'})`),
+                                        literal(`${'WorkCalendar.userId'} = '${result.result.userId}'`),
+                                    ],
+                                };
+                                var existingWorkCalendar = await dbContext.WorkCalendar.findOne({
+                                    where: queryWorkCalendar
+                                });
+                                existingWorkCalendar = existingWorkCalendar.dataValues;
+                                if (existingWorkCalendar) {
+                                    await dbContext.WorkCalendar.update({
+                                        workingHour: existingWorkCalendar.workingHour - numberOfHours
+                                    }, {
+                                        where: {
+                                            workCalendarId: existingWorkCalendar.workCalendarId
+                                        }
+                                    });
+                                }
+                                currentDate.setDate(currentDate.getDate() + 1);
+                                currentDate.setHours(8);
+                                currentDate.setMinutes(30);
+                            }
                         }
                     } else {
                         result.message = 'Can not save Leave Request';

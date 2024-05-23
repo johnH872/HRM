@@ -4,8 +4,8 @@
     <ng-template pTemplate="left">
       <button *ngIf="isAdmin" pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-button-sm mr-2"
         (click)="addEditLeaveEntitlement()"></button>
-      <button *ngIf="isAdmin" pButton pRipple [label]="Delete" icon="pi pi-trash" class="p-button-danger p-button-sm"
-        (click)="deleteSelectedEntitlement()" [disabled]="!selectedLeaveEntitlements || !selectedLeaveEntitlements?.length"></button>
+      <!-- <button *ngIf="isAdmin" pButton pRipple [label]="Delete" icon="pi pi-trash" class="p-button-danger p-button-sm"
+        (click)="deleteSelectedEntitlement()" [disabled]="!selectedLeaveEntitlements || !selectedLeaveEntitlements?.length"></button> -->
     </ng-template>
 
     <ng-template pTemplate="right">
@@ -97,8 +97,8 @@
         <td *ngIf="isAdmin">
           <button pButton pRipple icon="pi pi-pencil" class="p-button-sm  p-button-success mr-2"
             (click)="addEditLeaveEntitlement(leaveEntitlement)"></button>
-          <button pButton pRipple icon="pi pi-trash" class="p-button-sm p-button-warning"
-            (click)="deleteLeaveEntitlement(leaveEntitlement)"></button>
+          <!-- <button pButton pRipple icon="pi pi-trash" class="p-button-sm p-button-warning"
+            (click)="deleteLeaveEntitlement(leaveEntitlement)"></button> -->
         </td>
       </tr>
     </ng-template>

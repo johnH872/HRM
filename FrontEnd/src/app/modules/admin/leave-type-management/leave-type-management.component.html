@@ -4,8 +4,8 @@
     <ng-template pTemplate="left">
       <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-sm p-button-success mr-2"
         (click)="addEditLeaveType()"></button>
-      <button pButton pRipple [label]="Delete" icon="pi pi-trash" class="p-button-sm p-button-danger"
-        (click)="deleteSelectedLeaveType()" [disabled]="!selectedLeaveTypes || !selectedLeaveTypes?.length"></button>
+      <!-- <button pButton pRipple [label]="Delete" icon="pi pi-trash" class="p-button-sm p-button-danger"
+        (click)="deleteSelectedLeaveType()" [disabled]="!selectedLeaveTypes || !selectedLeaveTypes?.length"></button> -->
     </ng-template>
 
     <ng-template pTemplate="right">
@@ -91,8 +91,8 @@
         <td>
           <button pButton pRipple icon="pi pi-pencil" class="p-button-sm p-button-success mr-2"
             (click)="addEditLeaveType(leaveType)"></button>
-          <button pButton pRipple icon="pi pi-trash" class="p-button-sm p-button-warning"
-            (click)="deleteLeaveType(leaveType)"></button>
+          <!-- <button pButton pRipple icon="pi pi-trash" class="p-button-sm p-button-warning"
+            (click)="deleteLeaveType(leaveType)"></button> -->
         </td>
       </tr>
     </ng-template>
