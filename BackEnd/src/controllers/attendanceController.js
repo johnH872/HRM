@@ -30,8 +30,8 @@ class attendanceController {
                     'punchoutTime',
                     'punchoutNote',
                     'punchoutOffset',
-                    // 'punchInImageUrl', 
-                    // 'punchOutImageUrl',
+                    'punchInImageUrl', 
+                    'punchOutImageUrl',
                     [
                         literal(
                             `CASE 

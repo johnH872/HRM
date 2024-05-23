@@ -17,6 +17,9 @@ import { DateRangeModel } from '../../shared/models/dateRangeModel';
 import { LeaveRequestStatus } from '../../shared/enum/leave-request-status.enum';
 import { SettingManagementService } from '../../admin/setting-management/setting-management.service';
 import { WorkCalendarModel } from '../../admin/work-calendar-management/work-calendar-management.model';
+import { InfoCardComponent } from './info-card/info-card.component';
+import { InforCardType } from '../../shared/enum/info-card-type.enum';
+import { LeaveRequestModel } from '../../admin/leave-request-management/leave-request-management.model';
 
 @Component({
   selector: 'app-punch-in-out-webcam',
@@ -41,6 +44,8 @@ export class PunchInOutWebcamComponent implements OnInit, OnDestroy {
   detectedMaps: Map<String, number> = new Map();
   isOpeningDialog: boolean = false;
   cancelClickCouting: number = 0;
+  infoCardtype: InforCardType = InforCardType.WORK_CALENDAR;
+  leaveModel: LeaveRequestModel = new LeaveRequestModel();
   constructor(
     private elRef: ElementRef,
     private http: HttpClient,
@@ -112,7 +117,7 @@ export class PunchInOutWebcamComponent implements OnInit, OnDestroy {
           // );
           // const box = this.resizedDetections.detection.box;
           if (!this.detectedMaps.has(bestMatch.label)) this.detectedMaps.set(bestMatch.label, 0);
-          else if (bestMatch.distance <= 0.45) {
+          else if (bestMatch.distance <= 0.75) {
             var existedCount = this.detectedMaps.get(bestMatch.label);
             ++existedCount;
             this.detectedMaps.set(bestMatch.label, existedCount);
@@ -126,28 +131,31 @@ export class PunchInOutWebcamComponent implements OnInit, OnDestroy {
               // - not working time => no punch in
               // - on leaving times => no punch in
               var validAttendance = await this.checkAttendanceCondition(res.result.userId);
-
-              this.canvas.toBlob((blob: any) => {
-                if (res.result) {
-                  this.isOpeningDialog = true;
-                  this.dialog.open(PunchCardComponent, {
-                    disableClose: true,
-                    width: 'auto',
-                    height: 'auto',
-                    backdropClass: 'custom-backdrop',
-                    hasBackdrop: true,
-                    data: {
-                      model: res.result,
-                      blobImage: blob
-                    },
-                  }).afterClosed().subscribe(closeRes => {
-                    if (!closeRes) this.cancelClickCouting++;
-                    this.isOpeningDialog = false;
-                    this.detectedMaps.clear();
-                  });
-                }
-              }, 'image/png');
+              if (!validAttendance) this.openReminderPopup(res.result.email);
+              else {
+                this.canvas.toBlob((blob: any) => {
+                  if (res.result) {
+                    this.isOpeningDialog = true;
+                    this.dialog.open(PunchCardComponent, {
+                      disableClose: true,
+                      width: 'auto',
+                      height: 'auto',
+                      backdropClass: 'custom-backdrop',
+                      hasBackdrop: true,
+                      data: {
+                        model: res.result,
+                        blobImage: blob
+                      },
+                    }).afterClosed().subscribe(closeRes => {
+                      if (!closeRes) this.cancelClickCouting++;
+                      this.isOpeningDialog = false;
+                      this.detectedMaps.clear();
+                    });
+                  }
+                }, 'image/png');
+              }
             })
+
           }
           if (this.cancelClickCouting == 3) {
             this.isOpeningDialog = true;
@@ -208,7 +216,7 @@ export class PunchInOutWebcamComponent implements OnInit, OnDestroy {
       var startDate = moment().startOf('day').toDate();
       var endDate = moment().endOf('day').toDate();
       const workingdaysRes = await lastValueFrom(this.workCalendarService.getWorkCalendarByUserId(startDate, endDate, [userId]));
-      const leaveRequestRes = await lastValueFrom(this.leaveRequestService.getLeaveRequestByFilter(startDate, endDate, userId));
+      const leaveRequestRest = await lastValueFrom(this.leaveRequestService.getLeaveRequestByFilter(startDate, endDate, userId));
       const attendanceResult = await lastValueFrom(this.attendanceService.getAttendanceByEmployeeId(userId as string, new DateRangeModel(startDate, endDate)));
       var workingDay = new WorkCalendarModel();
       var leaveRequests = [];
@@ -218,7 +226,7 @@ export class PunchInOutWebcamComponent implements OnInit, OnDestroy {
       }
       if (workingdaysRes?.result && workingdaysRes?.result.length > 0) {
         workingDay = workingdaysRes.result[0];
-        leaveRequests = leaveRequestRes.result.filter(x => x.status == LeaveRequestStatus.APPROVED);
+        leaveRequests = leaveRequestRest.result?.filter(x => x.status == LeaveRequestStatus.APPROVED);
       }
       if (isPunchIn) {
         // If punching in, only accept if:
@@ -227,31 +235,48 @@ export class PunchInOutWebcamComponent implements OnInit, OnDestroy {
         if (workingDay && workingDay.workingHour > 0) result = true;
         if (leaveRequests.length > 0) {
           for (let leaveRequest of leaveRequests) {
-            if (moment().isBetween(moment(leaveRequest.leaveDateFrom), moment(leaveRequest.leaveDateTo))) result = false;
+            if (moment().isBetween(moment(leaveRequest.leaveDateFrom), moment(leaveRequest.leaveDateTo))) {
+              result = false;
+              this.infoCardtype = InforCardType.LEAVE;
+              this.leaveModel = leaveRequest;
+            }
           }
         }
       }
-
-      if(!result) this.openReminderPopup();
     } catch (err) {
       console.error(err);
     }
     return result;
   }
 
-  openReminderPopup() {
+  openReminderPopup(email: string) {
+    const title = `You cannot punch in.`;
+    var content = ``;
+    switch(this.infoCardtype) {
+      case InforCardType.LEAVE:
+        content = `<div>You cannot punch in with email: <b>${email}</b> because you have leave from: <div> 
+                  <div><b>${moment(this.leaveModel.leaveDateFrom).format('MMMM DD, YYYY HH:mm')}</b> to <b>${moment(this.leaveModel.leaveDateTo).format('MMMM DD, YYYY HH:mm')}</b>.</div>
+                  <div>If this is not you, feel fee to click on 'Cancel'.</div>`
+        break;
+      default:
+        content = `You cannot punch in because the system doesn't recognize today as a working day for you.`
+    }
+
     this.isOpeningDialog = true;
-    this.dialog.open(AlertCardComponent, {
+    this.dialog.open(InfoCardComponent, {
       disableClose: true,
       width: 'auto',
       height: 'auto',
       backdropClass: 'custom-backdrop',
       hasBackdrop: true,
       data: {
-        // model: res.result
+        title,
+        content
       }
     }).afterClosed().subscribe(closeRes => {
       this.isOpeningDialog = false;
+      this.cancelClickCouting ++;
+      this.detectedMaps.clear()
     });
   }
 }

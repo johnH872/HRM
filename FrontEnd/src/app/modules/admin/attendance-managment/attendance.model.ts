@@ -24,6 +24,9 @@ export class AttendanceModel {
     @prop()
     punchoutOffset: number;
 
+    punchInImageUrl: string;
+    punchOutImageUrl: string;
+
     User: EmployeeModel | null;
     duration: number | null;
 

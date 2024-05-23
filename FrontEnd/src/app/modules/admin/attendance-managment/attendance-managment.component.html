@@ -72,7 +72,7 @@
           <p-tableCheckbox [value]="attendance"></p-tableCheckbox>
         </td>
         <td>
-          <nb-user class="custom-nb-user-small" size="small" [name]=" (attendance?.User?.firstName || '') + ' '  + (attendance?.User?.middleName || '') + ' ' +
+          <nb-user (click)="openEmployeeDetail(attendance?.User)" class="custom-nb-user-small" size="small" [name]=" (attendance?.User?.firstName || '') + ' '  + (attendance?.User?.middleName || '') + ' ' +
           (attendance?.User?.lastName||'')" title="Engineer" [showTitle]="false"
             [picture]=" attendance?.User?.avatarUrl"></nb-user>
           <!-- <img [alt]="" src="{{ attendance?.User?.avatarUrl }}" width="32" style="vertical-align: middle" />

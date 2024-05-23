@@ -101,7 +101,6 @@ export class ReportAttendanceDialogComponent implements OnInit, OnDestroy {
       } else {
         this.dialModalRef.close(false);
       }
-
     });
   }
 }

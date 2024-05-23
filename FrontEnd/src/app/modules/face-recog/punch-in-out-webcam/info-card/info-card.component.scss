@@ -1,0 +1,36 @@
+svg {
+    width: 125px;
+    height: 110px;
+}
+
+.punch-card-container {
+    max-width: 500px;
+    padding: unset !important;
+}
+
+.text-center {
+    text-align: center;
+    width: 100%;
+}
+
+.main-text {
+    font-size: 18px;
+    font-weight: 600;
+    width: 100% !important;
+}
+
+.quote-text {
+    font-size: 14px;
+    width: 100% !important;
+    text-align: left;
+}
+
+.custom-card {
+    padding: unset !important;
+}
+
+:host {
+    ::ng-deep .p-card .p-card-content {
+        padding: unset;
+    }
+}

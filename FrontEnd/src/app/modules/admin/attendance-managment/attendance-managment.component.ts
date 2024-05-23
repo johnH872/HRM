@@ -9,6 +9,7 @@ import { Table } from 'primeng/table';
 import { AddEditAttendanceComponent } from './add-edit-attendance/add-edit-attendance.component';
 import { EmployeeModel } from '../../shared/models/employee.model';
 import { EmployeeManagementService } from '../employee-management/employee-management.service';
+import { EmployeeDetailDialogComponent } from '../employee-management/employee-detail-dialog/employee-detail-dialog.component';
 
 @Component({
   selector: 'app-attendance-managment',
@@ -61,7 +62,7 @@ export class AttendanceManagmentComponent implements OnInit, OnDestroy {
     this.loading = !this.loading;
     var attendancePagingResults = await this.attendanceService.getAllAttendance().pipe(takeUntil(this.destroy$)).toPromise();
     if (attendancePagingResults.result) {
-      if(this.isOnlyCurrentUser) {
+      if (this.isOnlyCurrentUser) {
         attendancePagingResults.result = attendancePagingResults.result.filter(x => x.userId === this.currentUser.userId);
       }
       this.dataTable = attendancePagingResults.result;
@@ -96,7 +97,7 @@ export class AttendanceManagmentComponent implements OnInit, OnDestroy {
   }
 
   prev() {
-      this.first = this.first - this.rows;
+    this.first = this.first - this.rows;
   }
 
   async reset() {
@@ -105,8 +106,8 @@ export class AttendanceManagmentComponent implements OnInit, OnDestroy {
   }
 
   pageChange(event) {
-      this.first = event.first;
-      this.rows = event.rows;
+    this.first = event.first;
+    this.rows = event.rows;
   }
 
   clear(table: Table) {
@@ -116,8 +117,25 @@ export class AttendanceManagmentComponent implements OnInit, OnDestroy {
   deleteAttendance(model: AttendanceModel) {
 
   }
-  
+
   deleteSelectedAttendance() {
 
+  }
+
+  openEmployeeDetail(employee: EmployeeModel = null) {
+    this.dialog.open(EmployeeDetailDialogComponent, {
+      width: '90vw',
+      height: '90vh',
+      backdropClass: 'custom-backdrop',
+      hasBackdrop: true,
+      data: {
+        model: employee,
+        action: TblActionType.Edit
+      },
+    }).afterClosed().subscribe(closeRes => {
+      if (closeRes) {
+
+      }
+    });
   }
 }

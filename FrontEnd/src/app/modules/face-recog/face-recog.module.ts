@@ -8,6 +8,7 @@ import { ThemeModule } from 'src/app/@theme/theme.module';
 import { SharedModule } from '../shared/shared.module';
 import { AlertCardComponent } from './punch-in-out-webcam/alert-card/alert-card.component';
 import { ReportAttendanceDialogComponent } from './punch-in-out-webcam/report-attendance-dialog/report-attendance-dialog.component';
+import { InfoCardComponent } from './punch-in-out-webcam/info-card/info-card.component';
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import { ReportAttendanceDialogComponent } from './punch-in-out-webcam/report-at
     PunchInOutWebcamComponent,
     PunchCardComponent,
     AlertCardComponent,
-    ReportAttendanceDialogComponent
+    ReportAttendanceDialogComponent,
+    InfoCardComponent
   ],
   imports: [
     SharedModule,
