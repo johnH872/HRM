@@ -250,11 +250,11 @@ export class PunchInOutWebcamComponent implements OnInit, OnDestroy {
   }
 
   openReminderPopup(email: string) {
-    const title = `You cannot punch in.`;
+    const title = `<div>You cannot punch in with email: <b>${email}</b>.</div> `;
     var content = ``;
     switch(this.infoCardtype) {
       case InforCardType.LEAVE:
-        content = `<div>You cannot punch in with email: <b>${email}</b> because you have leave from: <div> 
+        content = `<div>You cannot punch in because you have leave from: </div> 
                   <div><b>${moment(this.leaveModel.leaveDateFrom).format('MMMM DD, YYYY HH:mm')}</b> to <b>${moment(this.leaveModel.leaveDateTo).format('MMMM DD, YYYY HH:mm')}</b>.</div>
                   <div>If this is not you, feel fee to click on 'Cancel'.</div>`
         break;

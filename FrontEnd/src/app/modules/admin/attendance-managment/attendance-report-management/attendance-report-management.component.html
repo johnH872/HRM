@@ -17,7 +17,7 @@
     [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '100%' }" (onPage)="pageChange($event)"
     [rowsPerPageOptions]="[10, 25, dataTable?.length]" [loading]="loading" [globalFilterFields]="['email']"
     editMode="row" [(selection)]="selectedReports" [rowHover]="true" [scrollable]="true" scrollHeight="700px"
-    dataKey="userId">
+    dataKey="attendanceReportId">
     <ng-template pTemplate="header">
       <tr>
         <th style="width: 4rem">
@@ -44,6 +44,11 @@
           <p-sortIcon field="statusId"></p-sortIcon>
         </th>
         <th pSortableColumn="type">
+          Rejected Reason
+          <p-columnFilter type="text" field="type" display="menu"></p-columnFilter>
+          <p-sortIcon field="type"></p-sortIcon>
+        </th>
+        <th pSortableColumn="type">
           type
           <p-columnFilter type="text" field="type" display="menu"></p-columnFilter>
           <p-sortIcon field="type"></p-sortIcon>
@@ -60,6 +65,7 @@
         <td>{{ attendanceReport?.note }}</td>
         <td>{{ attendanceReport?.createdAt | dateTimeFormat }}</td>
         <td><ng-container *ngTemplateOutlet="status; context: { row: attendanceReport.status }"></ng-container></td>
+        <td>{{ attendanceReport?.reasonRejected }}</td>
         <td>{{ attendanceReport?.type === "PUNCHIN" ? "Punch in" : "Punch out" }}</td>
         <td>
           <button *ngIf="attendanceReport.status.dataStateId === 1"

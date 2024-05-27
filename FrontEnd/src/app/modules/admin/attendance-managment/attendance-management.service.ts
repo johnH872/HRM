@@ -57,6 +57,10 @@ export class AttendanceManagementService {
     return this.http.post<ReturnResult<ReportAttendanceModel[]>>(`${this.baseUrl}/DeleteAttendanceReport`, ids)
   }
 
+  deleteAttendance(ids: number[]): Observable<ReturnResult<AttendanceModel[]>> {
+    return this.http.post<ReturnResult<AttendanceModel[]>>(`${this.baseUrl}/DeleteAttendance`, ids)
+  }
+
   getAttendanceRange(userId: string, page: PagingRangeDateFilter): Observable<ReturnResult<AttendanceModel[]>> {
     return this.http.post<ReturnResult<AttendanceModel[]>>(`${this.baseUrl}/GetAttendanceRange?userId=${userId}&timezone=${new Date().getTimezoneOffset()/60}`, page);
   }

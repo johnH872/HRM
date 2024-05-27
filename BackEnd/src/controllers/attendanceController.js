@@ -310,12 +310,13 @@ class attendanceController {
         var returnResult = new ReturnResult();
         try {
             returnResult.result = false;
-            const { statusId, attendanceReportId } = req.body;
+            const { statusId, attendanceReportId, reasonRejected } = req.body;
             const userId = req.query.userId;
             const oldAttendanceReport = await dbContext.AttendanceReport.findByPk(attendanceReportId);
             var oldStatusId = oldAttendanceReport.statusId;
             const updatedRes = await dbContext.AttendanceReport.update({
-                statusId
+                statusId,
+                reasonRejected
             }, {
                 where: {
                     attendanceReportId
@@ -324,6 +325,7 @@ class attendanceController {
             if (updatedRes) {
                 returnResult.result = true;
             }
+            // Update attendance data when attendance has been approved
             if (oldStatusId == 1 && statusId == 2 && userId) {
                 if (oldAttendanceReport.type === 'PUNCHIN') {
                     await dbContext.Attendance.create({
@@ -362,14 +364,17 @@ class attendanceController {
                 }
 
             }
-            const userModel = await dbContext.User.findOne({ where: { email: oldAttendanceReport.email } });
-            if (userModel) {
-                sendNotification(
-                    'Attendance report', `Your attendance report on at ${moment(oldAttendanceReport.createdAt).format('MMMM DD, YYYY HH:mm')} has been ${statusId == leaveRequestStatus.APPROVED ? 'approved' : 'rejected'}`,
-                    '/admin/attendance-report',
-                    NotificationType.ATTENDANCE_REPORT,
-                    userModel.ownerId
-                );
+            // Send notification when approve or reject attendance report
+            if(statusId != oldAttendanceReport.statusId && (statusId == leaveRequestStatus.APPROVED || statusId == leaveRequestStatus.REJECTED)) {
+                const userModel = await dbContext.User.findOne({ where: { email: oldAttendanceReport.email } });
+                if (userModel) {
+                    sendNotification(
+                        'Attendance report', `Your attendance report on at ${moment(oldAttendanceReport.createdAt).format('MMMM DD, YYYY HH:mm')} has been ${statusId == leaveRequestStatus.APPROVED ? 'approved' : 'rejected'}`,
+                        '/admin/attendance-report',
+                        NotificationType.ATTENDANCE_REPORT,
+                        userModel.ownerId
+                    );
+                }
             }
             res.status(200).json(returnResult);
         } catch (error) {
@@ -387,6 +392,28 @@ class attendanceController {
                 const updatedRes = await dbContext.AttendanceReport.destroy({
                     where: {
                         attendanceReportId: removeIds
+                    }
+                });
+                if (updatedRes) {
+                    returnResult.result = true;
+                }
+            }
+            res.status(200).json(returnResult);
+        } catch (error) {
+            res.status(400).json(error);
+            console.log(error)
+        }
+    }
+
+    async deleteAttendance(req, res, next) {
+        var returnResult = new ReturnResult();
+        try {
+            returnResult.result = false;
+            const removeIds = req.body;
+            if (removeIds?.length > 0) {
+                const updatedRes = await dbContext.Attendance.destroy({
+                    where: {
+                        attendanceId: removeIds
                     }
                 });
                 if (updatedRes) {

@@ -12,6 +12,7 @@ import { LeaveRequestStatus } from 'src/app/modules/shared/enum/leave-request-st
 import { ReportAttendanceDialogComponent } from 'src/app/modules/face-recog/punch-in-out-webcam/report-attendance-dialog/report-attendance-dialog.component';
 import { TblActionType } from 'src/app/modules/shared/enum/tbl-action-type.enum';
 import { ConfirmModalComponent } from 'src/app/modules/shared/components/confirm-modal/confirm-modal.component';
+import { DialogGetReasonRejectedComponent } from '../../leave-request-management/dialog-get-reason-rejected/dialog-get-reason-rejected.component';
 
 @Component({
   selector: 'app-attendance-report-management',
@@ -117,8 +118,18 @@ export class AttendanceReportManagementComponent implements OnInit, OnDestroy {
     })
   }
 
-  saveAttendanceReport(isApprove: boolean, attendanceReport: ReportAttendanceModel) {
+  async saveAttendanceReport(isApprove: boolean, attendanceReport: ReportAttendanceModel) {
     attendanceReport.statusId = isApprove ? LeaveRequestStatus.APPROVED : LeaveRequestStatus.REJECTED;
+    if(!isApprove) {
+      const dialogRef = this.dialog.open(DialogGetReasonRejectedComponent, {
+        backdropClass: 'custom-backdrop',
+        hasBackdrop: true,
+      });
+
+      var dialogRes = await lastValueFrom(dialogRef.afterClosed());
+      if(dialogRes) attendanceReport.reasonRejected = dialogRes;
+    }
+    attendanceReport
     this.attendanceService.saveAttendanceReport(attendanceReport, this.userModel.userId).subscribe(res => {
       if (res.result) {
         this.messageService.add({

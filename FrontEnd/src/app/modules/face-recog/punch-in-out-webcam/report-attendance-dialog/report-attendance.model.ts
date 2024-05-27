@@ -12,7 +12,8 @@ export class ReportAttendanceModel {
     @prop()
     note: String;
     @prop()
-    type: Object; 
+    type: Object;
+    reasonRejected: String; 
     statusId: number;
     status: DataStateModel;
     imageUrl: String;

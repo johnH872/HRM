@@ -15,7 +15,7 @@
             </svg>
         </div>
         <div fxLayout="column" fxLayoutAlign="start start" class="text-center">
-            <span class="main-text my-4">{{title}}</span>
+            <span [innerHTML]="title" class="main-text my-4"></span>
             <div [innerHTML]="content" class="quote-text mb-2"></div>
         </div>
         <div fxLayout="row" fxLayoutAlign="end center" style="padding: unset !important; margin-top: 1.5rem;"

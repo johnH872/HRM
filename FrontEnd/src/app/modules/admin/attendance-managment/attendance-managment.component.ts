@@ -10,6 +10,8 @@ import { AddEditAttendanceComponent } from './add-edit-attendance/add-edit-atten
 import { EmployeeModel } from '../../shared/models/employee.model';
 import { EmployeeManagementService } from '../employee-management/employee-management.service';
 import { EmployeeDetailDialogComponent } from '../employee-management/employee-detail-dialog/employee-detail-dialog.component';
+import { ConfirmModalComponent } from '../../shared/components/confirm-modal/confirm-modal.component';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-attendance-managment',
@@ -35,6 +37,7 @@ export class AttendanceManagmentComponent implements OnInit, OnDestroy {
     private employeeService: EmployeeManagementService,
     private dataStateService: DatastateService,
     private dialog: MatDialog,
+    private messageService: MessageService
   ) {
     this.employeeService.getAllEmployee().pipe(takeUntil(this.destroy$)).subscribe(res => {
       if (res.result) {
@@ -68,6 +71,7 @@ export class AttendanceManagmentComponent implements OnInit, OnDestroy {
       this.dataTable = attendancePagingResults.result;
     }
     this.loading = !this.loading;
+    this.selectedAttendances = [];
   }
 
   async addEditAttendance(model: AttendanceModel = null) {
@@ -114,12 +118,34 @@ export class AttendanceManagmentComponent implements OnInit, OnDestroy {
     table.clear();
   }
 
-  deleteAttendance(model: AttendanceModel) {
-
-  }
-
-  deleteSelectedAttendance() {
-
+  deleteSelectedAttendance(attendanceModel: AttendanceModel = null) {
+    var deleteIds = attendanceModel ? [attendanceModel.attendanceId] : this.selectedAttendances.map(x => x.attendanceId);
+    const dialogRef = this.dialog.open(ConfirmModalComponent, {
+      width: 'auto',
+      height: 'auto',
+      backdropClass: 'custom-backdrop',
+      hasBackdrop: true,
+      autoFocus: false,
+      data: {
+        message: `Do you wish to remove ${deleteIds.length} item(s)?`
+      }
+    });
+    dialogRef.afterClosed().subscribe(dialogRes => {
+      this.attendanceService.deleteAttendance(deleteIds).subscribe(res => {
+        if (res.result) {
+          this.messageService.add({
+            key: 'toast1', severity: 'success', summary: 'Success',
+            detail: `Delete successfully!`, life: 2000
+          });
+          this.refreshData();
+        } else {
+          this.messageService.add({
+            key: 'toast1', severity: 'warn', summary: 'Warning',
+            detail: `Failed!`, life: 2000
+          });
+        }
+      })
+    })
   }
 
   openEmployeeDetail(employee: EmployeeModel = null) {

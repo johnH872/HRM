@@ -41,6 +41,9 @@ export default (sequelize, DataTypes) => {
     statusId: {
       type: DataTypes.INTEGER
     },
+    reasonRejected: {
+      type: DataTypes.STRING
+    },
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE
