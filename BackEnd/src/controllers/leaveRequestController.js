@@ -72,7 +72,7 @@ class LeaveRequestController {
                     } else {
                         const ownerModel = await dbContext.User.findByPk(userModel.ownerId);
                         sendNotification(
-                            'Leave request', `${ownerModel.firstName || ''} ${ownerModel.middleName || ''} ${ownerModel.lastName || ''} assign for you a leave request.`,
+                            'Leave request', `${ownerModel.firstName || ''} ${ownerModel.middleName || ''} ${ownerModel.lastName || ''} assigned a leave request for you.`,
                             '/admin/leave-request',
                             NotificationType.LEAVE_REQUEST,
                             userModel.userId
