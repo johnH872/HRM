@@ -11,14 +11,14 @@ export class AdminComponent {
   user: any;
   menuAdmin = MENU_ITEMS_ADMIN;
   menuEmployee = MENU_ITEMS_EMPLOYEE;
-  roleUser: string;
+  roles: string[] = [];
 
   constructor(private authService: NbAuthService) {
     this.authService.onTokenChange()
     .subscribe((token: NbAuthJWTToken) => {
       if (token.isValid()) {
         this.user = token.getPayload()?.user; // here we receive a payload from the token and assigns it to our `user` variable 
-        this.roleUser = this.user?.roles[0]?.roleName;
+        this.roles = this.user?.roles?.map(x => x?.roleName);
       }
     });
   }
