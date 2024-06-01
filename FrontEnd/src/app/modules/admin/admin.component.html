@@ -1,5 +1,5 @@
 <ngx-one-column-layout>
     <nb-menu *ngIf="roles.includes('admin')" tag="menu" [items]="menuAdmin"></nb-menu>
-    <nb-menu *ngIf="roles.includes('employee')" tag="menu" [items]="menuEmployee"></nb-menu>
+    <nb-menu *ngIf="(roles.includes('employee') || roles.includes('manager')) && !roles.includes('admin')" tag="menu" [items]="menuEmployee"></nb-menu>
     <router-outlet></router-outlet>
 </ngx-one-column-layout>

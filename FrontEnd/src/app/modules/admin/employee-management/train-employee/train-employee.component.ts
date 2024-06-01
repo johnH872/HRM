@@ -50,6 +50,7 @@ export class TrainEmployeeComponent implements OnInit {
               key: 'toast1', severity: 'success', summary: 'Success',
               detail: `Add user face successfully!`, life: 2000
             });
+            this.dialModalRef.close();
           } else  this.messageService.add({
             key: 'toast1', severity: 'error', summary: 'Error',
             detail: `Add user face failed!`, life: 2000
