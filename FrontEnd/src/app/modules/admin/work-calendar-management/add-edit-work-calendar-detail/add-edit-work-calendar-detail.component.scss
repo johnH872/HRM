@@ -5,3 +5,11 @@
 :host ::ng-deep .p-fluid .p-calendar .p-inputtext {
     width: 60px !important;
 }
+
+::ng-deep .mat-mdc-menu-panel.mat-mdc-menu-panel {
+    max-width: 380px !important;
+}
+
+::ng-deep .mat-mdc-menu-content {
+    padding: 8px !important;
+}

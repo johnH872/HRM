@@ -31,7 +31,8 @@
       <div class="p-fluid p-grid p-formgrid p-md-1">
         <div class="p-field p-col-12">
           <label class="fs-14 fw-500" for="description">Description</label>
-          <textarea pInputTextarea class="p-inputtext-sm" formControlName="description" id="description"></textarea>
+          <textarea rows="5" pInputTextarea class="p-inputtext-sm" formControlName="description"
+            id="description"></textarea>
           <mat-error *ngIf="
               frmData?.controls?.description?.errors &&
               (frmData?.controls?.description?.dirty || 
@@ -42,19 +43,27 @@
     </div>
   </form>
 </mat-dialog-content>
-<div class="dialog-header" fxLayout="row" fxLayoutAlign="end end" mat-dialog-title
+<div class="dialog-header" fxLayout="row" fxLayoutGap="5" fxLayoutAlign="end end" mat-dialog-title
   style="margin: unset; padding-top: 40px" [nbSpinner]="isLoading">
   <ng-container *ngIf="user?.userId === data?.userId && !dataModel.isReviewed">
-    <p-button
-      label="Delete" [disabled]="!frmData.valid" [loading]="isLoading" icon="pi pi-times" (click)="deleteData()"
-      styleClass="p-button-sm p-button-rounded p-button-outlined p-button-danger"></p-button>
-    <p-button
-      label="Save" [disabled]="!frmData.valid" [loading]="isLoading" icon="pi pi-save" (click)="saveData()"
-      styleClass="p-button-sm p-button-rounded p-button-outlined p-button-success"></p-button>
+    <p-button label="Delete" [disabled]="!frmData.valid" [loading]="isLoading" icon="pi pi-times" (click)="deleteData()"
+      styleClass="p-button-sm p-button-rounded p-button-danger"></p-button>
+    <p-button label="Save" [disabled]="!frmData.valid" [loading]="isLoading" icon="pi pi-save" (click)="saveData()"
+      styleClass="p-button-sm p-button-rounded p-button-success"></p-button>
   </ng-container>
   <ng-container *ngIf="user?.userId === data?.User?.ownerId  && !dataModel.isReviewed">
-    <p-button
-      label="Reviewed" [loading]="isLoading" icon="pi pi-eye" (click)="reviewData()"
-      styleClass="p-button-sm p-button-rounded p-button-outlined p-button-success"></p-button>
+    <p-button label="Reviewed" [loading]="isLoading" icon="pi pi-eye" (click)="reviewData()"
+      styleClass="p-button-sm p-button-rounded p-button-success"></p-button>
   </ng-container>
+
+  <!-- <p-button *ngIf="action === actionTypes.Add" [loading]="isLoading" (onClick)="onSendReport()"
+                icon="pi pi-send" styleClass="p-button-sm p-button-info" label="Submit"></p-button>
+            <p-button
+                *ngIf="action === actionTypes.Edit && reportAttendanceModel.status.dataStateId === 1 && currentUser?.email != reportAttendanceModel?.email"
+                [loading]="isLoading" (onClick)="onSaveAttendanceReport(false)" icon="pi pi-times-circle"
+                styleClass="p-button-sm p-button-warning p-button-info" label="Reject"></p-button>
+            <p-button
+                *ngIf="action === actionTypes.Edit && reportAttendanceModel.status.dataStateId === 1 && currentUser?.email != reportAttendanceModel?.email"
+                [loading]="isLoading" (onClick)="onSaveAttendanceReport(true)" icon="pi pi-check-circle"
+                styleClass="p-button-sm p-button-success p-button-info" label="Approve"></p-button> -->
 </div>
