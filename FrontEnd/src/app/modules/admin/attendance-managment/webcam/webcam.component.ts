@@ -148,28 +148,26 @@ export class WebcamComponent implements OnInit, OnDestroy {
     var interations = 0;
     this.canvas.style.display = 'none';
 
-    console.log( this.videoInput.width,)
-
-    this.canvas.width = 80* window.innerWidth/100;
+    this.canvas.width = 80 * window.innerWidth / 100;
     this.canvas.height = window.innerHeight;
 
     this.captureInterval = setInterval(async () => {
       try {
         this.canvas
           .getContext("2d")
-          .drawImage(this.videoInput, 0, 0,80* window.innerWidth/100, window.innerHeight);
+          .drawImage(this.videoInput, 0, 0, 80 * window.innerWidth / 100, window.innerHeight);
         // Convert canvas data to a Blob
         this.canvas.toBlob(blob => {
           // Create a new File object
           // saveAs(blob, `${startIndex * 10 + interations}.png`);
           const file = new File([blob], `${startIndex * 10 + interations}.png`, { type: 'image/jpg' });
           images.push(file);
+          interations++;
+          if (interations == 10) {
+            clearInterval(this.captureInterval);
+            this.finishCapturing.emit(images);
+          }
         }, 'image/png');
-        interations++;
-        if (interations == 11) {
-          clearInterval(this.captureInterval);
-          this.finishCapturing.emit(images);
-        }
       } catch (error) {
         console.log(error);
         this.finishCapturing.emit([]);
