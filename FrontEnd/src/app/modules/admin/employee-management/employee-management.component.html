@@ -123,11 +123,11 @@
           {{ employee?.nationality }}
         </td>
         <td>
-          <button pButton pRipple icon="pi pi-pencil" class="p-button-success p-button-sm mr-2"
+          <button *ngIf="employee.ownerId == currentUser.userId || isAdmin" pButton pRipple icon="pi pi-pencil" class="p-button-success p-button-sm mr-2"
             (click)="addEditEmployee(employee)"></button>
           <button *ngIf="isAdmin" pButton pRipple icon="pi pi-trash" class="p-button-warning p-button-sm mr-2"
             (click)="deleteEmployee(employee)"></button>
-          <button pButton pRipple icon="pi pi-camera" class="p-button-info p-button-sm mr-2"
+          <button *ngIf="employee.ownerId == currentUser.userId || isAdmin" pButton pRipple icon="pi pi-camera" class="p-button-info p-button-sm mr-2"
             (click)="addEmployeeFaceRecog(employee)"></button>
         </td>
       </tr>
