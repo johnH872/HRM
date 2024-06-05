@@ -34,6 +34,8 @@ export class WorkCalendarManagementComponent implements OnInit {
   @ViewChild('matSelectStatus') matSelectStatus: MatSelect;
 
   user;
+  isAdmin: boolean = false;
+  
   listEmployees: EmployeeModel[];
   listRoles: RoleModel[];
   frmGroup: FormGroup;
@@ -110,6 +112,7 @@ export class WorkCalendarManagementComponent implements OnInit {
     this.authService.onTokenChange().subscribe((token: NbAuthJWTToken) => {
       if (token.isValid()) {
         this.user = token.getPayload().user;
+        if (this.user?.roles[0]?.roleName === 'admin') this.isAdmin = true;
       }
     });
     // this.configFilterRole = {
