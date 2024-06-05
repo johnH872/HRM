@@ -96,27 +96,24 @@ export class PopoverDetailScheduleCellComponent implements OnInit {
   }
 
   openLeaveRequestDetail(leaveRequestModel: any) {
-    this.leaveRequestService.getLeaveRequestById(leaveRequestModel?.leaveRequestId).subscribe(resp => {
-      if (resp.result) {
-        const modelLeaveRequest = resp.result;
-        const dialogRef = this.dialog.open(AddEditLeaveRequestComponent, {
-          disableClose: true,
-          height: '100vh',
-          width: '600px',
-          panelClass: 'dialog-detail',
-          autoFocus: false,
-          data: {
-            model: modelLeaveRequest,
-            action: TblActionType.Edit,
-            listEmployees: this.listEmployees
-          }
-        });
-        dialogRef.afterClosed().subscribe(response => {
-          if (response) {
-            this.onRefresh.emit(response);
-          }
-        });
-      }
-    });
+    if (leaveRequestModel) {
+      const dialogRef = this.dialog.open(AddEditLeaveRequestComponent, {
+        disableClose: true,
+        height: '100vh',
+        width: '600px',
+        panelClass: 'dialog-detail',
+        autoFocus: false,
+        data: {
+          model: leaveRequestModel,
+          action: TblActionType.Edit,
+          listEmployees: this.listEmployees
+        }
+      });
+      dialogRef.afterClosed().subscribe(response => {
+        if (response) {
+          this.onRefresh.emit(response);
+        }
+      });
+    }
   }
 }

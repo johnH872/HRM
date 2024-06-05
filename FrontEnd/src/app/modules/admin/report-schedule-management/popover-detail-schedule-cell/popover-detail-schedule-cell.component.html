@@ -23,7 +23,7 @@
           (click)="(isAdmin) ? openLeaveRequestDetail(item) : ''">
           <mat-icon style="margin-right: 0px !important;"
             [ngStyle]="{'color': item?.leaveEntitlement?.leaveType?.isPaidSalary ? (item?.leaveEntitlement?.leaveTypeId === bonusTypeId ? '#00ced1' : '#3366cc') : '#996600'}">person_off</mat-icon>
-          {{ item?.leaveDateFrom | dateTimeToTime }} - {{ item?.leaveDateTo | dateTimeToTime }} = {{ item?.numberOfHour
+          {{ item?.leaveDateFrom | dateTimeToTimeNotSeconds }} - {{ item?.leaveDateTo | dateTimeToTimeNotSeconds }} = {{ item?.numberOfHour
           }}h
         </nb-list-item>
       </nb-list>

@@ -64,5 +64,16 @@ export class DateTimeToTimePipe implements PipeTransform {
       return this.dateService.format(new Date(value), environment.formateHoursTime);
     }
   }
+}
 
+@Pipe({
+  name: 'dateTimeToTimeNotSeconds'
+})
+export class DateTimeToTimeNotSecondsPipe implements PipeTransform {
+  constructor(protected dateService: NbDateService<Date>) { }
+  transform(value: any, args?: any): any {
+    if (value != null && value.length > 0) {
+      return this.dateService.format(new Date(value), environment.formateHoursTimeNotSeconds);
+    }
+  }
 }

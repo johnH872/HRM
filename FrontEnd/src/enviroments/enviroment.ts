@@ -6,6 +6,7 @@ export const environment = {
     formatDateTimeZone: 'yyyy-MM-dd\'T\'HH:mm:ss x',
     formatDate: 'MM/dd/yyyy',
     formateHoursTime: 'HH:mm:ss',
+    formateHoursTimeNotSeconds: 'HH:mm',
     
     production: true,
     host,

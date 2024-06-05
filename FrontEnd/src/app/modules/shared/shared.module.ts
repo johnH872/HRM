@@ -72,7 +72,7 @@ import { EmployeeSearchingComponent } from './components/employee-searching/empl
 import { NumberFormatPipe } from './pipes/number-format.pipe';
 import { HighlightTextSearchingPipe } from './pipes/highlight-text-searching.pipe';
 import { MatNativeDateModule } from '@angular/material/core';
-import { DateFormatPipe, DateTimeFormatPipe, DateTimeToTimePipe } from './pipes/date-time-format.pipe';
+import { DateFormatPipe, DateTimeFormatPipe, DateTimeToTimeNotSecondsPipe, DateTimeToTimePipe } from './pipes/date-time-format.pipe';
 import {MatStepperModule} from '@angular/material/stepper';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { DateArrFormatPipe } from './pipes/date-arr-format.pipe';
@@ -200,6 +200,7 @@ const primengModules = [
     DateFormatPipe,
     DateArrFormatPipe,
     DateTimeToTimePipe,
+    DateTimeToTimeNotSecondsPipe,
   ],
   imports: [
     CommonModule,
@@ -256,6 +257,7 @@ const primengModules = [
     DateFormatPipe,
     DateArrFormatPipe,
     DateTimeToTimePipe,
+    DateTimeToTimeNotSecondsPipe,
   ],
   providers: [
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},
@@ -272,6 +274,7 @@ const primengModules = [
     NumberFormatPipe,
     NbAuthJWTToken,
     DateTimeToTimePipe,
+    DateTimeToTimeNotSecondsPipe,
   ]
 })
 export class SharedModule { }
