@@ -160,7 +160,7 @@
           </p-dropdown>
           <p-dropdown [options]="lstWorkHours" [(ngModel)]="data.workingHour" [readonly]="true"
             (onChange)="editWorkHour($event, data)"></p-dropdown>
-          <i class="pi pi-plus-circle"
+          <i *ngIf="user?.userId === data?.userId" class="pi pi-plus-circle"
             style="align-items: center; display: flex;"
             [matMenuTriggerFor]="addEditWorkCalendarDetail"
             [matMenuTriggerData]="{ data: data, model: null }"></i>

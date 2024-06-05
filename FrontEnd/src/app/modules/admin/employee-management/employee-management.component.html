@@ -113,7 +113,7 @@
         <td>{{ employee?.phoneNumber }}</td>
         <td>{{ employee?.jobTitle }}</td>
         <td>
-          <nb-user (click)="openEmployeeDetail(employee.manager)" class="custom-nb-user-small" size="small" [name]="(employee?.manager?.firstName || '') + ' '  + (employee?.manager?.middleName || '') + ' ' +
+          <nb-user *ngIf="employee?.manager" (click)="openEmployeeDetail(employee.manager)" class="custom-nb-user-small" size="small" [name]="(employee?.manager?.firstName || '') + ' '  + (employee?.manager?.middleName || '') + ' ' +
           (employee?.manager?.lastName||'')" title="Engineer" [showTitle]="false"
             [picture]="employee?.manager?.avatarUrl"></nb-user>
         </td>
