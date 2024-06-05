@@ -123,7 +123,7 @@ async function generateNotification() {
                 return;
             }
             for (let userId of validUserIds) {
-                fcmTokens = [...fcmTokens, ...fcmTokenCache[userId]];
+                fcmTokens = [...fcmTokens || [], ...fcmTokenCache[userId] || []];
                 // Create model for creating notification in DB
                 notificationModels.push({
                     userId,

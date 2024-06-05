@@ -30,6 +30,7 @@ export class AddEditWorkCalendarDetailComponent implements OnInit, OnDestroy {
   frmData: FormGroup;
   isLoading = false;
   isAdmin: boolean = false;
+  tblactions = TblActionType;
 
   constructor(
     // public dialModalRef: MatDialogRef<AddEditWorkCalendarDetailComponent>,

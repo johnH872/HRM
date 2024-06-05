@@ -11,7 +11,7 @@ export const sendNotification = async (title, content, redirectUrl, type, userId
     try {
         var notificationModels = [];
         const fcmTokenCache = JSON.parse(await localRedis.get(process.env.DB_HOST));
-        var fcmTokens = [...fcmTokenCache[userId]];
+        var fcmTokens = [...fcmTokenCache[userId] || []];
         notificationModels.push({
             userId,
             type,

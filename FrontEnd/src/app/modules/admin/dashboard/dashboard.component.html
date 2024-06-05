@@ -4,7 +4,8 @@
         <!-- attendance reports -->
         <div fxLayout="column" fxFlex="50">
             <div [nbSpinner]="isLoadingDashboard" class="card flex justify-content-center">
-                <p-orderList [value]="dashboardData.waitingAttendanceReports" [listStyle]="{ 'height': '42vh' }" header="Waiting Reports">
+                <p-orderList [value]="dashboardData.waitingAttendanceReports" [listStyle]="{ 'height': '42vh' }"
+                    header="Waiting Reports">
                     <ng-template let-report pTemplate="item">
                         <div fxLayout="row" fxLayoutGap="5">
                             <img (click)="openReportDialog(report)" fxFlex="20" [src]="report?.imageUrl"
@@ -123,7 +124,7 @@
                             [radius]="40" [outerStrokeWidth]="8" [innerStrokeWidth]="8"
                             [outerStrokeColor]="usedAnnualLeavePercentage >=67 && usedAnnualLeavePercentage <= 100 ? '#4CC790' : usedAnnualLeavePercentage >=33 && usedAnnualLeavePercentage <67 ? '#3c9ee5' : '#ff9f00'"
                             [animation]="true" [animationDuration]="300" [titleFontSize]="'13px'"
-                            [title]="annualLeaveEntitlement ? ((annualLeaveEntitlement?.usableLeave - annualLeaveEntitlement?.usedLeave)?.toFixed(1) || 0 + '/' + annualLeaveEntitlement?.usableLeave?.toFixed(1) || 0)  || 0 : '0/0'"
+                            [title]="annualLeaveEntitlement ? ((annualLeaveEntitlement?.usableLeave - annualLeaveEntitlement?.usedLeave)?.toFixed(1) + '/' + annualLeaveEntitlement?.usableLeave?.toFixed(1)) : '0/0'"
                             [maxPercent]="100"></circle-progress>
                         <span class="fs-13 header-text">Annual Leaves</span>
                     </div>
@@ -133,7 +134,7 @@
                             [radius]="40" [outerStrokeWidth]="8" [innerStrokeWidth]="8"
                             [outerStrokeColor]="usedSeniorityLeavePercentage >=67 && usedSeniorityLeavePercentage <= 100 ? '#4CC790' : usedSeniorityLeavePercentage >=33 && usedSeniorityLeavePercentage <67 ? '#3c9ee5' : '#ff9f00'"
                             [animation]="true" [animationDuration]="300" [titleFontSize]="'13px'"
-                            [title]="seniorityLeaveEntitlement ? ((seniorityLeaveEntitlement?.usableLeave - seniorityLeaveEntitlement?.usedLeave)?.toFixed(1) || 0 + '/' + seniorityLeaveEntitlement?.usableLeave?.toFixed(1) || 0)  || 0 : '0/0'"
+                            [title]="seniorityLeaveEntitlement ? ((seniorityLeaveEntitlement?.usableLeave - seniorityLeaveEntitlement?.usedLeave)?.toFixed(1) + '/' + seniorityLeaveEntitlement?.usableLeave?.toFixed(1)) : '0/0'"
                             [maxPercent]="100"></circle-progress>
                         <span class="fs-13 header-text">Seniority Leaves</span>
                     </div>
@@ -143,7 +144,7 @@
                             [radius]="40" [outerStrokeWidth]="8" [innerStrokeWidth]="8"
                             [outerStrokeColor]="usedTransferLeavePercentage >=67 && usedTransferLeavePercentage <= 100 ? '#4CC790' : usedTransferLeavePercentage >=33 && usedTransferLeavePercentage <67 ? '#3c9ee5' : '#ff9f00'"
                             [animation]="true" [titleFontSize]="'13px'"
-                            [title]="transferLeaveEntitlement ? ((transferLeaveEntitlement?.usableLeave - transferLeaveEntitlement?.usedLeave)?.toFixed(1) || 0 + '/' + transferLeaveEntitlement?.usableLeave?.toFixed(1) || 0)  || 0 : '0/0'"
+                            [title]="transferLeaveEntitlement ? ((transferLeaveEntitlement?.usableLeave - transferLeaveEntitlement?.usedLeave)?.toFixed(1)  + '/' + transferLeaveEntitlement?.usableLeave?.toFixed(1) ) : '0/0'"
                             [animationDuration]="300" [maxPercent]="100"></circle-progress>
                         <span class="fs-13 header-text">Transfer Leaves</span>
                     </div>
@@ -153,7 +154,7 @@
                             [radius]="40" [outerStrokeWidth]="8" [innerStrokeWidth]="8"
                             [outerStrokeColor]="usedUnpaidLeavePercentage >=67 && usedUnpaidLeavePercentage <= 100 ? '#4CC790' : usedUnpaidLeavePercentage >=33 && usedUnpaidLeavePercentage <67 ? '#3c9ee5' : '#ff9f00'"
                             [animation]="true" [animationDuration]="300" [titleFontSize]="'13px'"
-                            [title]="unpaidLeaveEntitlement ? ((unpaidLeaveEntitlement?.usableLeave - unpaidLeaveEntitlement?.usedLeave)?.toFixed(1) || 0 + '/' + unpaidLeaveEntitlement?.usableLeave?.toFixed(1) || 0)  || 0 : '0/0'"
+                            [title]="unpaidLeaveEntitlement ? ((unpaidLeaveEntitlement?.usableLeave - unpaidLeaveEntitlement?.usedLeave)?.toFixed(1) + '/' + unpaidLeaveEntitlement?.usableLeave?.toFixed(1)) : '0/0'"
                             [maxPercent]="100"></circle-progress>
                         <span class="fs-13 header-text">Unpaid Leaves</span>
                     </div>
