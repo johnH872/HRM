@@ -326,7 +326,8 @@ class employeeController {
                     'email'
                 ]
             });
-            const emails = users.map(x => x.email);
+            var emails = users.map(x => x.email);
+            emails = [...emails, myEmail];
 
             const leaveRequests = await dbContext.LeaveRequest.findAll({
                 include: [
@@ -334,9 +335,9 @@ class employeeController {
                         model: dbContext.User,
                         attributes: employeeValidReturnVariable,
                         where: {
-                            ownerId: employeeId,
                             [Op.or]: {
-                                userId: employeeId
+                                userId: employeeId,
+                                ownerId: employeeId
                             }
                         },
                     },
