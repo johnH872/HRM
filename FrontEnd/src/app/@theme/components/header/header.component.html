@@ -33,6 +33,11 @@
                   <p-divider *ngIf="i != notifications?.length - 1"></p-divider>
                 </div>
               </div>
+              <div *ngIf="notifications?.length == 0" fxFlex="100" fxLayout="column" class="notification-card p-3">
+                <div fxLayout="row" fxLayoutAlign="center center">
+                  <h5 class="fw-bold mb-0 fs-12">No records found</h5>
+                </div>
+              </div>
             </div>
           </div>
         </ng-template>

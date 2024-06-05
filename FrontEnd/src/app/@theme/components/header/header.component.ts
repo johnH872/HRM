@@ -192,6 +192,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   markAllNotifications() {
+    if(this.notifications.filter(x => !x.isRead).length <= 0) {
+      this.messageService.add({
+        key: 'toast1', severity: 'warn', summary: 'Warnig',
+        detail: `No unread notification!`, life: 2000
+      });
+      return;
+    }
+    
     this.notificationService.markRead(this.userDetail.userId).subscribe(res => {
       if (res.result) {
         this.messageService.add({

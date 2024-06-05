@@ -13,7 +13,7 @@
         <nb-list-item *ngFor="let item of lstAttendanceDetails"
           (click)="(isAdmin) ? openAttendanceDetail(item) : ''">
           {{ item?.punchinDate ? (item?.punchinDate | dateTimeToTime) : '??:??:??' }} - {{ item?.punchoutDate ?
-          (item?.punchoutDate | dateTimeToTime) : '??:??:??' }} = {{ item?.duration }}h
+          (item?.punchoutDate | dateTimeToTime) : '??:??:??' }} = {{ item?.duration?.toFixed(2) }}h
         </nb-list-item>
       </nb-list>
     </nb-tab>
@@ -23,7 +23,7 @@
           (click)="(isAdmin) ? openLeaveRequestDetail(item) : ''">
           <mat-icon style="margin-right: 0px !important;"
             [ngStyle]="{'color': item?.leaveEntitlement?.leaveType?.isPaidSalary ? (item?.leaveEntitlement?.leaveTypeId === bonusTypeId ? '#00ced1' : '#3366cc') : '#996600'}">person_off</mat-icon>
-          {{ item?.leaveDateFrom | dateTimeToTimeNotSeconds }} - {{ item?.leaveDateTo | dateTimeToTimeNotSeconds }} = {{ item?.numberOfHour
+          {{ item?.leaveDateFrom | dateTimeToTimeNotSeconds }} - {{ item?.leaveDateTo | dateTimeToTimeNotSeconds }} = {{ item?.numberOfHour?.toFixed(2)
           }}h
         </nb-list-item>
       </nb-list>
