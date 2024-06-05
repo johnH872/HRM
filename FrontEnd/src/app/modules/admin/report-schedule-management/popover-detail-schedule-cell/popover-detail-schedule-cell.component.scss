@@ -35,7 +35,19 @@
     }
 }
 
-.body-card{
+::ng-deep {
+    .mat-mdc-menu-panel.mat-mdc-menu-panel {
+        max-width: 355px !important;
+        border-radius: 10px;
+    }
+
+    .mat-mdc-menu-content {
+        padding: unset !important;
+    }
+}
+
+
+.body-card {
     max-height: 270px;
     overflow-y: auto;
     max-width: 400px;

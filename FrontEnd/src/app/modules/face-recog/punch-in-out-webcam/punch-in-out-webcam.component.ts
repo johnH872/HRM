@@ -233,15 +233,15 @@ export class PunchInOutWebcamComponent implements OnInit, OnDestroy {
         // - There is a working day on the current date
         // - Punching in is not between leave-from and leave-to times
         if (workingDay && workingDay.workingHour > 0) result = true;
-        if (leaveRequests.length > 0) {
-          for (let leaveRequest of leaveRequests) {
-            if (moment().isBetween(moment(leaveRequest.leaveDateFrom), moment(leaveRequest.leaveDateTo))) {
-              result = false;
-              this.infoCardtype = InforCardType.LEAVE;
-              this.leaveModel = leaveRequest;
-            }
-          }
-        }
+        // if (leaveRequests.length > 0) {
+        //   for (let leaveRequest of leaveRequests) {
+        //     if (moment().isBetween(moment(leaveRequest.leaveDateFrom), moment(leaveRequest.leaveDateTo))) {
+        //       result = false;
+        //       this.infoCardtype = InforCardType.LEAVE;
+        //       this.leaveModel = leaveRequest;
+        //     }
+        //   }
+        // }
       }
     } catch (err) {
       console.error(err);
