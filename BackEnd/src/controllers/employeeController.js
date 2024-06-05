@@ -335,6 +335,9 @@ class employeeController {
                         attributes: employeeValidReturnVariable,
                         where: {
                             ownerId: employeeId,
+                            [Op.or]: {
+                                userId: employeeId
+                            }
                         },
                     },
                     {
