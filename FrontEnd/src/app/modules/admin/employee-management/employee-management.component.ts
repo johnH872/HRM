@@ -58,8 +58,11 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
       }
     });
     this.dataStateService.getListCountries().subscribe(resp => {
-      if (resp) {
-        this.lstNationalities = resp.map(item => Object.assign({ text: `${item?.name?.common}`, value: item?.name?.common, img: item?.flags?.png }));
+      // if (resp) {
+      //   this.lstNationalities = resp.map(item => Object.assign({ text: `${item?.name?.common}`, value: item?.name?.common, img: item?.flags?.png }));
+      // } else this.lstNationalities = [];
+      if (resp?.data) {
+        this.lstNationalities = resp?.data?.map(item => Object.assign({ text: `${item?.name}`, value: item?.name, img: item?.flag }));
       } else this.lstNationalities = [];
     });
   }
