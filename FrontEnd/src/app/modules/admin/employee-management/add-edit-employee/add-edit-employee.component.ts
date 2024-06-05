@@ -72,18 +72,18 @@ export class AddEditEmployeeComponent implements OnInit, OnDestroy {
         this.user = token.getPayload().user;
       }
     });
-    this.configFilterContries = {
-      filterType: FilterType.DropDown,
-      filterValue: this.dataStateService.getListCountries().pipe(map(resp => {
-        if (resp) {
-          return resp.map(item => Object.assign({ text: `${item?.name?.common}`, value: item?.name?.common, img: item?.flags?.png }));
-        } else return [];
-      })),
-      displayText: 'text',
-      displayValue: 'value',
-      displayImg: 'img',
-      firstLoad: true
-    } as FilterConfig;
+    // this.configFilterContries = {
+    //   filterType: FilterType.DropDown,
+    //   filterValue: this.dataStateService.getListCountries().pipe(map(resp => {
+    //     if (resp) {
+    //       return resp.map(item => Object.assign({ text: `${item?.name?.common}`, value: item?.name?.common, img: item?.flags?.png }));
+    //     } else return [];
+    //   })),
+    //   displayText: 'text',
+    //   displayValue: 'value',
+    //   displayImg: 'img',
+    //   firstLoad: true
+    // } as FilterConfig;
   }
 
   ngOnInit() {
@@ -123,12 +123,23 @@ export class AddEditEmployeeComponent implements OnInit, OnDestroy {
   async loadCountriesData() {
     this.isGettingCountries = true;
     this.countriesData = await lastValueFrom(this.dataStateService.getListCountries().pipe(map(resp => {
-      if (resp) {
-        return resp.map(item => {
+      // if (resp) {
+      //   return resp.map(item => {
+      //     const countryName = this.frmEmployee?.get('nationality')?.value;
+      //     var returnObj = Object.assign({ name: `${item?.name?.common}`, img: item?.flags?.png });
+      //     if (countryName?.toLowerCase() == item?.name?.common?.toLowerCase()) {
+      //       this.frmEmployee?.get('nationality')?.setValue(item?.name?.common);
+      //       this.selectedCountry = returnObj;
+      //     }
+      //     return returnObj;
+      //   });
+      // } else return {};
+      if (resp?.data) {
+        return resp?.data?.map(item => {
           const countryName = this.frmEmployee?.get('nationality')?.value;
-          var returnObj = Object.assign({ name: `${item?.name?.common}`, img: item?.flags?.png });
-          if (countryName?.toLowerCase() == item?.name?.common?.toLowerCase()) {
-            this.frmEmployee?.get('nationality')?.setValue(item?.name?.common);
+          var returnObj = Object.assign({ name: `${item?.name}`, img: item?.flag });
+          if (countryName?.toLowerCase() == item?.name?.toLowerCase()) {
+            this.frmEmployee?.get('nationality')?.setValue(item?.name);
             this.selectedCountry = returnObj;
           }
           return returnObj;

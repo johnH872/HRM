@@ -149,19 +149,21 @@ export class AttendanceManagmentComponent implements OnInit, OnDestroy {
   }
 
   openEmployeeDetail(employee: EmployeeModel = null) {
-    this.dialog.open(EmployeeDetailDialogComponent, {
-      width: '90vw',
-      height: '90vh',
-      backdropClass: 'custom-backdrop',
-      hasBackdrop: true,
-      data: {
-        model: employee,
-        action: TblActionType.Edit
-      },
-    }).afterClosed().subscribe(closeRes => {
-      if (closeRes) {
-
-      }
-    });
+    if (!this.isOnlyCurrentUser) {
+      this.dialog.open(EmployeeDetailDialogComponent, {
+        width: '90vw',
+        height: '90vh',
+        backdropClass: 'custom-backdrop',
+        hasBackdrop: true,
+        data: {
+          model: employee,
+          action: TblActionType.Edit
+        },
+      }).afterClosed().subscribe(closeRes => {
+        if (closeRes) {
+  
+        }
+      });
+    }
   }
 }
