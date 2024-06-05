@@ -13,11 +13,13 @@
     </div>
     <div style="display:flex; justify-content: center;">
       <mat-button-toggle-group class="attendance-report-mode" [(ngModel)]="typeMode">
-        <mat-button-toggle value="List" ngDefaultControl [ngClass]="{'selected-button-type': typeMode === 'List'}">
-          <mat-icon>lists</mat-icon>
+        <mat-button-toggle value="List" ngDefaultControl [ngClass]="{'selected-button-type': typeMode === 'List'}"
+          routerLink="/admin/report-schedule" matTooltip="Go to Report Schedule">
+          <mat-icon>compost</mat-icon>
         </mat-button-toggle>
-        <mat-button-toggle value="Grid" [ngClass]="{'selected-button-type': typeMode === 'Grid'}">
-          <mat-icon>auto_awesome_mosaic</mat-icon>
+        <mat-button-toggle value="Grid" [ngClass]="{'selected-button-type': typeMode === 'Grid'}"
+          routerLink="/admin/work-calendar" matTooltip="Go to Work Calendar">
+          <mat-icon>edit_calendar</mat-icon>
         </mat-button-toggle>
       </mat-button-toggle-group>
     </div>
@@ -37,8 +39,8 @@
         <button mat-raised-button style="background-color: #b45cea; color: white;" class="button-app-function" (click)="nextData()">
           <mat-icon>arrow_forward_ios</mat-icon>
         </button>
-        <button mat-raised-button style="background-color: #b45cea; color: white;" [matMenuTriggerFor]="exportMenu" [nbSpinner]="btnExportState"
-          class="button-app-function">Export</button>
+        <!-- <button mat-raised-button style="background-color: #b45cea; color: white;" [matMenuTriggerFor]="exportMenu" [nbSpinner]="btnExportState"
+          class="button-app-function">Export</button> -->
       </mat-toolbar>
     </div>
   </div>
@@ -87,7 +89,7 @@
             </p-multiSelect>
 
             <mat-label style="font-size: 14px;">From date:</mat-label>
-            <mat-form-field class="form-function-filter" appearance="fill">
+            <mat-form-field class="form-function-filter" appearance="fill" style="max-width: 110px;">
               <input matInput [matDatepicker]="fromDatePicker" formControlName="fromDate" readonly
                 (click)="fromDatePicker.open()">
               <mat-datepicker #fromDatePicker>
@@ -95,7 +97,7 @@
             </mat-form-field>
 
             <mat-label style="font-size: 14px;">To date:</mat-label>
-            <mat-form-field class="form-function-filter" appearance="fill">
+            <mat-form-field class="form-function-filter" appearance="fill" style="max-width: 110px;">
               <input matInput [matDatepicker]="toDatePicker" formControlName="toDate" readonly
                 (click)="toDatePicker.open()">
               <mat-datepicker #toDatePicker>

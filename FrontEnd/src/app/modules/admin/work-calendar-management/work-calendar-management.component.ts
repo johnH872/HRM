@@ -39,7 +39,7 @@ export class WorkCalendarManagementComponent implements OnInit {
   frmGroup: FormGroup;
   timeMode = 'Week';
   viewMode = 'Both';
-  typeMode = 'List';
+  typeMode = 'Grid';
   timeModeDisplay = 'This week';
   isLoading = false;
   dataFilterWorkCalendar: DataFilterWorkCalendar;

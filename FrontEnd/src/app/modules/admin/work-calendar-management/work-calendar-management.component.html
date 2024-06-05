@@ -12,14 +12,16 @@
       </mat-button-toggle-group>
     </div>
     <div style="display:flex; justify-content: center;">
-      <!-- <mat-button-toggle-group class="attendance-report-mode" [(ngModel)]="typeMode">
-        <mat-button-toggle value="List" ngDefaultControl [ngClass]="{'selected-button-type': typeMode === 'List'}">
-          <mat-icon>lists</mat-icon>
+      <mat-button-toggle-group class="attendance-report-mode" [(ngModel)]="typeMode">
+        <mat-button-toggle value="List" ngDefaultControl [ngClass]="{'selected-button-type': typeMode === 'List'}"
+          routerLink="/admin/report-schedule" matTooltip="Go to Report Schedule">
+          <mat-icon>compost</mat-icon>
         </mat-button-toggle>
-        <mat-button-toggle value="Grid" [ngClass]="{'selected-button-type': typeMode === 'Grid'}">
-          <mat-icon>auto_awesome_mosaic</mat-icon>
+        <mat-button-toggle value="Grid" [ngClass]="{'selected-button-type': typeMode === 'Grid'}"
+          routerLink="/admin/work-calendar" matTooltip="Go to Work Calendar">
+          <mat-icon>edit_calendar</mat-icon>
         </mat-button-toggle>
-      </mat-button-toggle-group> -->
+      </mat-button-toggle-group>
     </div>
     <div style="display: flex; justify-content: right">
       <mat-toolbar style="display: flex; justify-content: right; background-color: #edf1f7; align-items: center;">
@@ -41,8 +43,8 @@
           (click)="nextData()">
           <mat-icon>arrow_forward_ios</mat-icon>
         </button>
-        <button mat-raised-button style="background-color: #b45cea; color: white;" [matMenuTriggerFor]="exportMenu"
-          [nbSpinner]="btnExportState" class="button-app-function">Export</button>
+        <!-- <button mat-raised-button style="background-color: #b45cea; color: white;" [matMenuTriggerFor]="exportMenu"
+          [nbSpinner]="btnExportState" class="button-app-function">Export</button> -->
       </mat-toolbar>
     </div>
   </div>
