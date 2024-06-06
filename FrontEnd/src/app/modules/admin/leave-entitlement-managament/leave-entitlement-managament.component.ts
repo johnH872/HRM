@@ -38,7 +38,7 @@ export class LeaveEntitlementManagamentComponent implements OnInit, OnDestroy {
       .subscribe((token: NbAuthJWTToken) => {
         if (token.isValid()) {
           this.currentUser = token.getPayload()?.user;
-          if (this.currentUser?.roles[0]?.roleName === 'admin') this.isAdmin = true;
+          if (this.currentUser?.roles?.find(x => x.roleName === 'admin')) this.isAdmin = true;
         }
       });
     this.employeeService.getAllEmployee().pipe(takeUntil(this.destroy$)).subscribe(res => {
