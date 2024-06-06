@@ -52,7 +52,7 @@ export class LeaveRequestManagementComponent implements OnInit, OnDestroy {
       .subscribe((token: NbAuthJWTToken) => {
         if (token.isValid()) {
           this.user = token.getPayload()?.user;
-          if (this.user?.roles[0]?.roleName === 'admin') this.isAdmin = true;
+          if (this.user?.roles?.find(x => x.roleName === 'admin')) this.isAdmin = true;
         }
       });
     this.employeeService.getAllEmployee().pipe(takeUntil(this.destroy$)).subscribe(res => {
