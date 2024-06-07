@@ -69,15 +69,17 @@ class NotificationController {
                         else model[userId] = [token];
 
                         // find token in other user and remove it
-                        const keys = (model.keys()).filter(x => x != userId);
-                        if (model[userId].includes(token)) {
-                            for (let key of keys) {
-                                const index = model[key].indexOf(token);
-                                if (model?.[key]?.length > 0 && index > -1) {
-                                    model[key] = [...array.splice(index, 1)];
-                                }
-                            }
-                        }
+                        // if(model) {
+                        //     const keys = (model?.keys())?.filter(x => x != userId) || '';
+                        //     if (model[userId].includes(token)) {
+                        //         for (let key of keys) {
+                        //             const index = model[key].indexOf(token);
+                        //             if (model?.[key]?.length > 0 && index > -1) {
+                        //                 model[key] = [...array.splice(index, 1)];
+                        //             }
+                        //         }
+                        //     }
+                        // }
                     }
                     localRedis.set(process.env.DB_HOST, JSON.stringify(model));
                 }

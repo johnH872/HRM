@@ -242,7 +242,7 @@ export class PunchInOutWebcamComponent implements OnInit, OnDestroy {
         //     }
         //   }
         // }
-      }
+      } else result = true;
     } catch (err) {
       console.error(err);
     }
