@@ -1,0 +1,20 @@
+.vscode/
+.git/
+.gitignore
+README.md
+HRM.code-workspace
+bitbucket-pipelines.yml
+
+# Backend ignore files
+BackEnd/node_modules/
+BackEnd/.vscode/
+BackEnd/attendance_img/
+BackEnd/labeled_images/
+BackEnd/.gitignore/
+
+# Frontend ignore files
+FrontEnd/node_modules/
+FrontEnd/.angular/
+FrontEnd/.vscode/
+FrontEnd/README.md/
+FrontEnd/.gitignore/

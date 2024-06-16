@@ -20,7 +20,7 @@ import dbConfigs from './config/db.config.js';
 import { generationLeaveEntitlementJob } from './cronJobs/generationLeaveEntitlementJobs.js';
 import { balanceLeaveEntitlementJob } from './cronJobs/balanceLeaveEntitlementJobs.js';
 import { workCalendarJob } from './cronJobs/workCalendarJobs.js';
-import { notificationJobs } from './cronJobs/NotificationJobs.js';
+import { notificationJobs } from './cronJobs/notificationJobs.js';
 
 //database connection
 const sequelize = new Sequelize(

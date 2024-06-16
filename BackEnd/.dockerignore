@@ -1,0 +1,5 @@
+node_modules/
+.vscode/
+attendance_img/
+labeled_images/
+.gitignore/
