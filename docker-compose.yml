@@ -3,7 +3,7 @@ version: '3.4'
 services:
   # Angular web
   web:
-    image: ui
+    image: nginx:1.17-alpine
     ports:
       - 4200:80 #ngix default porst is 80
     restart: unless-stopped
@@ -12,6 +12,7 @@ services:
     #   dockerfile: Dockerfile.ui
     volumes:
       - ./FrontEnd/.docker/config/default.conf:/etc/nginx/conf.d/default.conf
+      - ./FrontEnd/dist/cofront-end:/usr/share/nginx/html
     links:
       - server
     depends_on:
