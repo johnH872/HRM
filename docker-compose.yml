@@ -23,13 +23,13 @@ services:
     image: server
     ports:
       - "5000:5000"
-    restart: unless-stopped
-    extra_hosts:
-      - "host.docker.internal:host-gateway" #for linux only (remove when using on Windows)
+    restart: unless-stopped 
     # volumes:
     #   - ./BackEnd/node_modules:/usr/src/app/node_modules
     depends_on:
       - db
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
 
   #MySQL Service
   db:
