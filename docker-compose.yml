@@ -39,6 +39,7 @@ services:
     #   - "3306"
     ports:
       - "3306:3306"  
+    command: --lower_case_table_names=1
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_USER: ${DB_USERNAME}
