@@ -1,4 +1,5 @@
-export const host = 'http://localhost:5000';
+// export const host = 'http://localhost:5000';
+export const host = 'http://51.79.159.84:5000'; //for ubuntu server
 export const apiUrl = `${host}/api`;
 
 export const environment = {
@@ -34,6 +35,7 @@ export const environment = {
     apiReportScheduleManagement: apiUrl + '/ReportScheduleManagement',
     apiWorkCalendarManagement: apiUrl + '/WorkCalendarManagement',
     apiNotification: apiUrl + '/Notification',
-    SOCKET_ENDPOINT: 'http://localhost:5000/',
+    // SOCKET_ENDPOINT: 'http://localhost:5000/',
+    SOCKET_ENDPOINT: 'http://51.79.159.84:5000/',
     FACE_MATCHER_MODEL_URL: 'https://res.cloudinary.com/dudtu2qef/raw/upload/v1712589621/traning_model/faceMatcher.json'
 }
