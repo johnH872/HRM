@@ -15,7 +15,7 @@ services:
       - ./FrontEnd/.docker/config/default.conf:/etc/nginx/conf.d/default.conf
       - ./FrontEnd/dist/front-end:/usr/share/nginx/html
       # - ./FrontEnd/nginx/conf/:/etc/nginx/conf.d/:ro
-      - ./FrontEnd/certbot/www/:/var/www/certbot/:ro
+      - ./certbot/www/:/var/www/certbot/:ro
     links:
       - server
     depends_on:
