@@ -12,7 +12,7 @@ services:
     #   context: ./
     #   dockerfile: Dockerfile.ui
     volumes:
-      - ./FrontEnd/.docker/config/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./FrontEnd/.docker/config/default.conf:/etc/nginx/conf.d/default.conf
       - ./FrontEnd/dist/front-end:/usr/share/nginx/html
       # - ./FrontEnd/nginx/conf/:/etc/nginx/conf.d/:ro
       - ./FrontEnd/certbot/www/:/var/www/certbot/:ro
