@@ -16,6 +16,8 @@ services:
       - ./FrontEnd/dist/front-end:/usr/share/nginx/html
       # - ./FrontEnd/nginx/conf/:/etc/nginx/conf.d/:ro
       - ./certbot/www/:/var/www/certbot/:ro
+      - ./certbot/conf/live/lhhrm.xyz/fullchain.pem:/etc/nginx/ssl/live/lhhrm.xyz/fullchain.pem
+      - ./certbot/conf/live/lhhrm.xyz/privkey.pem:/etc/nginx/ssl/live/lhhrm.xyz/privkey.pem 
     links:
       - server
     depends_on:
