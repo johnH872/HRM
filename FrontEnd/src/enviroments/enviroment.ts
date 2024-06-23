@@ -1,5 +1,5 @@
 // export const host = 'http://localhost:5000';
-export const host = 'https://lhhrm.xyz/api'; //for ubuntu server
+export const host = 'https://lhhrm.xyz'; //for ubuntu server
 export const apiUrl = `${host}/api`;
 
 export const environment = {
@@ -36,6 +36,6 @@ export const environment = {
     apiWorkCalendarManagement: apiUrl + '/WorkCalendarManagement',
     apiNotification: apiUrl + '/Notification',
     // SOCKET_ENDPOINT: 'http://localhost:5000/',
-    SOCKET_ENDPOINT: 'https://lhhrm.xyz/api/',
+    SOCKET_ENDPOINT: 'https://lhhrm.xyz/',
     FACE_MATCHER_MODEL_URL: 'https://res.cloudinary.com/dudtu2qef/raw/upload/v1712589621/traning_model/faceMatcher.json'
 }
