@@ -39,6 +39,8 @@ export class EmployeeModel {
     @prop()
     @required()
     roleId: string[];
+
+    isAppliedFace: boolean;
     
     Roles: RoleModel[];
     displayName: string;

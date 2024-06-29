@@ -93,6 +93,9 @@
           <p-columnFilter type="text" field="nationality" display="menu"></p-columnFilter>
           <!-- <p-sortIcon field="nationality"></p-sortIcon> -->
         </th>
+        <th pSortableColumn="nationality" style="min-width:150px">
+          Face recognition
+        </th>
         <th pSortableColumn="nationality" style="min-width:200px">
         </th>
       </tr>
@@ -122,6 +125,10 @@
           <img [src]="getNationalityImg(employee?.nationality)" class="custom-display-img">
           {{ employee?.nationality }}
         </td>
+        <td class="added-face">
+          <p-tag [icon]="employee?.isAppliedFace ? 'pi pi-check' : 'pi pi-times'" [severity]="employee?.isAppliedFace ? 'success' : 'danger'" [rounded]="true"></p-tag>
+        </td>
+
         <td>
           <button *ngIf="employee.ownerId == currentUser.userId || isAdmin" pButton pRipple icon="pi pi-pencil" class="p-button-success p-button-sm mr-2"
             (click)="addEditEmployee(employee)"></button>

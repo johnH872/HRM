@@ -63,20 +63,24 @@ class LeaveRequestController {
                     await handleLeaveEntitlementForLeaveRequest(saveLeaveRequest.userId, saveLeaveRequest.leaveEntitlementId);
                     const userModel = await dbContext.User.findByPk(model.userId);
                     if (model.userId === model.userAction) {
-                        sendNotification(
-                            'Leave request', `${userModel.firstName || ''} ${userModel.middleName || ''} ${userModel.lastName || ''} submitted a leave request.`,
-                            '/admin/leave-request',
-                            NotificationType.LEAVE_REQUEST,
-                            userModel.ownerId
-                        );
+                        if(userModel) {
+                            sendNotification(
+                                'Leave request', `${userModel?.firstName || ''} ${userModel?.middleName || ''} ${userModel?.lastName || ''} submitted a leave request.`,
+                                '/admin/leave-request',
+                                NotificationType.LEAVE_REQUEST,
+                                userModel.ownerId
+                            );
+                        }
                     } else {
                         const ownerModel = await dbContext.User.findByPk(userModel.ownerId);
-                        sendNotification(
-                            'Leave request', `${ownerModel.firstName || ''} ${ownerModel.middleName || ''} ${ownerModel.lastName || ''} assigned a leave request for you.`,
-                            '/admin/leave-request',
-                            NotificationType.LEAVE_REQUEST,
-                            userModel.userId
-                        );
+                        if(ownerModel) {
+                            sendNotification(
+                                'Leave request', `${ownerModel?.firstName || ''} ${ownerModel?.middleName || ''} ${ownerModel?.lastName || ''} assigned a leave request for you.`,
+                                '/admin/leave-request',
+                                NotificationType.LEAVE_REQUEST,
+                                userModel.userId
+                            );
+                        }
                     }
                     
                 } else {

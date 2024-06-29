@@ -2,3 +2,10 @@
     max-width: 4vh !important;
     max-height: 4vh !important;
 }
+::ng-deep.added-face .p-tag .p-tag-icon {
+    margin: unset;
+}
+
+.added-face {
+    text-align: center !important;
+}
