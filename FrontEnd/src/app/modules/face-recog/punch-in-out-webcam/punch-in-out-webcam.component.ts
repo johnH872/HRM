@@ -135,7 +135,7 @@ export class PunchInOutWebcamComponent implements OnInit, OnDestroy {
               else {
                 this.canvas.style.display = 'none';
 
-                this.canvas
+                await this.canvas
                   .getContext("2d")
                   .drawImage(this.videoInput, 0, 0, window.innerWidth, window.innerHeight);
                 this.canvas.toBlob((blob: any) => {
