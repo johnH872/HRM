@@ -3,7 +3,7 @@ import db from '../models/index.js';
 const dbContext = await db;
 
 const workCalendarJob = CronJob.from({
-    cronTime: '0 0 1 * * *',
+    cronTime: '0 */5 * * * *',
     onTick: async function () {
         // Auto create work calendar in the first day of the month '0 0 1 * * *'
         await generateDefaultWorkCalendar();
