@@ -133,6 +133,11 @@ export class PunchInOutWebcamComponent implements OnInit, OnDestroy {
               var validAttendance = await this.checkAttendanceCondition(res.result.userId);
               if (!validAttendance) this.openReminderPopup(res.result.email);
               else {
+                this.canvas.style.display = 'none';
+
+                this.canvas
+                  .getContext("2d")
+                  .drawImage(this.videoInput, 0, 0, window.innerWidth, window.innerHeight);
                 this.canvas.toBlob((blob: any) => {
                   if (res.result) {
                     this.isOpeningDialog = true;
