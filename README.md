@@ -8,17 +8,9 @@ Features:
   * Working days management and filling timesheets for each working day.
   * Attendance management.
 ## Images
-<p float="center">
-  <img src="https://github.com/user-attachments/assets/689b4e16-59a5-424d-93dc-b8b322cd7d69" width="300"/>
-  <img src="https://github.com/user-attachments/assets/22df1be3-c0bb-403f-83c7-969e43f7dc8d" width="300"/> 
-</p>
-
-<p float="center">
-  <img src="https://github.com/user-attachments/assets/0571c8d2-8224-4538-86a8-3a15b61604ee" width="300"/>
-  <img src="https://github.com/user-attachments/assets/cee0f387-1bc1-4a93-a55c-e2539190c8d6" width="300"/> 
-</p>
-
-<p float="center">
-  <img src="https://github.com/user-attachments/assets/5b2f0225-e777-4ee0-a05e-93dd95118829" width="300"/>
-  <img src="https://github.com/user-attachments/assets/143a3132-686d-4505-8e99-6b21db4b40dd" width="300"/> 
-</p>
+![image](https://github.com/user-attachments/assets/7bceb784-b6c2-480b-ac1b-a7926cb7b63b)
+![image](https://github.com/user-attachments/assets/d92d9149-6ce4-417e-af46-5e4ebe192d87)
+![image](https://github.com/user-attachments/assets/86212902-ff78-402c-b914-bfe93d29d414)
+![image](https://github.com/user-attachments/assets/1602a7a6-340f-4b95-9aeb-3ab122486451)
+![image](https://github.com/user-attachments/assets/9ccca11a-7498-44ef-9965-c408077e0b3d)
+![image](https://github.com/user-attachments/assets/d61a0198-ba41-4ed2-8061-3f2935e51bd7)
